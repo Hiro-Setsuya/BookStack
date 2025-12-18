@@ -1,36 +1,59 @@
 <?php
-$gatewayUrl = "http://192.168.18.39:8080/messages"; // full endpoint
-$username = "sms";
-$password = "lickmyez";
-$recipient = "+639123456789"; // Replace with the actual recipient phone number
 
-// Generate OTP
-$otp = rand(100000, 999999);
-$message = "Your OTP code is: " . $otp . ". Do not share this code with anyone.";
+$smsConfig = require __DIR__ . '/../config/sms.php';
 
-// Prepare payload
-$payload = [
-    "phoneNumbers" => [$recipient],
-    "message" => $message,
-];
+function sendSMS($recipient, $message)
+{
+    global $smsConfig;
 
-$options = [
-    'http' => [
-        'method' => 'POST',
-        'header' => [
-            'Content-Type: application/json',
-            'Authorization: Basic ' . base64_encode("$username:$password"),
-        ],
-        'content' => json_encode($payload),
-    ]
-];
+    // Validate phone number
+    if (empty($recipient)) {
+        error_log('SMS Error: Empty recipient phone number');
+        return false;
+    }
 
-$context = stream_context_create($options);
-$response = file_get_contents($gatewayUrl, false, $context);
+    // Ensure phone number starts with 63 for Philippines
+    $recipient = preg_replace('/[^0-9]/', '', $recipient);
+    if (!preg_match('/^63/', $recipient)) {
+        if (preg_match('/^0/', $recipient)) {
+            $recipient = '63' . substr($recipient, 1);
+        } else {
+            $recipient = '63' . $recipient;
+        }
+    }
 
-// Display results
-echo "<h3>OTP:</h3>";
-echo "<p>Recipient: <strong>$recipient</strong></p>";
-echo "<p>OTP Code: <strong>$otp</strong></p>";
-echo "<h4>Response:</h4>";
-echo "<pre>" . htmlspecialchars($response) . "</pre>";
+    $payload = [
+        "phoneNumbers" => [$recipient],
+        "message" => $message,
+    ];
+
+    $headers = [
+        'Content-Type: application/json',
+        'Authorization: Basic ' . base64_encode(
+            $smsConfig['username'] . ':' . $smsConfig['password']
+        ),
+    ];
+
+    $options = [
+        'http' => [
+            'method'  => 'POST',
+            'header'  => implode("\r\n", $headers),
+            'content' => json_encode($payload),
+            'timeout' => 10,
+            'ignore_errors' => true
+        ]
+    ];
+
+    $context = stream_context_create($options);
+    $response = @file_get_contents($smsConfig['gateway_url'], false, $context);
+
+    // Log for debugging
+    if ($response === false) {
+        error_log('SMS Error: Failed to send SMS to ' . $recipient);
+        error_log('Gateway URL: ' . $smsConfig['gateway_url']);
+        return false;
+    }
+
+    error_log('SMS Success: Sent to ' . $recipient);
+    return $response;
+}
