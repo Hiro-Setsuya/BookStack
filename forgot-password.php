@@ -1,3 +1,169 @@
+<?php
+session_start();
+require_once 'notifications/send-sms.php';
+
+$statusMessage = '';
+$statusType = '';
+$showVerification = false;
+$verificationFailed = false;
+$attemptsRemaining = 3;
+
+$userEmail = "student@gmail.com";
+$userPhone = "639123456789"; // Example phone number in Philippines format receiving SMS
+
+// Handle resending OTP
+if (isset($_GET['resend']) && isset($_SESSION['delivery_method'])) {
+    $deliveryMethod = $_SESSION['delivery_method'];
+
+    // Generate new OTP
+    $otp = rand(100000, 999999);
+    $_SESSION['otp'] = $otp;
+    $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
+    $_SESSION['otp_attempts'] = 0;
+
+    if ($deliveryMethod === 'sms') {
+        // Send SMS
+        $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
+        $result = sendSMS($userPhone, $message);
+
+        if ($result !== false) {
+            $statusMessage = 'New OTP sent to your phone successfully!';
+            $statusType = 'success';
+            $showVerification = true;
+        } else {
+            $statusMessage = 'Failed to send OTP via SMS. Please try again.';
+            $statusType = 'danger';
+            $showVerification = true;
+        }
+    } else {
+        // Send Email (placeholder - implement email sending)
+        $statusMessage = 'New OTP sent to your email successfully!';
+        $statusType = 'success';
+        $showVerification = true;
+        // TODO: Implement email sending using send-email.php
+    }
+}
+
+// Handle resending OTP
+if (isset($_GET['resend']) && isset($_SESSION['delivery_method'])) {
+    $deliveryMethod = $_SESSION['delivery_method'];
+
+    // Generate new OTP
+    $otp = rand(100000, 999999);
+    $_SESSION['otp'] = $otp;
+    $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
+    $_SESSION['otp_attempts'] = 0;
+
+    if ($deliveryMethod === 'sms') {
+        // Send SMS
+        $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
+        $result = sendSMS($userPhone, $message);
+
+        if ($result !== false) {
+            $statusMessage = 'New OTP sent to your phone successfully!';
+            $statusType = 'success';
+            $showVerification = true;
+        } else {
+            $statusMessage = 'Failed to send OTP via SMS. Please try again.';
+            $statusType = 'danger';
+            $showVerification = true;
+        }
+    } else {
+        // Send Email (placeholder - implement email sending)
+        $statusMessage = 'New OTP sent to your email successfully!';
+        $statusType = 'success';
+        $showVerification = true;
+        // TODO: Implement email sending using send-email.php
+    }
+}
+
+// Handle changing delivery method (Try another way)
+if (isset($_GET['change_method'])) {
+    unset($_SESSION['otp']);
+    unset($_SESSION['otp_expiry']);
+    unset($_SESSION['otp_attempts']);
+    unset($_SESSION['delivery_method']);
+    header('Location: forgot-password.php');
+    exit;
+}
+
+// Handle OTP verification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verifyOTP'])) {
+    $enteredOTP = '';
+    for ($i = 1; $i <= 6; $i++) {
+        $enteredOTP .= $_POST['otp' . $i] ?? '';
+    }
+
+    if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry'])) {
+        if (time() > $_SESSION['otp_expiry']) {
+            $statusMessage = 'OTP has expired. Please request a new code.';
+            $statusType = 'danger';
+            $verificationFailed = true;
+            $showVerification = true;
+        } elseif ($enteredOTP == $_SESSION['otp']) {
+            $statusMessage = 'Verification successful! Redirecting...';
+            $statusType = 'success';
+            // Redirect to reset password page
+            // header('Location: reset-password.php');
+            // exit;
+        } else {
+            $verificationFailed = true;
+            $showVerification = true;
+            if (!isset($_SESSION['otp_attempts'])) {
+                $_SESSION['otp_attempts'] = 0;
+            }
+            $_SESSION['otp_attempts']++;
+            $attemptsRemaining = 3 - $_SESSION['otp_attempts'];
+            $statusMessage = "Invalid verification code. You have $attemptsRemaining attempts remaining.";
+            $statusType = 'danger';
+        }
+    } else {
+        $statusMessage = 'No OTP found. Please request a new code.';
+        $statusType = 'danger';
+    }
+}
+
+// Handle form submission for sending OTP
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sendOTP'])) {
+    $deliveryMethod = $_POST['deliveryMethod'] ?? 'email';
+
+    // Generate OTP
+    $otp = rand(100000, 999999);
+    $_SESSION['otp'] = $otp;
+    $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
+    $_SESSION['otp_attempts'] = 0;
+    $_SESSION['delivery_method'] = $deliveryMethod;
+
+    if ($deliveryMethod === 'sms') {
+        // Send SMS
+        $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
+        $result = sendSMS($userPhone, $message);
+
+        if ($result !== false) {
+            $statusMessage = 'OTP sent to your phone successfully!';
+            $statusType = 'success';
+            $showVerification = true;
+        } else {
+            $statusMessage = 'Failed to send OTP via SMS. Please try again or use email.';
+            $statusType = 'danger';
+        }
+    } else {
+        // Send Email (placeholder - implement email sending)
+        $statusMessage = 'OTP sent to your email successfully!';
+        $statusType = 'success';
+        $showVerification = true;
+        // TODO: Implement email sending using send-email.php
+    }
+}
+
+// Check if we should show verification based on session
+if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['sendOTP'])) {
+    if (time() <= $_SESSION['otp_expiry']) {
+        $showVerification = true;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -273,10 +439,67 @@
             margin-top: 0.25rem;
         }
 
+        /* OTP Input Styles */
+        .otp-input {
+            width: 40px;
+            height: 48px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            border-radius: 0;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-bottom-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .otp-input.error {
+            border-bottom-color: #dc3545;
+        }
+
+        .otp-input.error:focus {
+            border-bottom-color: #dc3545;
+        }
+
         @media (min-width: 576px) {
             .card-title {
                 font-size: 2rem;
             }
+
+            .otp-input {
+                width: 48px;
+                height: 56px;
+            }
+        }
+
+        .error-box {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        .success-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: rgba(220, 53, 69, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc3545;
+            margin: 0 auto 1rem;
+        }
+
+        .success-icon-wrapper.success {
+            background-color: rgba(25, 135, 84, 0.1);
+            color: #198754;
         }
     </style>
 </head>
@@ -297,10 +520,6 @@
     </nav>
 
     <?php
-    // Simulating database retrieval - In production, fetch from database based on username/student ID
-    $userEmail = "student@university.edu";
-    $userPhone = "09123456789";
-
     // Mask email: show first 2 chars and domain
     $emailParts = explode('@', $userEmail);
     $length = strlen($emailParts[0]);
@@ -308,7 +527,6 @@
         . str_repeat('*', max($length - 2, 1))
         . '@' . $emailParts[1];
     $maskedPhone = substr($userPhone, 0, 3) . str_repeat('*', strlen($userPhone) - 7) . substr($userPhone, -4);
-
     ?>
 
     <main>
@@ -325,66 +543,144 @@
                     </p>
                 </div>
 
-                <!-- Form Section -->
-                <form onsubmit="event.preventDefault();">
+                <?php if ($showVerification): ?>
+                    <!-- Verification Code Section -->
+                    <div class="text-center mb-4">
+                        <div class="<?php echo $verificationFailed ? 'success-icon-wrapper' : 'success-icon-wrapper success'; ?>">
+                            <span class="material-symbols-outlined" style="font-size: 2rem;">
+                                <?php echo $verificationFailed ? 'gpp_bad' : 'mark_email_read'; ?>
+                            </span>
+                        </div>
+                        <h2 class="h4 fw-bold mb-2">
+                            <?php echo $verificationFailed ? 'Verification Failed' : 'Verify Your Code'; ?>
+                        </h2>
+                        <p class="text-muted">
+                            <?php echo $verificationFailed
+                                ? 'The code you entered is incorrect or has expired. Please check and try again.'
+                                : 'Enter the 6-digit code sent to your ' . ($_SESSION['delivery_method'] ?? 'email'); ?>
+                        </p>
+                    </div>
+
+                    <?php if (!empty($statusMessage) && $verificationFailed): ?>
+                        <div class="error-box d-flex align-items-start gap-2 mb-4">
+                            <span class="material-symbols-outlined text-danger" style="font-size: 1.25rem;">error</span>
+                            <p class="text-danger mb-0 small fw-medium">
+                                <?php echo htmlspecialchars($statusMessage); ?>
+                            </p>
+                        </div>
+                    <?php elseif (!empty($statusMessage)): ?>
+                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($statusMessage); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="forgot-password.php" id="verifyForm">
+                        <!-- OTP Input Fields -->
+                        <div class="d-flex justify-content-center gap-2 mb-4">
+                            <?php for ($i = 1; $i <= 6; $i++): ?>
+                                <input
+                                    type="text"
+                                    name="otp<?php echo $i; ?>"
+                                    id="otp<?php echo $i; ?>"
+                                    class="otp-input <?php echo $verificationFailed ? 'error' : ''; ?>"
+                                    maxlength="1"
+                                    pattern="[0-9]"
+                                    inputmode="numeric"
+                                    required
+                                    autocomplete="off">
+                            <?php endfor; ?>
+                        </div>
+
+                        <button type="submit" name="verifyOTP" class="btn btn-primary w-100 mb-3">
+                            Verify Code
+                        </button>
+
+                        <div class="text-center mb-3">
+                            <p class="text-muted small mb-2">
+                                Didn't receive the code?
+                                <a href="#" id="resendLink" class="text-primary fw-bold text-decoration-none" style="pointer-events: none; opacity: 0.6;">
+                                    <span id="resendText">Resend in <span id="timerCount">00:30</span></span>
+                                </a>
+                            </p>
+                            <p class="text-muted small mb-0">
+                                <a href="forgot-password.php?change_method=1" class="text-decoration-none" style="color: var(--text-muted); font-weight: 500;">
+                                    <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">swap_horiz</span>
+                                    Try another way
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+
+                <?php else: ?>
                     <!-- Delivery Method Selection -->
-                    <div class="mb-4">
-                        <label class="form-label">Send verification code to:</label>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="delivery-option active" id="emailOption">
-                                    <label class="delivery-option-label">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            name="deliveryMethod"
-                                            id="radioEmail"
-                                            value="email"
-                                            checked>
-                                        <span class="delivery-option-icon">
-                                            <span class="material-symbols-outlined">mail</span>
-                                        </span>
-                                        <div class="delivery-option-text flex-grow-1">
-                                            <h6>Email</h6>
-                                            <p>Send code to your email</p>
-                                            <div class="masked-info"><?php echo $maskedEmail; ?></div>
-                                        </div>
-                                    </label>
+                    <?php if (!empty($statusMessage)): ?>
+                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($statusMessage); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="forgot-password.php">
+                        <div class="mb-4">
+                            <label class="form-label">Send verification code to:</label>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="delivery-option" id="emailOption">
+                                        <label class="delivery-option-label">
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="deliveryMethod"
+                                                id="radioEmail"
+                                                value="email"
+                                                required>
+                                            <span class="delivery-option-icon">
+                                                <span class="material-symbols-outlined">mail</span>
+                                            </span>
+                                            <div class="delivery-option-text flex-grow-1">
+                                                <h6>Email</h6>
+                                                <p>Send code to your email</p>
+                                                <div class="masked-info"><?php echo $maskedEmail; ?></div>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="delivery-option" id="smsOption">
-                                    <label class="delivery-option-label">
-                                        <input
-                                            class="form-check-input"
-                                            type="radio"
-                                            name="deliveryMethod"
-                                            id="radioSms"
-                                            value="sms">
-                                        <span class="delivery-option-icon">
-                                            <span class="material-symbols-outlined">sms</span>
-                                        </span>
-                                        <div class="delivery-option-text flex-grow-1">
-                                            <h6>SMS</h6>
-                                            <p>Send code to your phone</p>
-                                            <div class="masked-info"><?php echo $maskedPhone; ?></div>
-                                        </div>
-                                    </label>
+                                <div class="col-12">
+                                    <div class="delivery-option" id="smsOption">
+                                        <label class="delivery-option-label">
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="deliveryMethod"
+                                                id="radioSms"
+                                                value="sms"
+                                                required>
+                                            <span class="delivery-option-icon">
+                                                <span class="material-symbols-outlined">sms</span>
+                                            </span>
+                                            <div class="delivery-option-text flex-grow-1">
+                                                <h6>SMS</h6>
+                                                <p>Send code to your phone</p>
+                                                <div class="masked-info"><?php echo $maskedPhone; ?></div>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                        Send Verification Code
-                    </button>
-                </form>
+                        <button type="submit" name="sendOTP" class="btn btn-primary w-100 mb-3">
+                            Send Verification Code
+                        </button>
+                    </form>
+                <?php endif; ?>
 
                 <div class="text-center pt-2">
-                    <button class="back-link">
+                    <a href="login.php" class="back-link text-decoration-none">
                         <span class="material-symbols-outlined">arrow_back</span>
                         <span>Back to Login</span>
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -404,33 +700,131 @@
         const radioEmail = document.getElementById('radioEmail');
         const radioSms = document.getElementById('radioSms');
 
-        // Click handlers for delivery options
-        emailOption.addEventListener('click', function() {
-            radioEmail.checked = true;
-            emailOption.classList.add('active');
-            smsOption.classList.remove('active');
-        });
-
-        smsOption.addEventListener('click', function() {
-            radioSms.checked = true;
-            smsOption.classList.add('active');
-            emailOption.classList.remove('active');
-        });
-
-        // Radio button change handlers
-        radioEmail.addEventListener('change', function() {
-            if (this.checked) {
+        if (emailOption && smsOption) {
+            // Click handlers for delivery options
+            emailOption.addEventListener('click', function() {
+                radioEmail.checked = true;
                 emailOption.classList.add('active');
                 smsOption.classList.remove('active');
-            }
-        });
+            });
 
-        radioSms.addEventListener('change', function() {
-            if (this.checked) {
+            smsOption.addEventListener('click', function() {
+                radioSms.checked = true;
                 smsOption.classList.add('active');
                 emailOption.classList.remove('active');
+            });
+
+            // Radio button change handlers
+            radioEmail.addEventListener('change', function() {
+                if (this.checked) {
+                    emailOption.classList.add('active');
+                    smsOption.classList.remove('active');
+                }
+            });
+
+            radioSms.addEventListener('change', function() {
+                if (this.checked) {
+                    smsOption.classList.add('active');
+                    emailOption.classList.remove('active');
+                }
+            });
+        }
+
+        // OTP Input Auto-focus and Navigation
+        const otpInputs = document.querySelectorAll('.otp-input');
+        if (otpInputs.length > 0) {
+            otpInputs.forEach((input, index) => {
+                // Auto-focus next input
+                input.addEventListener('input', function(e) {
+                    if (this.value.length === 1) {
+                        // Remove error class on input
+                        this.classList.remove('error');
+                        // Move to next input
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                        }
+                    }
+                });
+
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '') {
+                        if (index > 0) {
+                            otpInputs[index - 1].focus();
+                        }
+                    }
+                });
+
+                // Allow only numbers
+                input.addEventListener('keypress', function(e) {
+                    if (!/[0-9]/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Handle paste
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '');
+                    if (pastedData.length === 6) {
+                        otpInputs.forEach((inp, idx) => {
+                            inp.value = pastedData[idx] || '';
+                            inp.classList.remove('error');
+                        });
+                        otpInputs[5].focus();
+                    }
+                });
+            });
+
+            // Auto-focus first input
+            otpInputs[0].focus();
+        }
+
+        // Resend Code Timer
+        const resendLink = document.getElementById('resendLink');
+        const resendText = document.getElementById('resendText');
+        const timerCount = document.getElementById('timerCount');
+
+        if (resendLink && timerCount) {
+            let timeLeft = 30;
+            let countdownInterval;
+
+            // Update timer display
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerCount.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             }
-        });
+
+            // Start countdown
+            function startCountdown() {
+                countdownInterval = setInterval(function() {
+                    timeLeft--;
+
+                    if (timeLeft >= 0) {
+                        updateTimer();
+                    } else {
+                        clearInterval(countdownInterval);
+                        resendText.textContent = 'Resend Code';
+                        resendLink.style.pointerEvents = 'auto';
+                        resendLink.style.opacity = '1';
+                    }
+                }, 1000);
+            }
+
+            // Handle resend click
+            resendLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (timeLeft <= 0) {
+                    // Redirect to resend
+                    window.location.href = 'forgot-password.php?resend=1';
+                }
+            });
+
+            // Initial display
+            updateTimer();
+            startCountdown();
+        }
     </script>
 </body>
 
