@@ -8,72 +8,76 @@ $showVerification = false;
 $verificationFailed = false;
 $attemptsRemaining = 3;
 
-$userEmail = "student@gmail.com";
-$userPhone = "639123456789"; // Example phone number in Philippines format receiving SMS
-
-// Handle resending OTP
-if (isset($_GET['resend']) && isset($_SESSION['delivery_method'])) {
-    $deliveryMethod = $_SESSION['delivery_method'];
-
-    // Generate new OTP
-    $otp = rand(100000, 999999);
-    $_SESSION['otp'] = $otp;
-    $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
-    $_SESSION['otp_attempts'] = 0;
-
-    if ($deliveryMethod === 'sms') {
-        // Send SMS
-        $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
-        $result = sendSMS($userPhone, $message);
-
-        if ($result !== false) {
-            $statusMessage = 'New OTP sent to your phone successfully!';
-            $statusType = 'success';
-            $showVerification = true;
+// Check if user is in cooldown period
+function isInCooldown()
+{
+    if (isset($_SESSION['cooldown_until'])) {
+        if (time() < $_SESSION['cooldown_until']) {
+            return true;
         } else {
-            $statusMessage = 'Failed to send OTP via SMS. Please try again.';
-            $statusType = 'danger';
-            $showVerification = true;
+            // Cooldown expired, clear it
+            unset($_SESSION['cooldown_until']);
+            $_SESSION['otp_attempts'] = 0;
+            return false;
         }
-    } else {
-        // Send Email (placeholder - implement email sending)
-        $statusMessage = 'New OTP sent to your email successfully!';
-        $statusType = 'success';
-        $showVerification = true;
-        // TODO: Implement email sending using send-email.php
     }
+    return false;
 }
 
+// Get remaining cooldown time in seconds
+function getCooldownRemaining()
+{
+    if (isset($_SESSION['cooldown_until'])) {
+        $remaining = $_SESSION['cooldown_until'] - time();
+        return max(0, $remaining);
+    }
+    return 0;
+}
+
+$userEmail = "student@gmail.com";
+// $userPhone = "639123456789"; // Example phone number in Philippines format receiving SMS
+$userPhone = "639623489331"; // Example phone number in Philippines format receiving SMS
+
 // Handle resending OTP
 if (isset($_GET['resend']) && isset($_SESSION['delivery_method'])) {
-    $deliveryMethod = $_SESSION['delivery_method'];
+    // Check if user is in cooldown
+    if (isInCooldown()) {
+        $cooldownRemaining = getCooldownRemaining();
+        $minutes = floor($cooldownRemaining / 60);
+        $seconds = $cooldownRemaining % 60;
+        $statusMessage = sprintf('Too many failed attempts. Please wait %d:%02d before trying again.', $minutes, $seconds);
+        $statusType = 'danger';
+        $showVerification = true;
+    } else {
+        $deliveryMethod = $_SESSION['delivery_method'];
 
-    // Generate new OTP
-    $otp = rand(100000, 999999);
-    $_SESSION['otp'] = $otp;
-    $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
-    $_SESSION['otp_attempts'] = 0;
+        // Generate new OTP
+        $otp = rand(100000, 999999);
+        $_SESSION['otp'] = $otp;
+        $_SESSION['otp_expiry'] = time() + 600; // 10 minutes
+        $_SESSION['otp_attempts'] = 0;
 
-    if ($deliveryMethod === 'sms') {
-        // Send SMS
-        $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
-        $result = sendSMS($userPhone, $message);
+        if ($deliveryMethod === 'sms') {
+            // Send SMS
+            $message = "Your BookStack OTP is: $otp. Valid for 10 minutes. Do not share this code.";
+            $result = sendSMS($userPhone, $message);
 
-        if ($result !== false) {
-            $statusMessage = 'New OTP sent to your phone successfully!';
+            if ($result !== false) {
+                $statusMessage = 'New OTP sent to your phone successfully!';
+                $statusType = 'success';
+                $showVerification = true;
+            } else {
+                $statusMessage = 'Failed to send OTP via SMS. Please try again.';
+                $statusType = 'danger';
+                $showVerification = true;
+            }
+        } else {
+            // Send Email (placeholder - implement email sending)
+            $statusMessage = 'New OTP sent to your email successfully!';
             $statusType = 'success';
             $showVerification = true;
-        } else {
-            $statusMessage = 'Failed to send OTP via SMS. Please try again.';
-            $statusType = 'danger';
-            $showVerification = true;
+            // TODO: Implement email sending using send-email.php
         }
-    } else {
-        // Send Email (placeholder - implement email sending)
-        $statusMessage = 'New OTP sent to your email successfully!';
-        $statusType = 'success';
-        $showVerification = true;
-        // TODO: Implement email sending using send-email.php
     }
 }
 
@@ -89,37 +93,58 @@ if (isset($_GET['change_method'])) {
 
 // Handle OTP verification
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verifyOTP'])) {
-    $enteredOTP = '';
-    for ($i = 1; $i <= 6; $i++) {
-        $enteredOTP .= $_POST['otp' . $i] ?? '';
-    }
+    // Check if user is in cooldown
+    if (isInCooldown()) {
+        $cooldownRemaining = getCooldownRemaining();
+        $minutes = floor($cooldownRemaining / 60);
+        $seconds = $cooldownRemaining % 60;
+        $statusMessage = sprintf('Too many failed attempts. Please wait %d:%02d before trying again.', $minutes, $seconds);
+        $statusType = 'danger';
+        $verificationFailed = true;
+        $showVerification = true;
+    } else {
+        $enteredOTP = '';
+        for ($i = 1; $i <= 6; $i++) {
+            $enteredOTP .= $_POST['otp' . $i] ?? '';
+        }
 
-    if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry'])) {
-        if (time() > $_SESSION['otp_expiry']) {
-            $statusMessage = 'OTP has expired. Please request a new code.';
-            $statusType = 'danger';
-            $verificationFailed = true;
-            $showVerification = true;
-        } elseif ($enteredOTP == $_SESSION['otp']) {
-            $statusMessage = 'Verification successful! Redirecting...';
-            $statusType = 'success';
-            // Redirect to reset password page
-            // header('Location: reset-password.php');
-            // exit;
-        } else {
-            $verificationFailed = true;
-            $showVerification = true;
-            if (!isset($_SESSION['otp_attempts'])) {
+        if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry'])) {
+            if (time() > $_SESSION['otp_expiry']) {
+                $statusMessage = 'OTP has expired. Please request a new code.';
+                $statusType = 'danger';
+                $verificationFailed = true;
+                $showVerification = true;
+            } elseif ($enteredOTP == $_SESSION['otp']) {
+                // Successful verification - clear attempts and cooldown
                 $_SESSION['otp_attempts'] = 0;
+                unset($_SESSION['cooldown_until']);
+                $statusMessage = 'Verification successful! Redirecting...';
+                $statusType = 'success';
+                // Redirect to reset password page
+                // header('Location: reset-password.php');
+                // exit;
+            } else {
+                $verificationFailed = true;
+                $showVerification = true;
+                if (!isset($_SESSION['otp_attempts'])) {
+                    $_SESSION['otp_attempts'] = 0;
+                }
+                $_SESSION['otp_attempts']++;
+                $attemptsRemaining = 3 - $_SESSION['otp_attempts'];
+
+                // After 3 failed attempts, set cooldown for 1 minute
+                if ($_SESSION['otp_attempts'] >= 3) {
+                    $_SESSION['cooldown_until'] = time() + 60; // 1 minute cooldown
+                    $statusMessage = 'Too many failed attempts. Please wait 1 minute before trying again.';
+                } else {
+                    $statusMessage = "Invalid verification code. You have $attemptsRemaining attempt(s) remaining.";
+                }
+                $statusType = 'danger';
             }
-            $_SESSION['otp_attempts']++;
-            $attemptsRemaining = 3 - $_SESSION['otp_attempts'];
-            $statusMessage = "Invalid verification code. You have $attemptsRemaining attempts remaining.";
+        } else {
+            $statusMessage = 'No OTP found. Please request a new code.';
             $statusType = 'danger';
         }
-    } else {
-        $statusMessage = 'No OTP found. Please request a new code.';
-        $statusType = 'danger';
     }
 }
 
@@ -331,6 +356,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
             box-shadow: 0 0 0 0.25rem rgba(76, 153, 230, 0.3);
         }
 
+        .btn-primary:disabled {
+            background-color: #9ca3af;
+            border-color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
         .back-link {
             background: none;
             border: none;
@@ -467,6 +499,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
             border-bottom-color: #dc3545;
         }
 
+        .otp-input:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         @media (min-width: 576px) {
             .card-title {
                 font-size: 2rem;
@@ -575,6 +614,22 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                         </div>
                     <?php endif; ?>
 
+                    <?php if (isInCooldown()): ?>
+                        <div class="alert alert-warning d-flex align-items-start gap-2 mb-4">
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">schedule</span>
+                            <div>
+                                <strong>Account Temporarily Locked</strong>
+                                <p class="mb-0 small">Too many failed attempts. Please wait <span id="cooldownDisplay">
+                                        <?php
+                                        $cooldownRemaining = getCooldownRemaining();
+                                        $minutes = floor($cooldownRemaining / 60);
+                                        $seconds = $cooldownRemaining % 60;
+                                        echo sprintf('%d:%02d', $minutes, $seconds);
+                                        ?></span> before trying again.</p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <form method="POST" action="forgot-password.php" id="verifyForm">
                         <!-- OTP Input Fields -->
                         <div class="d-flex justify-content-center gap-2 mb-4">
@@ -592,8 +647,17 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                             <?php endfor; ?>
                         </div>
 
-                        <button type="submit" name="verifyOTP" class="btn btn-primary w-100 mb-3">
-                            Verify Code
+                        <button type="submit" name="verifyOTP" class="btn btn-primary w-100 mb-3" id="verifyBtn" <?php echo isInCooldown() ? 'disabled' : ''; ?>>
+                            <?php
+                            if (isInCooldown()) {
+                                $cooldownRemaining = getCooldownRemaining();
+                                $minutes = floor($cooldownRemaining / 60);
+                                $seconds = $cooldownRemaining % 60;
+                                echo sprintf('Wait %d:%02d', $minutes, $seconds);
+                            } else {
+                                echo 'Verify Code';
+                            }
+                            ?>
                         </button>
 
                         <div class="text-center mb-3">
@@ -825,6 +889,53 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
             updateTimer();
             startCountdown();
         }
+
+        // Cooldown Timer for Verify Button
+        const verifyBtn = document.getElementById('verifyBtn');
+        const cooldownDisplay = document.getElementById('cooldownDisplay');
+        <?php if (isInCooldown()): ?>
+            let cooldownTimeLeft = <?php echo getCooldownRemaining(); ?>;
+
+            function updateCooldownButton() {
+                if (cooldownTimeLeft > 0) {
+                    const minutes = Math.floor(cooldownTimeLeft / 60);
+                    const seconds = cooldownTimeLeft % 60;
+                    const timeString = `${minutes}:${String(seconds).padStart(2, '0')}`;
+                    verifyBtn.textContent = `Wait ${timeString}`;
+                    verifyBtn.disabled = true;
+
+                    // Update cooldown display if it exists
+                    if (cooldownDisplay) {
+                        cooldownDisplay.textContent = timeString;
+                    }
+                } else {
+                    clearInterval(cooldownInterval);
+                    // Refresh the page to clear cooldown state
+                    window.location.reload();
+                }
+            }
+
+            // Disable OTP inputs during cooldown
+            if (cooldownTimeLeft > 0 && otpInputs.length > 0) {
+                otpInputs.forEach(input => {
+                    input.disabled = true;
+                });
+            }
+
+            // Disable resend link during cooldown
+            if (resendLink && cooldownTimeLeft > 0) {
+                resendLink.style.pointerEvents = 'none';
+                resendLink.style.opacity = '0.6';
+                resendText.innerHTML = 'Resend blocked due to cooldown';
+            }
+
+            const cooldownInterval = setInterval(function() {
+                cooldownTimeLeft--;
+                updateCooldownButton();
+            }, 1000);
+
+            updateCooldownButton();
+        <?php endif; ?>
     </script>
 </body>
 
