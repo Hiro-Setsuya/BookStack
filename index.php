@@ -66,6 +66,28 @@
     </div>
   </div>
 
+  <div class="container mt-lg-5 py-4 px-4">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="display-3 fw-bold">Buy and Download</div>
+        <div class="display-3 fw-bold text-success">E-Books Instantly</div>
+        <div class="fs-5 mt-3">
+          Explore a wide collection of books across multiple categories. With BookStack, you can easily discover new titles, read your favorites, and organize your personal library all in one place.”
+        </div>
+        <div class="mt-4 mb-4">
+          <button class="btn btn-success me-2"><i class="bi bi-cart3 me-2"></i>Browse Shop</button>
+          <button class="btn btn-outline-success"><i class="bi bi-info-circle me-2"></i>How it Works</button>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <img src="https://tse4.mm.bing.net/th/id/OIP.4vlJD00w2dCppW1ZYkrb8gHaFI?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+          class="img-fluid rounded-3 mb-2">
+        <div class="fs-5 fw-semibold">Featued Collection</div>
+        <div class="fs-5">Best Sellers of the Month.</div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 
