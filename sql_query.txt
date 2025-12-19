@@ -96,3 +96,17 @@ CREATE TABLE notifications (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+// Collaboration TABLE
+CREATE TABLE vouchers (
+    voucher_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    external_system ENUM('travel_agency','ebook_store') NOT NULL,
+    code VARCHAR(50) NOT NULL,
+    discount_amount DECIMAL(10,2),
+    is_redeemed BOOLEAN DEFAULT FALSE,
+    issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    redeemed_at DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
