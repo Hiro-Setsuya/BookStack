@@ -14,11 +14,12 @@
   <nav id="navbar" class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
     <div class="container-fluid">
       <div class="navbar-brand fw-bold text-success">
-        BookStack
+        <img src="assets/logo.svg" height="25" alt="Logo">
+        <span>BookStack</span>
       </div>
       <div class="ms-auto">
-        <button class="btn btn-success d-lg-none d-inline-block me-2">Login/Register</button>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        <a href="login.php" class="btn btn-success d-lg-none d-inline-block me-2">Login/Register</a>
+        <button class="navbar-toggler" href="login.php" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -50,7 +51,7 @@
       <div class="ms-auto d-none d-lg-flex">
         <input class="form-control me-2" type="text" placeholder="Search">
         <button class="btn btn-success me-2"><i class="bi bi-cart3"></i></button>
-        <button class="btn btn-success">Login/Register</button>
+        <a href="login.php" class="btn btn-success">Login/Register</a>
       </div>
     </div>
   </nav>
