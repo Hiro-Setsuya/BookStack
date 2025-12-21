@@ -206,13 +206,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
     <style>
         :root {
-            --primary-color: #4c99e6;
-            --primary-hover: #3b8bd6;
-            --text-dark: #111417;
-            --text-muted: #647587;
-            --bg-light: #f6f7f8;
-            --border-color: #e5e7eb;
-            --bg-footer: #f8f9fa;
+            /* BookStack Brand Colors from Image */
+            --primary-color: #198754;
+            --primary-hover: #146c43;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --bg-light: #f8f9fa;
+            --border-color: #e9ecef;
         }
 
         body {
@@ -231,20 +231,21 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: var(--text-dark);
-            font-weight: 700;
-            font-size: 1.125rem;
+            gap: 0.75rem;
+            color: #198754;
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-decoration: none;
         }
 
         .navbar-brand:hover {
             color: var(--text-dark);
         }
 
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            color: var(--primary-color);
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
         }
 
         .nav-link {
@@ -432,7 +433,7 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
         .delivery-option.active {
             border-color: var(--primary-color);
-            background-color: rgba(76, 153, 230, 0.1);
+            background-color: #f0fdf4;
         }
 
         .delivery-option .form-check-input {
@@ -544,13 +545,11 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
         <div class="container-fluid px-4 px-lg-5">
             <a class="navbar-brand" href="#">
-                <svg class="logo-icon" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>
-                </svg>
-                EduBooks
+                <img src="assets/logo.svg" alt="BookStack Logo" class="logo-img">
+                BookStack
             </a>
             <div class="d-none d-sm-flex">
                 <a class="nav-link px-3" href="#">Help</a>
