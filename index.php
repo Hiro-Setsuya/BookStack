@@ -7,7 +7,7 @@ session_start();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BookStack - Your Digital Library</title>
+  <title>BookStack - Computer & Tech E-Books</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -58,7 +58,7 @@ session_start();
         </ul>
       </div>
       <div class="ms-auto d-none d-lg-flex align-items-center">
-        <input class="form-control me-2" type="text" placeholder="Search" style="width: 200px;">
+        <input class="form-control me-2" type="text" placeholder="Search tech books..." style="width: 200px;">
         <a href="cart.php" class="btn btn-success me-2"><i class="bi bi-cart3"></i></a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="dropdown">
@@ -85,7 +85,7 @@ session_start();
     <div class="row">
       <div class="col text-center mx-2">
         <div class="mx-auto d-lg-none d-flex mt-4">
-          <input class="form-control me-2" type="text" placeholder="Search books...">
+          <input class="form-control me-2" type="text" placeholder="Search tech books...">
           <button class="btn btn-success"><i class="bi bi-search"></i></button>
         </div>
       </div>
@@ -95,21 +95,21 @@ session_start();
   <div class="container mt-lg-5 py-4 px-4">
     <div class="row">
       <div class="col-lg-7">
-        <div class="display-3 fw-bold">Your Digital Library,</div>
-        <div class="display-3 fw-bold text-success">Anytime, Anywhere</div>
+        <div class="display-3 fw-bold">Learn Tech Skills with</div>
+        <div class="display-3 fw-bold text-success">Expert E-Books</div>
         <div class="fs-5 mt-3 text-muted">
-          Discover thousands of e-books across all genres. Download instantly, read on any device, and build your personal digital library with BookStack.
+          Access thousands of computer science, programming, and tech e-books. From web development to AI, find resources to advance your career.
         </div>
         <div class="mt-4 mb-4">
-          <a href="ebooks.php" class="btn btn-success me-2"><i class="bi bi-book me-2"></i>Explore E-Books</a>
-          <a href="#how-it-works" class="btn btn-outline-success"><i class="bi bi-info-circle me-2"></i>Learn More</a>
+          <a href="ebooks.php" class="btn btn-success me-2"><i class="bi bi-laptop me-2"></i>Browse Tech Books</a>
+          <a href="#how-it-works" class="btn btn-outline-success"><i class="bi bi-info-circle me-2"></i>How It Works</a>
         </div>
       </div>
       <div class="col-lg-5">
         <img src="https://tse4.mm.bing.net/th/id/OIP.4vlJD00w2dCppW1ZYkrb8gHaFI?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
           class="img-fluid rounded-3 mb-2 shadow">
-        <div class="fs-5 fw-semibold">Featured Collection</div>
-        <div class="text-muted">This month's bestsellers</div>
+        <div class="fs-5 fw-semibold">Popular Topics</div>
+        <div class="text-muted">Web Dev • Python • Data Science • AI</div>
       </div>
     </div>
   </div>
