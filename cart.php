@@ -7,6 +7,7 @@
   <title>Bootstrap Demo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -123,7 +124,7 @@
 
       </div>
 
-      <div class="col-lg-4 mb-3">
+      <div class="col-lg-4 mb-3 sticky-summary">
         <div class="card p-3 position-sticky" style="top: 90px;">
           <div class="card-title fs-4 fw-bold mb-3">Order Summary</div>
           <div class="d-flex justify-content-between align-items-center mb-3">
