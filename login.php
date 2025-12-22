@@ -1,3 +1,57 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+$error = "";
+
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+// Handle login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $identifier = trim($_POST['identifier']); // Can be email or phone
+    $password = $_POST['password'];
+
+    // Validation
+    if (empty($identifier) || empty($password)) {
+        $error = "All fields are required.";
+    } else {
+        // Check if identifier is email or phone number
+        $identifier_escaped = mysqli_real_escape_string($conn, $identifier);
+
+        // Query to check both email and phone_number
+        $query = "SELECT user_id, user_name, email, phone_number, password_hash, role 
+                  FROM users 
+                  WHERE email = '$identifier_escaped' OR phone_number = '$identifier_escaped'";
+
+        $result = executeQuery($query);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+
+            // Verify password
+            if (password_verify($password, $user['password_hash'])) {
+                // Set session variables
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['user_name'] = $user['user_name'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
+
+                // Redirect to index.php
+                header('Location: index.php');
+                exit;
+            } else {
+                $error = "Invalid credentials. Please try again.";
+            }
+        } else {
+            $error = "Invalid credentials. Please try again.";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -118,16 +172,36 @@
         .btn-primary {
             background-color: var(--accent-green);
             border: none;
-            color: #050a08;
+            color: #ffffff;
             font-weight: 700;
             border-radius: 12px;
             padding: 14px;
             font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #27ae60;
-            transform: translateY(-1px);
+            background-color: #27ae60 !important;
+            color: #ffffff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-primary:active,
+        .btn-primary:active:focus {
+            background-color: #229954 !important;
+            color: #ffffff !important;
+            border-color: #229954 !important;
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-primary:focus,
+        .btn-primary:focus-visible {
+            background-color: var(--accent-green) !important;
+            color: #ffffff !important;
+            border-color: var(--accent-green) !important;
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
         }
 
         .login-img {
@@ -172,12 +246,19 @@
             <div class="col-lg-5 offset-lg-1">
                 <div class="login-card">
                     <h2 class="fw-bold mb-2">Welcome Back</h2>
-                    <p class="text-muted small mb-4">Please enter your credentials to sign in.</p>
+                    <p class="text-muted small mb-4">Sign in to continue to your library</p>
 
-                    <form action="login-process.php" method="POST">
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> <?php echo htmlspecialchars($error); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="">
                         <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" placeholder="student@example.com" required>
+                            <label class="form-label">Email or Phone Number</label>
+                            <input type="text" name="identifier" class="form-control" placeholder="Enter email or phone" value="<?php echo isset($_POST['identifier']) ? htmlspecialchars($_POST['identifier']) : ''; ?>" required>
                         </div>
                         <div class="mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -185,7 +266,7 @@
                                 <a href="forgot-password.php" class="footer-link">Forgot Password?</a>
                             </div>
                             <div class="position-relative">
-                                <input type="password" id="passwordInput" class="form-control" placeholder="password" required style="padding-right: 45px;">
+                                <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Enter your password" required style="padding-right: 45px;">
 
                                 <button type="button" onclick="togglePassword()" class="btn-toggle-pw">
                                     <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
@@ -193,7 +274,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mb-4 shadow">Sign in to Library</button>
+                        <button type="submit" class="btn btn-primary w-100 mb-4 shadow">Sign In</button>
                     </form>
 
                     <div class="text-center">
