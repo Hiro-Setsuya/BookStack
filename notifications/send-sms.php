@@ -1,14 +1,36 @@
 <?php
 
-$smsConfig = require __DIR__ . '/../config/sms.php';
+/**
+ * SMS Helper Functions
+ * 
+ * This file provides reusable SMS sending functionality.
+ * Simply include this file and call sendSMS() whenever you need to send a message.
+ */
 
+/**
+ * Send SMS message via gateway
+ * 
+ * @param string $recipient Phone number (will be formatted to 63XXXXXXXXX for Philippines)
+ * @param string $message The message content to send
+ * @return mixed Response from gateway on success, false on failure
+ * 
+ * @example
+ * require_once 'notifications/send-sms.php';
+ * $result = sendSMS('639123456789', 'Your OTP is: 123456');
+ */
 function sendSMS($recipient, $message)
 {
-    global $smsConfig;
+    // Load SMS configuration
+    $smsConfig = require __DIR__ . '/../config/sms.php';
 
-    // Validate phone number
+    // Validate inputs
     if (empty($recipient)) {
         error_log('SMS Error: Empty recipient phone number');
+        return false;
+    }
+
+    if (empty($message)) {
+        error_log('SMS Error: Empty message content');
         return false;
     }
 
@@ -22,11 +44,13 @@ function sendSMS($recipient, $message)
         }
     }
 
+    // Prepare payload
     $payload = [
         "phoneNumbers" => [$recipient],
         "message" => $message,
     ];
 
+    // Prepare headers with authentication
     $headers = [
         'Content-Type: application/json',
         'Authorization: Basic ' . base64_encode(
@@ -34,6 +58,7 @@ function sendSMS($recipient, $message)
         ),
     ];
 
+    // Configure HTTP request
     $options = [
         'http' => [
             'method'  => 'POST',
@@ -44,6 +69,7 @@ function sendSMS($recipient, $message)
         ]
     ];
 
+    // Send request
     $context = stream_context_create($options);
     $response = @file_get_contents($smsConfig['gateway_url'], false, $context);
 
