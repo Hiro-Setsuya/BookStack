@@ -94,7 +94,7 @@ function sendStackAIMessage() {
     showTypingIndicator();
 
     // Send message to backend via AJAX
-    fetch("chatbot. php", {
+    fetch("chatbot/chatbot.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
