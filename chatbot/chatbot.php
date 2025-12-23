@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   $message = $_POST['message'];
 
   // Load FAQ data
-  $data_file = __DIR__ . '/data. txt';
+  $data_file = __DIR__ . '/data.txt';
   if (file_exists($data_file)) {
     $data = file_get_contents($data_file);
   } else {
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
   // Prepare data for Ollama
   $payload = json_encode([
-    "model" => "llama3.2: latest",
+    "model" => "llama3.2:latest",
     "prompt" => $prompt,
     "stream" => false
   ]);
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 }
 ?>
 
-<! doctype html>
+<!doctype html>
 <html lang="en">
 
 <head>
