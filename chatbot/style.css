@@ -178,7 +178,7 @@
 
      0%,
      100% {
-         opacity: 0. 3;
+         opacity: 0.3;
          transform: translateY(0);
      }
 
@@ -221,7 +221,7 @@
  @media (max-width: 768px) {
      .stack-ai-button {
          width: 60px;
-         padding: 0. 75rem ! important;
+         padding: 0.75rem ! important;
      }
 
      .stack-ai-button .btn-text {

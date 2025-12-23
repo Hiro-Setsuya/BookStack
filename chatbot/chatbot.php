@@ -4,36 +4,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
   $message = $_POST['message'];
 
-  // Load FAQ data
+  // Load FAQ data - FIXED FILE PATH (removed extra space)
   $data_file = __DIR__ . '/data.txt';
   if (file_exists($data_file)) {
     $data = file_get_contents($data_file);
   } else {
-    $data = "No reference data available. ";
+    $data = "No reference data available.";
   }
 
   // System prompt for ebook chatbot
   $prompt =
     "You are Stack AI, a friendly and helpful AI assistant for BookStack, an ebook e-commerce platform. 
 
-  You have access to comprehensive information about our ebook store below.  
+You have access to comprehensive information about our ebook store below. 
 
-  Important guidelines:
-  • Answer questions ONLY based on the provided BookStack information.  
-  • If the user's question is related to BookStack services, use ONLY the dataset to answer.
-  • If the dataset does NOT contain the needed information, respond with:  \"I don't have information about that.  Please contact our support team at support@bookstack.com for more details.\"
-  • Always be friendly, professional, and helpful.
-  • Do NOT mention or reference the dataset unless the user directly asks about it.
-  • Keep responses natural, friendly, and concise (under 150 words when possible).
-  • If user asks about account issues, direct them to support@bookstack.com or phone 1-800-BOOKSTACK.  
-  • Suggest relevant ebooks or categories when appropriate.  
-  • For technical issues, provide step-by-step solutions when possible.
+Important guidelines:
+• Answer questions ONLY based on the provided BookStack information.  
+• If the user's question is related to BookStack services, use ONLY the dataset to answer.
+• If the dataset does NOT contain the needed information, respond with:  \"I don't have information about that.  Please contact our support team at support@bookstack.com for more details.\"
+• Always be friendly, professional, and helpful.
+• Do NOT mention or reference the dataset unless the user directly asks about it.
+• Keep responses natural, friendly, and concise (under 150 words when possible).
+• If user asks about account issues, direct them to support@bookstack.com or phone 1-800-BOOKSTACK.  
+• Suggest relevant ebooks or categories when appropriate.  
+• For technical issues, provide step-by-step solutions when possible. 
 
-  --- BEGIN BOOKSTACK INFORMATION ---
-  $data
-  --- END BOOKSTACK INFORMATION ---
+--- BEGIN BOOKSTACK INFORMATION ---
+$data
+--- END BOOKSTACK INFORMATION ---
 
-  User Question: $message";
+User Question: $message";
 
   // Prepare data for Ollama
   $payload = json_encode([
@@ -63,21 +63,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
   $data = json_decode($response, true);
 
-  echo $data["response"] ?? "Error:  No response from AI.  Please try again.";
+  echo $data["response"] ?? "Error: No response from AI.  Please try again.";
   exit;
 }
 ?>
 
-<!doctype html>
+<! doctype html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stack AI - ChatBot</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min. css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="chatbot/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -119,8 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     <span>💬</span>
   </button>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  <script src="chatbot/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min. js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
 
 </body>
 
