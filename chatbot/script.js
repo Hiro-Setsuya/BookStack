@@ -18,12 +18,12 @@ function openStackAIModal() {
 function closeStackAIModal() {
     document.getElementById("chatModal").classList.remove("active");
     document.getElementById("chatOverlay").classList.remove("active");
-    document.body.style.overflow = "auto";
+    document.body. style.overflow = "auto";
 }
 
 // Add user message to chat
 function addUserMessage(text) {
-    let box = document.getElementById("chatbox");
+    let box = document. getElementById("chatbox");
     let messageDiv = document.createElement("div");
     messageDiv.className = "message user";
 
@@ -31,7 +31,7 @@ function addUserMessage(text) {
     bubble.className = "msg-bubble";
     bubble.textContent = text;
 
-    messageDiv.appendChild(bubble);
+    messageDiv. appendChild(bubble);
     box.appendChild(messageDiv);
     box.scrollTop = box.scrollHeight;
 }
@@ -56,7 +56,7 @@ function showTypingIndicator() {
     let box = document.getElementById("chatbox");
     let typingDiv = document.createElement("div");
     typingDiv.className = "message bot";
-    typingDiv.id = "typing";
+    typingDiv. id = "typing";
 
     typingDiv.innerHTML = `
     <div class="typing-indicator">
@@ -67,7 +67,7 @@ function showTypingIndicator() {
   `;
 
     box.appendChild(typingDiv);
-    box.scrollTop = box.scrollHeight;
+    box.scrollTop = box. scrollHeight;
 }
 
 // Remove typing indicator
@@ -93,15 +93,23 @@ function sendStackAIMessage() {
     // Show typing indicator
     showTypingIndicator();
 
+    // Use root-relative path that works from any page
+    const chatbotUrl = "/ebook-ecommerce-system/chatbot/chatbot.php";
+
     // Send message to backend via AJAX
-    fetch("chatbot/chatbot.php", {
+    fetch(chatbotUrl, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
+        headers:  {
+            "Content-Type":  "application/x-www-form-urlencoded"
         },
         body: "message=" + encodeURIComponent(msg),
     })
-        .then((res) => res.text())
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.text();
+        })
         .then((data) => {
             // Remove typing indicator
             removeTypingIndicator();
@@ -116,9 +124,9 @@ function sendStackAIMessage() {
             // Remove typing indicator
             removeTypingIndicator();
 
-            // Show error message
+            // Show error message with details
+            console.error("Chatbot Error:", error);
             addStackAIMessage("Sorry, I'm having trouble connecting right now. Please try again or contact support@bookstack.com");
-            console.error("Error:", error);
         });
 }
 
