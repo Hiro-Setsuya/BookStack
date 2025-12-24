@@ -1,12 +1,34 @@
 <?php
 session_start();
+require_once 'config/db.php';
 require_once 'notifications/send-sms.php';
+require_once 'notifications/send-email.php';
 
 $statusMessage = '';
 $statusType = '';
 $showVerification = false;
 $verificationFailed = false;
 $attemptsRemaining = 3;
+$showAccountInput = true; // New flag to show account input form
+
+// Clear old session data if user is starting fresh (not from form submission or redirect)
+if (
+    !isset($_POST['identifyAccount']) && !isset($_POST['sendOTP']) && !isset($_POST['verifyOTP'])
+    && !isset($_GET['resend']) && !isset($_GET['change_method']) && !isset($_GET['start_over'])
+) {
+    // User is arriving fresh from login page, clear ALL old password reset sessions
+    unset($_SESSION['otp']);
+    unset($_SESSION['otp_expiry']);
+    unset($_SESSION['otp_attempts']);
+    unset($_SESSION['delivery_method']);
+    unset($_SESSION['reset_email']);
+    unset($_SESSION['reset_phone']);
+    unset($_SESSION['reset_username']);
+    unset($_SESSION['reset_user_id']);
+    unset($_SESSION['otp_verified']);
+    unset($_SESSION['password_reset_allowed']);
+    unset($_SESSION['cooldown_until']);
+}
 
 // Check if user is in cooldown period
 function isInCooldown()
@@ -34,9 +56,51 @@ function getCooldownRemaining()
     return 0;
 }
 
-$userEmail = "student@gmail.com";
-// $userPhone = "639123456789"; // Example phone number in Philippines format receiving SMS
-$userPhone = "639623489331"; // Example phone number in Philippines format receiving SMS
+// Handle account identification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['identifyAccount'])) {
+    $identifier = trim($_POST['identifier'] ?? '');
+
+    if (empty($identifier)) {
+        $statusMessage = 'Please enter your email, phone number, or username.';
+        $statusType = 'danger';
+    } else {
+        // Search for user in database
+        $identifier_escaped = mysqli_real_escape_string($conn, $identifier);
+        $query = "SELECT user_id, user_name, email, phone_number 
+                  FROM users 
+                  WHERE email = '$identifier_escaped' 
+                     OR phone_number = '$identifier_escaped' 
+                     OR user_name = '$identifier_escaped'";
+
+        $result = executeQuery($query);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+
+            // Store user info in session
+            $_SESSION['reset_email'] = $user['email'];
+            // Only store phone if it exists and is not empty
+            $_SESSION['reset_phone'] = !empty($user['phone_number']) ? $user['phone_number'] : null;
+            $_SESSION['reset_username'] = $user['user_name'];
+            $_SESSION['reset_user_id'] = $user['user_id'];
+
+            $showAccountInput = false; // Hide account input, show delivery method selection
+        } else {
+            $statusMessage = 'Account not found. Please check your email, phone number, or username.';
+            $statusType = 'danger';
+        }
+    }
+}
+
+// Check if user info is already in session
+if (isset($_SESSION['reset_email']) && !isset($_POST['identifyAccount'])) {
+    $showAccountInput = false;
+    $userEmail = $_SESSION['reset_email'];
+    $userPhone = $_SESSION['reset_phone'] ?? null;
+} else {
+    $userEmail = '';
+    $userPhone = '';
+}
 
 // Handle resending OTP
 if (isset($_GET['resend']) && isset($_SESSION['delivery_method'])) {
@@ -91,6 +155,20 @@ if (isset($_GET['change_method'])) {
     exit;
 }
 
+// Handle starting over (new account)
+if (isset($_GET['start_over'])) {
+    unset($_SESSION['otp']);
+    unset($_SESSION['otp_expiry']);
+    unset($_SESSION['otp_attempts']);
+    unset($_SESSION['delivery_method']);
+    unset($_SESSION['reset_email']);
+    unset($_SESSION['reset_phone']);
+    unset($_SESSION['reset_username']);
+    unset($_SESSION['reset_user_id']);
+    header('Location: forgot-password.php');
+    exit;
+}
+
 // Handle OTP verification
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verifyOTP'])) {
     // Check if user is in cooldown
@@ -118,11 +196,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verifyOTP'])) {
                 // Successful verification - clear attempts and cooldown
                 $_SESSION['otp_attempts'] = 0;
                 unset($_SESSION['cooldown_until']);
-                $statusMessage = 'Verification successful! Redirecting...';
-                $statusType = 'success';
-                // Redirect to reset password page
-                // header('Location: reset-password.php');
-                // exit;
+                $_SESSION['otp_verified'] = true; // Mark OTP as verified
+                $_SESSION['password_reset_allowed'] = true; // Allow password reset
+
+                // Redirect to change password page
+                header('Location: change-password.php');
+                exit;
             } else {
                 $verificationFailed = true;
                 $showVerification = true;
@@ -173,11 +252,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sendOTP'])) {
             $statusType = 'danger';
         }
     } else {
-        // Send Email (placeholder - implement email sending)
-        $statusMessage = 'OTP sent to your email successfully!';
-        $statusType = 'success';
-        $showVerification = true;
-        // TODO: Implement email sending using send-email.php
+        // Send Email
+        $result = sendOTPEmail($userEmail, $otp, $_SESSION['reset_username'] ?? '');
+
+        if ($result) {
+            $statusMessage = 'OTP sent to your email successfully!';
+            $statusType = 'success';
+            $showVerification = true;
+        } else {
+            $statusMessage = 'Failed to send OTP via email. Please try again or use SMS.';
+            $statusType = 'danger';
+        }
     }
 }
 
@@ -221,12 +306,21 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
     <?php
     // Mask email: show first 2 chars and domain
-    $emailParts = explode('@', $userEmail);
-    $length = strlen($emailParts[0]);
-    $maskedEmail = substr($emailParts[0], 0, 2)
-        . str_repeat('*', max($length - 2, 1))
-        . '@' . $emailParts[1];
-    $maskedPhone = substr($userPhone, 0, 3) . str_repeat('*', strlen($userPhone) - 7) . substr($userPhone, -4);
+    if (!empty($userEmail)) {
+        $emailParts = explode('@', $userEmail);
+        $length = strlen($emailParts[0]);
+        $maskedEmail = substr($emailParts[0], 0, 2)
+            . str_repeat('*', max($length - 2, 1))
+            . '@' . $emailParts[1];
+    } else {
+        $maskedEmail = '';
+    }
+
+    if (!empty($userPhone)) {
+        $maskedPhone = substr($userPhone, 0, 3) . str_repeat('*', strlen($userPhone) - 7) . substr($userPhone, -4);
+    } else {
+        $maskedPhone = '';
+    }
     ?>
 
     <main>
@@ -243,7 +337,37 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                     </p>
                 </div>
 
-                <?php if ($showVerification): ?>
+                <?php if ($showAccountInput): ?>
+                    <!-- Account Identification Form -->
+                    <?php if (!empty($statusMessage)): ?>
+                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
+                            <?php echo htmlspecialchars($statusMessage); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="forgot-password.php">
+                        <div class="mb-4">
+                            <label for="identifier" class="form-label">Email, Phone Number, or Username</label>
+                            <input
+                                type="text"
+                                class="form-control form-control-lg"
+                                id="identifier"
+                                name="identifier"
+                                placeholder="Enter your email, phone, or username"
+                                required
+                                autofocus>
+                            <div class="form-text">
+                                Enter the email, phone number, or username associated with your account.
+                            </div>
+                        </div>
+
+                        <button type="submit" name="identifyAccount" class="btn btn-primary w-100 mb-3">
+                            Continue
+                        </button>
+                    </form>
+
+                <?php elseif ($showVerification): ?>
                     <!-- Verification Code Section -->
                     <div class="text-center mb-4">
                         <div class="<?php echo $verificationFailed ? 'success-icon-wrapper' : 'success-icon-wrapper success'; ?>">
@@ -333,6 +457,11 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                                     <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">swap_horiz</span>
                                     Try another way
                                 </a>
+                                &nbsp;|&nbsp;
+                                <a href="forgot-password.php?start_over=1" class="text-decoration-none" style="color: var(--text-muted); font-weight: 500;">
+                                    <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">restart_alt</span>
+                                    Different account
+                                </a>
                             </p>
                         </div>
                     </form>
@@ -350,54 +479,66 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                         <div class="mb-4">
                             <label class="form-label">Send verification code to:</label>
                             <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="delivery-option" id="emailOption">
-                                        <label class="delivery-option-label">
-                                            <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="deliveryMethod"
-                                                id="radioEmail"
-                                                value="email"
-                                                required>
-                                            <span class="delivery-option-icon">
-                                                <span class="material-symbols-outlined">mail</span>
-                                            </span>
-                                            <div class="delivery-option-text flex-grow-1">
-                                                <h6>Email</h6>
-                                                <p>Send code to your email</p>
-                                                <div class="masked-info"><?php echo $maskedEmail; ?></div>
-                                            </div>
-                                        </label>
+                                <?php if (!empty($maskedEmail)): ?>
+                                    <div class="col-12">
+                                        <div class="delivery-option" id="emailOption">
+                                            <label class="delivery-option-label">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    name="deliveryMethod"
+                                                    id="radioEmail"
+                                                    value="email"
+                                                    required>
+                                                <span class="delivery-option-icon">
+                                                    <span class="material-symbols-outlined">mail</span>
+                                                </span>
+                                                <div class="delivery-option-text flex-grow-1">
+                                                    <h6>Email</h6>
+                                                    <p>Send code to your email</p>
+                                                    <div class="masked-info"><?php echo $maskedEmail; ?></div>
+                                                </div>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="delivery-option" id="smsOption">
-                                        <label class="delivery-option-label">
-                                            <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="deliveryMethod"
-                                                id="radioSms"
-                                                value="sms"
-                                                required>
-                                            <span class="delivery-option-icon">
-                                                <span class="material-symbols-outlined">sms</span>
-                                            </span>
-                                            <div class="delivery-option-text flex-grow-1">
-                                                <h6>SMS</h6>
-                                                <p>Send code to your phone</p>
-                                                <div class="masked-info"><?php echo $maskedPhone; ?></div>
-                                            </div>
-                                        </label>
+                                <?php endif; ?>
+
+                                <?php if (!empty($maskedPhone)): ?>
+                                    <div class="col-12">
+                                        <div class="delivery-option" id="smsOption">
+                                            <label class="delivery-option-label">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    name="deliveryMethod"
+                                                    id="radioSms"
+                                                    value="sms"
+                                                    required>
+                                                <span class="delivery-option-icon">
+                                                    <span class="material-symbols-outlined">sms</span>
+                                                </span>
+                                                <div class="delivery-option-text flex-grow-1">
+                                                    <h6>SMS</h6>
+                                                    <p>Send code to your phone</p>
+                                                    <div class="masked-info"><?php echo $maskedPhone; ?></div>
+                                                </div>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
                         <button type="submit" name="sendOTP" class="btn btn-primary w-100 mb-3">
                             Send Verification Code
                         </button>
+
+                        <div class="text-center">
+                            <a href="forgot-password.php?start_over=1" class="text-decoration-none text-muted small">
+                                <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">restart_alt</span>
+                                Use a different account
+                            </a>
+                        </div>
                     </form>
                 <?php endif; ?>
 
