@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'notifications/send-email.php';
 
 $error = "";
 $success = "";
@@ -46,8 +47,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $insert_query = "INSERT INTO users (user_name, email, password_hash) VALUES ('$username_escaped', '$email_escaped', '$password_hash_escaped')";
 
             if (executeQuery($insert_query)) {
-                $success = "Registration successful! Redirecting to login...";
-                header("refresh:2;url=login.php");
+                // Get the newly created user's ID
+                $user_id = mysqli_insert_id($conn);
+
+                // Get user role (default is 'user')
+                $role_query = "SELECT role FROM users WHERE user_id = '$user_id'";
+                $role_result = executeQuery($role_query);
+                $user_role = 'user';
+                if ($role_result && mysqli_num_rows($role_result) > 0) {
+                    $user_data = mysqli_fetch_assoc($role_result);
+                    $user_role = $user_data['role'];
+                }
+
+                // Set session variables to log the user in automatically
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['user_name'] = $username;
+                $_SESSION['email'] = $email;
+                $_SESSION['role'] = $user_role;
+
+                // Send welcome email
+                sendWelcomeEmail($email, $username);
+
+                $success = "Registration successful! Check your email for welcome message. Redirecting to home...";
+                header("refresh:2;url=index.php");
             } else {
                 $error = "Registration failed: " . mysqli_error($conn);
             }
