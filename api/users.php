@@ -1,11 +1,12 @@
 <?php
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once "../config/db.php";
 require_once "response.php";
+require_once "auth-middleware.php"; // Admin authentication required
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -15,9 +16,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Handle GET requests (retrieve users)
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Return all users
-    $query = "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at FROM users ORDER BY created_at DESC";
-    $result = $conn->query($query);
+
+    // Get single user by ID
+    if (isset($_GET['id'])) {
+        $user_id = intval($_GET['id']);
+
+        $stmt = $conn->prepare(
+            "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at 
+             FROM users WHERE user_id = ?"
+        );
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            $stmt->close();
+            jsonResponse([
+                "success" => false,
+                "message" => "User not found"
+            ], 404);
+        }
+
+        $user = $result->fetch_assoc();
+        $stmt->close();
+
+        jsonResponse($user, 200);
+    }
+
+    // Get all users with filtering
+    $query = "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at FROM users";
+
+    $conditions = [];
+    $params = [];
+    $types = "";
+
+    // Filter by role
+    if (isset($_GET['role'])) {
+        $conditions[] = "role = ?";
+        $params[] = $_GET['role'];
+        $types .= "s";
+    }
+
+    // Search by username or email
+    if (isset($_GET['search'])) {
+        $search = "%" . $_GET['search'] . "%";
+        $conditions[] = "(user_name LIKE ? OR email LIKE ?)";
+        $params[] = $search;
+        $params[] = $search;
+        $types .= "ss";
+    }
+
+    if (count($conditions) > 0) {
+        $query .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    $query .= " ORDER BY created_at DESC";
+
+    if (count($params) > 0) {
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        $result = $conn->query($query);
+    }
 
     $users = [];
     while ($row = $result->fetch_assoc()) {
@@ -34,7 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate required fields
     if (!isset($data["username"]) || !isset($data["email"]) || !isset($data["password"])) {
-        jsonResponse(["error" => "Username, email, and password are required"], 400);
+        jsonResponse([
+            "success" => false,
+            "message" => "Username, email, and password are required"
+        ], 400);
     }
 
     $username = trim($data["username"]);
@@ -43,15 +108,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validation
     if (empty($username) || empty($email) || empty($password)) {
-        jsonResponse(["error" => "All fields are required"], 400);
+        jsonResponse([
+            "success" => false,
+            "message" => "All fields are required"
+        ], 400);
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        jsonResponse(["error" => "Invalid email format"], 400);
+        jsonResponse([
+            "success" => false,
+            "message" => "Invalid email format"
+        ], 400);
     }
 
     if (strlen($password) < 6) {
-        jsonResponse(["error" => "Password must be at least 6 characters long"], 400);
+        jsonResponse([
+            "success" => false,
+            "message" => "Password must be at least 6 characters long"
+        ], 400);
     }
 
     // Check if username already exists
@@ -62,7 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result_username->num_rows > 0) {
         $check_username->close();
-        jsonResponse(["error" => "Username already taken"], 409);
+        jsonResponse([
+            "success" => false,
+            "message" => "Username already taken"
+        ], 409);
     }
     $check_username->close();
 
@@ -74,7 +151,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result_email->num_rows > 0) {
         $check_email->close();
-        jsonResponse(["error" => "Email already registered"], 409);
+        jsonResponse([
+            "success" => false,
+            "message" => "Email already registered"
+        ], 409);
     }
     $check_email->close();
 
@@ -89,17 +169,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         jsonResponse([
-            "message" => "User registered successfully",
             "user_id" => $user_id,
             "username" => $username,
-            "email" => $email
+            "email" => $email,
+            "message" => "User registered successfully"
         ], 201);
     } else {
         $error_msg = $stmt->error;
         $stmt->close();
-        jsonResponse(["error" => "Registration failed: " . $error_msg], 500);
+        jsonResponse([
+            "success" => false,
+            "message" => "Registration failed: " . $error_msg
+        ], 500);
     }
 }
 
 // Method not allowed
-jsonResponse(["error" => "Method not allowed"], 405);
+jsonResponse([
+    "success" => false,
+    "message" => "Method not allowed"
+], 405);
