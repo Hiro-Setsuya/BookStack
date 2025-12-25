@@ -148,7 +148,7 @@
             <input class="form-control me-2" type="text" placeholder="Enter Code">
             <button class="btn btn-sm btn-success">Apply</button>
           </div>
-          <div class="btn btn-success">Proceed to Checkout</div>
+          <a class="btn btn-success" href="checkout.php">Proceed to Checkout</a>
         </div>
       </div>
 
