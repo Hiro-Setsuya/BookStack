@@ -80,7 +80,7 @@
     <div class="row">
       <div class="col-lg-8 mb-3">
 
-        <div class="card shadow-sm rounded-4 p-5 mb-4">
+        <div class="card shadow-sm rounded-4 p-3 p-lg-4 p-xl-5 mb-4">
           <div class="h5 fw-semibold mb-4">Contact Information</div>
 
           <div class="mb-3">
@@ -108,12 +108,12 @@
 
         </div>
 
-        <div class="card shadow-sm rounded-4 p-5">
+        <div class="card shadow-sm rounded-4 p-3 p-lg-4 p-xl-5">
           <div class="h5 fw-semibold mb-4">Payment Method</div>
 
           <div class="mb-3">
             <div class="row g-3">
-              <div class="col-6">
+              <div class="col-lg-6">
                 <input type="radio" class="btn-check" name="options-base" id="creditcard" autocomplete="off" checked>
                 <label class="btn p-3 bg-light shadow-sm w-100 text-start" for="creditcard">
                   <span class="fw-semibold">Credit Card</span>
@@ -121,7 +121,7 @@
                 </label>
               </div>
 
-              <div class="col-6">
+              <div class="col-lg-6">
                 <input type="radio" class="btn-check" name="options-base" id="paypal" autocomplete="off">
                 <label class="btn p-3 bg-light shadow-sm w-100 text-start" for="paypal">
                   <span class="fw-semibold">PayPal</span>
