@@ -95,10 +95,7 @@ Popular recommendations include:
 7. Instant access to download or read online
 
 **Supported Payment Methods:**
-• Credit/Debit Cards (Visa, Mastercard, American Express)
 • PayPal
-• Digital Wallets (Apple Pay, Google Pay)
-• Gift Cards
 
 **Transaction Security:**
 All transactions are protected by industry-standard SSL encryption.  Your payment information is never stored on our servers.

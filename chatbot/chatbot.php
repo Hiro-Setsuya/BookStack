@@ -2,45 +2,43 @@
 // --- BACKEND:  Handle AJAX request for Stack AI Chatbot ---
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
+  // Increase PHP timeout for slow CPU
+  set_time_limit(180);
+
   $message = $_POST['message'];
 
   // Load FAQ data - FIXED FILE PATH (removed extra space)
   $data_file = __DIR__ . '/data.txt';
   if (file_exists($data_file)) {
     $data = file_get_contents($data_file);
+    // Limit data size to prevent timeout (max 3000 chars)
+    if (strlen($data) > 3000) {
+      $data = substr($data, 0, 3000) . "\n... [truncated for performance]";
+    }
   } else {
     $data = "No reference data available.";
   }
 
-  // System prompt for ebook chatbot
-  $prompt =
-    "You are Stack AI, a friendly and helpful AI assistant for BookStack, an ebook e-commerce platform. 
+  // System prompt for ebook chatbot - OPTIMIZED for faster response
+  $prompt = "You are Stack AI, a helpful assistant for BookStack ebook store.\n\nBookStack Info:\n$data\n\nRules: Answer based on info above. Be friendly and concise (under 100 words). If info not available, say \"Contact support@bookstack.com\".\n\nQuestion: $message\nAnswer:";
 
-You have access to comprehensive information about our ebook store below. 
-
-Important guidelines:
-• Answer questions ONLY based on the provided BookStack information.  
-• If the user's question is related to BookStack services, use ONLY the dataset to answer.
-• If the dataset does NOT contain the needed information, respond with:  \"I don't have information about that.  Please contact our support team at support@bookstack.com for more details.\"
-• Always be friendly, professional, and helpful.
-• Do NOT mention or reference the dataset unless the user directly asks about it.
-• Keep responses natural, friendly, and concise (under 150 words when possible).
-• If user asks about account issues, direct them to support@bookstack.com or phone 1-800-BOOKSTACK.  
-• Suggest relevant ebooks or categories when appropriate.  
-• For technical issues, provide step-by-step solutions when possible. 
-
---- BEGIN BOOKSTACK INFORMATION ---
-$data
---- END BOOKSTACK INFORMATION ---
-
-User Question: $message";
-
-  // Prepare data for Ollama
+  // Prepare data for Ollama - USE STREAMING for faster response
   $payload = json_encode([
     "model" => "llama3.2:latest",
     "prompt" => $prompt,
-    "stream" => false
+    "stream" => false, // Keep false for now, but increased timeout
+    "options" => [
+      "num_predict" => 150, // Limit response length
+      "temperature" => 0.7
+    ]
   ]);
+
+  // Quick connection check first
+  $check = @file_get_contents("http://127.0.0.1:11434/api/version");
+  if ($check === false) {
+    echo "AI service is not running. Please start Ollama and try again.";
+    exit;
+  }
 
   // Send to Ollama API
   $ch = curl_init("http://127.0.0.1:11434/api/generate");
@@ -50,14 +48,23 @@ User Question: $message";
     "Content-Type: application/json"
   ]);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 180); // Increased for slow CPU
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_NOSIGNAL, 1); // Prevent timeout issues
 
   $response = curl_exec($ch);
   $curl_error = curl_error($ch);
+  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
 
   if ($curl_error) {
-    echo "Sorry, I'm having trouble connecting.  Please try again or contact support@bookstack.com";
+    echo "Connection error: " . htmlspecialchars($curl_error);
+    exit;
+  }
+
+  if ($http_code != 200) {
+    echo "AI service error (HTTP $http_code). Please try again.";
     exit;
   }
 
