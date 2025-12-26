@@ -59,6 +59,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             padding: 0.75rem 1.25rem;
             border-radius: 8px;
             margin: 0.2rem 1rem;
+            text-decoration: none;
         }
 
         .nav-link.active {
@@ -149,12 +150,12 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 </div>
 
                 <div class="nav flex-column mb-auto">
-                    <a href="#" class="nav-link active"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
-                    <a href="#" class="nav-link"><i class="bi bi-journal-text me-3"></i>E-Books</a>
-                    <a href="#" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
-                    <a href="#" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
-                    <a href="#" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
-                    <a href="#" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
+                    <a href="dashboard.php" class="nav-link active"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
+                    <a href="manage-ebooks.php" class="nav-link"><i class="bi bi-journal-text me-3"></i>E-Books</a>
+                    <a href="manage-categories.php" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
+                    <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
+                    <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
+                    <a href="reports.php" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
 
                     <hr class="mx-4 my-2 text-muted opacity-25">
 
