@@ -64,8 +64,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['identifyAccount'])) {
         $statusMessage = 'Please enter your email, phone number, or username.';
         $statusType = 'danger';
     } else {
+        // Format phone number if it looks like a phone (09XXXXXXXXX)
+        $identifier_formatted = $identifier;
+        if (preg_match('/^09[0-9]{9}$/', $identifier)) {
+            // Convert 09XX to 639XX for database lookup
+            $identifier_formatted = '63' . substr($identifier, 1);
+        }
+
         // Search for user in database
-        $identifier_escaped = mysqli_real_escape_string($conn, $identifier);
+        $identifier_escaped = mysqli_real_escape_string($conn, $identifier_formatted);
         $query = "SELECT user_id, user_name, email, phone_number 
                   FROM users 
                   WHERE email = '$identifier_escaped' 
@@ -84,6 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['identifyAccount'])) {
             $_SESSION['reset_username'] = $user['user_name'];
             $_SESSION['reset_user_id'] = $user['user_id'];
 
+            // Set variables immediately for display
+            $userEmail = $user['email'];
+            $userPhone = !empty($user['phone_number']) ? $user['phone_number'] : null;
+
             $showAccountInput = false; // Hide account input, show delivery method selection
         } else {
             $statusMessage = 'Account not found. Please check your email, phone number, or username.';
@@ -97,7 +108,10 @@ if (isset($_SESSION['reset_email']) && !isset($_POST['identifyAccount'])) {
     $showAccountInput = false;
     $userEmail = $_SESSION['reset_email'];
     $userPhone = $_SESSION['reset_phone'] ?? null;
-} else {
+}
+
+// Initialize if not set
+if (!isset($userEmail)) {
     $userEmail = '';
     $userPhone = '';
 }
@@ -348,21 +362,27 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
                     <form method="POST" action="forgot-password.php">
                         <div class="mb-4">
-                            <label for="identifier" class="form-label">Email, Phone Number, or Username</label>
-                            <input
-                                type="text"
-                                class="form-control form-control-lg"
-                                id="identifier"
-                                name="identifier"
-                                placeholder="Enter your email, phone, or username"
-                                required
-                                autofocus>
-                            <div class="form-text">
-                                Enter the email, phone number, or username associated with your account.
+                            <label for="identifier" class="form-label d-flex align-items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined" style="font-size: 20px; color: var(--primary-color);">account_circle</span>
+                                <span>Find Your Account</span>
+                            </label>
+                            <div class="position-relative mb-3">
+                                <span class="input-icon-wrapper">
+                                    <span class="material-symbols-outlined">search</span>
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control form-control-lg ps-5"
+                                    id="identifier"
+                                    name="identifier"
+                                    placeholder="Email, Phone, or Username"
+                                    required
+                                    autofocus>
                             </div>
                         </div>
 
                         <button type="submit" name="identifyAccount" class="btn btn-primary w-100 mb-3">
+                            <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle; margin-right: 8px;">arrow_forward</span>
                             Continue
                         </button>
                     </form>
