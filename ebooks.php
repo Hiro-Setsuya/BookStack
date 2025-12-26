@@ -22,17 +22,17 @@ $result = executeQuery($query);
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
         <div class="container-fluid">
-            <a href="index.php" class="navbar-brand fw-bold text-success">
+            <a href="index.php" class="navbar-brand fw-bold text-green">
                 <img src="assets/logo.svg" height="25" alt="Logo">
                 <span>BookStack</span>
             </a>
             <div class="ms-auto">
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="profile.php" class="btn btn-success d-lg-none d-inline-block me-2">
+                    <a href="profile.php" class="btn btn-green d-lg-none d-inline-block me-2">
                         <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name']); ?>
                     </a>
                 <?php else: ?>
-                    <a href="login.php" class="btn btn-success d-lg-none d-inline-block me-2">Sign In</a>
+                    <a href="login.php" class="btn btn-green d-lg-none d-inline-block me-2 fw-normal">Sign In</a>
                 <?php endif; ?>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
@@ -46,7 +46,7 @@ $result = executeQuery($query);
                         </a>
                     </li>
                     <li class="nav-item px-lg-3">
-                        <a class="nav-link fw-semibold text-success" href="ebooks.php">
+                        <a class="nav-link fw-semibold text-green" href="ebooks.php">
                             <i class="bi bi-book-fill me-2"></i>E-Books
                         </a>
                     </li>
@@ -64,10 +64,10 @@ $result = executeQuery($query);
             </div>
             <div class="ms-auto d-none d-lg-flex align-items-center">
                 <input class="form-control me-2" type="text" placeholder="Search tech books..." style="width: 200px;">
-                <a href="cart.php" class="btn btn-success me-2"><i class="bi bi-cart3"></i></a>
+                <a href="cart.php" class="btn btn-green me-2"><i class="bi bi-cart3"></i></a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="dropdown">
-                        <button class="btn btn-success dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown">
+                        <button class="btn btn-green dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name']); ?>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -80,7 +80,7 @@ $result = executeQuery($query);
                         </ul>
                     </div>
                 <?php else: ?>
-                    <a href="login.php" class="btn btn-success text-nowrap">Sign In</a>
+                    <a href="login.php" class="btn btn-green text-nowrap fw-normal">Sign In</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -114,16 +114,16 @@ $result = executeQuery($query);
                                 </p>
                                 <div class="mt-auto">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="h5 mb-0 text-success fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
+                                        <span class="h5 mb-0 text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
                                     </div>
                                     <div class="d-grid gap-2">
-                                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-outline-success btn-sm">
+                                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-outline-green btn-sm">
                                             <i class="bi bi-eye me-1"></i>View Details
                                         </a>
-                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-primary btn-sm">
+                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm">
                                             <i class="bi bi-download me-1"></i>Download
                                         </a>
-                                        <button class="btn btn-success btn-sm">
+                                        <button class="btn btn-green btn-sm">
                                             <i class="bi bi-cart-plus me-1"></i>Add to Cart
                                         </button>
                                     </div>

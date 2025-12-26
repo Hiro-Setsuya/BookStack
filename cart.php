@@ -49,9 +49,9 @@
         </ul>
       </div>
       <div class="ms-auto d-none d-lg-flex">
-        <input class="form-control me-2" type="text" placeholder="Search">
+    <input class="form-control me-2" type="text" placeholder="Search" style="width: 200px;">
         <button class="btn btn-green me-2"><i class="bi bi-cart3"></i></button>
-        <button class="btn btn-green">Login/Register</button>
+        <a href="login.php" class="btn btn-green text-nowrap fw-normal">Sign In</a>
       </div>
     </div>
   </nav>
