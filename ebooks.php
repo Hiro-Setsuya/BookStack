@@ -2,6 +2,55 @@
 session_start();
 require_once 'config/db.php';
 
+// Handle Add to Cart
+$message = '';
+$message_type = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php?redirect=ebooks.php');
+        exit;
+    }
+
+    $user_id = $_SESSION['user_id'];
+    $ebook_id = intval($_POST['ebook_id']);
+
+    // Check if item already exists in cart
+    $check_stmt = $conn->prepare("SELECT cart_id FROM cart_items WHERE user_id = ? AND ebook_id = ?");
+    $check_stmt->bind_param("ii", $user_id, $ebook_id);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
+
+    if ($check_result->num_rows > 0) {
+        $message = 'This item is already in your cart!';
+        $message_type = 'warning';
+    } else {
+        // Add to cart
+        $insert_stmt = $conn->prepare("INSERT INTO cart_items (user_id, ebook_id) VALUES (?, ?)");
+        $insert_stmt->bind_param("ii", $user_id, $ebook_id);
+
+        if ($insert_stmt->execute()) {
+            $message = 'Item added to cart successfully!';
+            $message_type = 'success';
+        } else {
+            $message = 'Failed to add item to cart.';
+            $message_type = 'danger';
+        }
+        $insert_stmt->close();
+    }
+    $check_stmt->close();
+}
+
+// Get cart count for navbar badge
+$cart_count = 0;
+if (isset($_SESSION['user_id'])) {
+    $count_stmt = $conn->prepare("SELECT COUNT(*) as count FROM cart_items WHERE user_id = ?");
+    $count_stmt->bind_param("i", $_SESSION['user_id']);
+    $count_stmt->execute();
+    $count_result = $count_stmt->get_result();
+    $cart_count = $count_result->fetch_assoc()['count'];
+    $count_stmt->close();
+}
+
 // Fetch ebooks from database
 $query = "SELECT ebook_id, title, author, price, cover_image, file_path FROM ebooks ORDER BY created_at DESC";
 $result = executeQuery($query);
@@ -64,7 +113,14 @@ $result = executeQuery($query);
             </div>
             <div class="ms-auto d-none d-lg-flex align-items-center">
                 <input class="form-control me-2" type="text" placeholder="Search tech books..." style="width: 200px;">
-                <a href="cart.php" class="btn btn-green me-2"><i class="bi bi-cart3"></i></a>
+                <a href="cart.php" class="btn btn-green me-2 position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <?php if ($cart_count > 0): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                            <?php echo $cart_count; ?>
+                        </span>
+                    <?php endif; ?>
+                </a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="dropdown">
                         <button class="btn btn-green dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown">
@@ -88,6 +144,14 @@ $result = executeQuery($query);
 
     <!-- Content -->
     <div class="container mt-5 pt-5">
+        <?php if ($message): ?>
+            <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
+                <i class="bi bi-<?php echo $message_type === 'success' ? 'check-circle' : ($message_type === 'warning' ? 'exclamation-triangle' : 'x-circle'); ?> me-2"></i>
+                <?php echo htmlspecialchars($message); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="row mb-4">
             <div class="col">
                 <h2 class="fw-bold">Tech E-Books</h2>
@@ -123,9 +187,12 @@ $result = executeQuery($query);
                                         <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm">
                                             <i class="bi bi-download me-1"></i>Download
                                         </a>
-                                        <button class="btn btn-green btn-sm">
-                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
-                                        </button>
+                                        <form method="POST" class="m-0">
+                                            <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
+                                            <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100">
+                                                <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
