@@ -10,24 +10,24 @@ session_start();
   <title>BookStack - Computer & Tech E-Books</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <!-- navbar -->
   <nav id="navbar" class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
     <div class="container-fluid">
-      <div class="navbar-brand fw-bold text-success">
+      <div class="navbar-brand fw-bold text-green">
         <img src="assets/logo.svg" height="25" alt="Logo">
         <span>BookStack</span>
       </div>
       <div class="ms-auto">
         <?php if (isset($_SESSION['user_id'])): ?>
-          <a href="profile.php" class="btn btn-success d-lg-none d-inline-block me-2">
+          <a href="profile.php" class="btn btn-green d-lg-none d-inline-block me-2">
             <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name']); ?>
           </a>
         <?php else: ?>
-          <a href="login.php" class="btn btn-success d-lg-none d-inline-block me-2">Sign In</a>
+          <a href="login.php" class="btn btn-green d-lg-none d-inline-block me-2">Sign In</a>
         <?php endif; ?>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ session_start();
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item px-lg-3">
-            <a class="nav-link fw-semibold text-success" href="index.php">
+            <a class="nav-link fw-semibold text-green" href="index.php">
               <i class="bi bi-house-door-fill me-2"></i>Home
             </a>
           </li>
@@ -60,10 +60,10 @@ session_start();
       </div>
       <div class="ms-auto d-none d-lg-flex align-items-center">
         <input class="form-control me-2" type="text" placeholder="Search tech books..." style="width: 200px;">
-        <a href="cart.php" class="btn btn-success me-2"><i class="bi bi-cart3"></i></a>
+        <a href="cart.php" class="btn btn-green me-2"><i class="bi bi-cart3"></i></a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="dropdown">
-            <button class="btn btn-success dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-green dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name']); ?>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -76,7 +76,7 @@ session_start();
             </ul>
           </div>
         <?php else: ?>
-          <a href="login.php" class="btn btn-success text-nowrap">Sign In</a>
+          <a href="login.php" class="btn btn-green text-nowrap">Sign In</a>
         <?php endif; ?>
       </div>
     </div>
@@ -87,7 +87,7 @@ session_start();
       <div class="col text-center mx-2">
         <div class="mx-auto d-lg-none d-flex mt-4">
           <input class="form-control me-2" type="text" placeholder="Search tech books...">
-          <button class="btn btn-success"><i class="bi bi-search"></i></button>
+          <button class="btn btn-green"><i class="bi bi-search"></i></button>
         </div>
       </div>
     </div>
@@ -97,13 +97,13 @@ session_start();
     <div class="row">
       <div class="col-lg-7">
         <div class="display-3 fw-bold">Learn Tech Skills with</div>
-        <div class="display-3 fw-bold text-success">Expert E-Books</div>
+        <div class="display-3 fw-bold text-green">Expert E-Books</div>
         <div class="fs-5 mt-3 text-muted">
           Access thousands of computer science, programming, and tech e-books. From web development to AI, find resources to advance your career.
         </div>
         <div class="mt-4 mb-4">
-          <a href="ebooks.php" class="btn btn-success me-2"><i class="bi bi-laptop me-2"></i>Browse Tech Books</a>
-          <a href="#how-it-works" class="btn btn-outline-success"><i class="bi bi-info-circle me-2"></i>How It Works</a>
+          <a href="ebooks.php" class="btn btn-green me-2"><i class="bi bi-laptop me-2"></i>Browse Tech Books</a>
+          <a href="#how-it-works" class="btn btn-outline-green"><i class="bi bi-info-circle me-2"></i>How It Works</a>
         </div>
       </div>
       <div class="col-lg-5">

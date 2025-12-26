@@ -15,36 +15,7 @@ $result = executeQuery($query);
     <title>E-Books - BookStack</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        .ebook-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-        }
-
-        .ebook-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .ebook-cover {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            background-color: #f8f9fa;
-        }
-
-        .ebook-title {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            min-height: 48px;
-        }
-
-        .ebook-author {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>

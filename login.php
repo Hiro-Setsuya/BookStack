@@ -59,167 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BookStack</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-    <style>
-        :root {
-            --bg-dark: #ffffffff;
-            --card-bg: rgba(167, 255, 211, 0.8);
-            --accent-green: #2ecc71;
-            --text-muted: #72817bff;
-            --input-bg: #ffffffff;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: #2ecc71;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 50%;
-            height: 50%;
-            background: radial-gradient(circle, rgba(46, 204, 113, 0.1) 0%, rgba(5, 10, 8, 0) 70%);
-            z-index: -1;
-        }
-
-        .navbar-brand {
-            font-weight: 900;
-            color: #28bd66ff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .login-title {
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-
-        .login-title .highlight {
-            color: var(--accent-green);
-        }
-
-        /* Glassmorphism card effect */
-        .login-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 28px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .form-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .form-control {
-            background-color: var(--input-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #1b7c43ff;
-            border-radius: 12px;
-            padding: 12px 16px;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            background-color: var(--input-bg);
-            border-color: var(--accent-green);
-            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
-            color: #1b7c43ff;
-        }
-
-        .position-relative {
-            position: relative !important;
-        }
-
-        .btn-toggle-pw {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            padding: 0;
-            color: #8a9a94;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-toggle-pw:hover {
-            color: #2ecc71;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-green);
-            border: none;
-            color: #ffffff;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #27ae60 !important;
-            color: #ffffff !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn-primary:active,
-        .btn-primary:active:focus {
-            background-color: #229954 !important;
-            color: #ffffff !important;
-            border-color: #229954 !important;
-            transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
-        }
-
-        .btn-primary:focus,
-        .btn-primary:focus-visible {
-            background-color: var(--accent-green) !important;
-            color: #ffffff !important;
-            border-color: var(--accent-green) !important;
-            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
-        }
-
-        .login-img {
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            max-width: 70%;
-        }
-
-        .footer-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .footer-link:hover {
-            color: var(--accent-green);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -274,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mb-4 shadow">Sign In</button>
+                        <button type="submit" class="btn btn-login w-100 mb-4 shadow">Sign In</button>
                     </form>
 
                     <div class="text-center">
@@ -299,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
     </script>
 </body>
 
