@@ -62,7 +62,10 @@ if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30') {
   $discount_percent = 30;
   $discount_amount = $subtotal * 0.30;
 }
-$tax = 0;
+// Calculate 12% tax on amount after discount
+$taxable_amount = $subtotal - $discount_amount;
+$tax_rate = 0.12;
+$tax = $taxable_amount * $tax_rate;
 $total = $subtotal - $discount_amount + $tax;
 ?>
 <!doctype html>
@@ -366,8 +369,10 @@ $total = $subtotal - $discount_amount + $tax;
         document.getElementById('discountRow').style.display = 'none';
       }
 
-      // Calculate tax (currently 0)
-      const tax = 0;
+      // Calculate 12% tax on amount after discount
+      const taxableAmount = subtotal - discount;
+      const taxRate = 0.12;
+      const tax = taxableAmount * taxRate;
 
       // Calculate total
       const total = subtotal - discount + tax;
