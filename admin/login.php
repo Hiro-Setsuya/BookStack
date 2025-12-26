@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    /* Brand green colors from index.php */
+    /* Brand green colors matched from index.php navbar and buttons */
     .text-green { color: #198754 !important; }
     .btn-green { 
       background-color: #198754 !important; 
@@ -40,7 +40,7 @@
 
       <div class="col-lg-7 d-flex align-items-center justify-content-center bg-white position-relative">
         
-        <a href="index.php" class="btn btn-outline-dark btn-sm position-absolute top-0 end-0 m-4 shadow-sm fw-semibold">
+        <a href="../index.php" class="btn btn-outline-dark btn-sm position-absolute top-0 end-0 m-4 shadow-sm fw-semibold">
           <i class="bi bi-archive me-1"></i> Return to Store
         </a>
 
