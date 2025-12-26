@@ -78,7 +78,7 @@
 
   <div class="container mt-4 px-3">
     <div class="row">
-      <div class="col-lg-8 mb-3">
+      <div class="col-xl-8 mb-3">
 
         <div class="card shadow-sm rounded-4 p-3 p-lg-4 p-xl-5 mb-4">
           <div class="h5 fw-semibold mb-4">Contact Information</div>
@@ -152,9 +152,19 @@
         </div>
       </div>
 
-      <div class="col-lg-4 mb-3 sticky-summary">
-        <div class="card p-3 position-sticky" style="top: 90px;">
-          <div class="card-title fs-4 fw-bold mb-3">Order Summary</div>
+      <div class="col-xl-4 mb-3 sticky-summary">
+        <div class="card shadow-sm rounded-4 p-4 position-sticky" style="top:90px;">
+          <div class="card-title fs-4 fw-bold mb-4">Order Summary</div>
+          <div class="mb-4">
+            <div class="d-flex gap-3">
+              <img src="https://m.media-amazon.com/images/I/519LoIgUAFL.jpg" height="120" class="flex-shrink-0">
+              <div class="flex-grow-1 overflow-hidden">
+                <div class="fs-5 fw-bold text-truncate">Sample Book 1</div>
+                <div class="text-muted text-truncate">Sample Author 1</div>
+              </div>
+              <div class="fw-semibold text-nowrap">₱100.00</div>
+            </div>
+          </div>
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="fs-6 fw-semibold">Subtotal</div>
             <div class="fs-6">₱100.00</div>
@@ -171,12 +181,7 @@
             <div class="fs-5 fw-bold">Total</div>
             <div class="fs-5 fw-semibold">₱70.00</div>
           </div>
-          <div class="fs-6 d-block ms-2">Promo Code</div>
-          <div class="d-flex mb-5">
-            <input class="form-control me-2" type="text" placeholder="Enter Code">
-            <button class="btn btn-sm btn-success">Apply</button>
-          </div>
-          <a class="btn btn-success" href="checkout.php">Proceed to Checkout</a>
+          <button class="btn btn-success">Confirm Purchase</button>
         </div>
       </div>
 
