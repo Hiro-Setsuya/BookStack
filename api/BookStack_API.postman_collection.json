@@ -1,0 +1,649 @@
+{
+  "info": {
+    "name": "BookStack API",
+    "description": "Complete REST API for BookStack E-commerce Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/BookStack/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth.php",
+              "host": ["{{base_url}}"],
+              "path": ["auth.php"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users.php",
+              "host": ["{{base_url}}"],
+              "path": ["users.php"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["users.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users.php?search=john",
+              "host": ["{{base_url}}"],
+              "path": ["users.php"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter Users by Role",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users.php?role=user",
+              "host": ["{{base_url}}"],
+              "path": ["users.php"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "user"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users.php",
+              "host": ["{{base_url}}"],
+              "path": ["users.php"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vouchers",
+      "item": [
+        {
+          "name": "Get All Vouchers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vouchers.php",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"]
+            }
+          }
+        },
+        {
+          "name": "Get Voucher by Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vouchers.php?code=SAVE20",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "SAVE20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Percentage Voucher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voucher_code\": \"SAVE20\",\n  \"discount_type\": \"percentage\",\n  \"discount_value\": 20,\n  \"min_purchase\": 50,\n  \"max_uses\": 100,\n  \"expiry_date\": \"2025-12-31 23:59:59\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vouchers.php",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"]
+            }
+          }
+        },
+        {
+          "name": "Create Fixed Amount Voucher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voucher_code\": \"FLAT10\",\n  \"discount_type\": \"fixed\",\n  \"discount_value\": 10,\n  \"min_purchase\": 30,\n  \"max_uses\": null,\n  \"expiry_date\": null,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vouchers.php",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"]
+            }
+          }
+        },
+        {
+          "name": "Validate Voucher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voucher_code\": \"SAVE20\",\n  \"order_amount\": 100.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vouchers.php?action=validate",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "validate"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Voucher",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"discount_value\": 25,\n  \"max_uses\": 150,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vouchers.php?code=SAVE20",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "SAVE20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Voucher",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vouchers.php?code=SAVE20",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "SAVE20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Voucher",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vouchers.php?code=SAVE20",
+              "host": ["{{base_url}}"],
+              "path": ["vouchers.php"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "SAVE20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "E-Books",
+      "item": [
+        {
+          "name": "Get All E-books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ebooks.php",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"]
+            }
+          }
+        },
+        {
+          "name": "Get E-book by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ebooks.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search E-books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ebooks.php?search=python",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "python"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ebooks.php?category_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create E-book",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Python Programming\",\n  \"description\": \"Learn Python from scratch\",\n  \"author\": \"John Smith\",\n  \"category_id\": 1,\n  \"price\": 29.99,\n  \"file_path\": \"files/python.pdf\",\n  \"cover_image\": \"covers/python.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ebooks.php",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"]
+            }
+          }
+        },
+        {
+          "name": "Update E-book",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Advanced Python Programming\",\n  \"price\": 34.99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ebooks.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete E-book",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ebooks.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["ebooks.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories.php",
+              "host": ["{{base_url}}"],
+              "path": ["categories.php"]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["categories.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Programming\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories.php",
+              "host": ["{{base_url}}"],
+              "path": ["categories.php"]
+            }
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Web Development\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["categories.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["categories.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders.php",
+              "host": ["{{base_url}}"],
+              "path": ["orders.php"]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["orders.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Orders by User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders.php?user_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["orders.php"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"items\": [\n    {\n      \"ebook_id\": 1,\n      \"price\": 29.99\n    },\n    {\n      \"ebook_id\": 2,\n      \"price\": 24.99\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders.php",
+              "host": ["{{base_url}}"],
+              "path": ["orders.php"]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders.php?id=1",
+              "host": ["{{base_url}}"],
+              "path": ["orders.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
