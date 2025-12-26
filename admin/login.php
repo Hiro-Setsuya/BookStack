@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Portal - BookStack</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* Brand green colors from index.php */
+    .text-green { color: #198754 !important; }
+    .btn-green { 
+      background-color: #198754 !important; 
+      border-color: #198754 !important; 
+      color: white !important; 
+    }
+    .btn-green:hover { background-color: #157347 !important; }
+    .active-dot { background-color: #198754 !important; width: 30px !important; }
+  </style>
+</head>
+
+<body class="bg-light">
+
+  <div class="container-fluid vh-100 p-0">
+    <div class="row g-0 h-100">
+      
+      <div class="col-lg-5 d-none d-lg-flex align-items-center position-relative p-5 text-white" 
+           style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=1000'); background-size: cover; background-position: center;">
+        <div class="p-4">
+          <h2 class="fw-bold mb-3"><i class="bi bi-book-half me-2 text-green"></i> E-Book Admin</h2>
+          <p class="fs-5 opacity-75">Manage your digital library efficiently. Secure access to student records, inventory, and sales analytics.</p>
+          <div class="mt-4 d-flex align-items-center">
+            <div class="active-dot rounded-pill me-1" style="height: 4px;"></div>
+            <div class="bg-secondary rounded-pill me-1 opacity-50" style="height: 4px; width: 10px;"></div>
+            <div class="bg-secondary rounded-pill opacity-50" style="height: 4px; width: 10px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7 d-flex align-items-center justify-content-center bg-white position-relative">
+        
+        <a href="index.php" class="btn btn-outline-dark btn-sm position-absolute top-0 end-0 m-4 shadow-sm fw-semibold">
+          <i class="bi bi-archive me-1"></i> Return to Store
+        </a>
+
+        <div class="w-100 px-4" style="max-width: 420px;">
+          <h2 class="fw-bold mb-1">Admin Portal</h2>
+          <p class="text-muted small mb-4">Welcome back! Please enter your details.</p>
+
+          <form action="login.php" method="POST">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Email or Username</label>
+              <div class="input-group border rounded-3 bg-light">
+                <input type="text" class="form-control border-0 bg-transparent py-2" placeholder="admin@university.edu" name="user">
+                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-person"></i></span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Password</label>
+              <div class="input-group border rounded-3 bg-light">
+                <input type="password" class="form-control border-0 bg-transparent py-2" placeholder="••••••••" name="pass">
+                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-eye-slash"></i></span>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end mb-4">
+              <a href="#" class="small text-decoration-none text-green fw-bold">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-green w-100 py-2 fw-bold shadow-sm rounded-3">Log in</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+
+</html>
