@@ -52,7 +52,7 @@
             <div class="mb-3">
               <label class="form-label small fw-bold">Email or Username</label>
               <div class="input-group border rounded-3 bg-light">
-                <input type="text" class="form-control border-0 bg-transparent py-2" placeholder="admin@university.edu" name="user">
+                <input type="text" class="form-control border-0 bg-transparent py-2" placeholder="admin@gmail.com" name="user">
                 <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-person"></i></span>
               </div>
             </div>
