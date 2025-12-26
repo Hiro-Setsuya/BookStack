@@ -727,3 +727,93 @@ body::before {
   margin-top: auto;
   margin-bottom: auto;
 }
+
+/* Profile Page Styles */
+:root {
+  --profile-margin-top: 100px;
+}
+
+.sidebar-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background-color: var(--border-color);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.profile-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: white;
+  transition: box-shadow 0.3s;
+}
+
+.profile-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-control-custom {
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.form-control-custom:focus {
+  background-color: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.15);
+}
+
+.btn-green {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-green:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: white;
+}
+
+.profile-header h2 {
+  color: var(--text-dark);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.profile-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.sidebar-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.account-container {
+  margin-top: var(--profile-margin-top);
+}
+
+.text-gprof {
+  font-size: 1.25rem;
+  margin-top: auto;
+  margin-bottom: auto;
+}
