@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     "Content-Type: application/json"
   ]);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 180); // Increased for slow CPU
+  curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Reduced from 180
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_NOSIGNAL, 1); // Prevent timeout issues
