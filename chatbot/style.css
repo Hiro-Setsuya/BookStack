@@ -4,13 +4,28 @@
      --dark-green: #059669;
      --light-green: #d1fae5;
      --very-light-green: #ecfdf5;
+     /* --stack-ai-top will be set at runtime by JS (default 0) */
+     --stack-ai-top: 0px;
  }
+
+ /* When chat modal is open, push the button behind the overlay/modal and disable clicks */
+.stack-ai-modal.active + .stack-ai-button {
+  z-index: 2080;        /* lower than overlay (2090) so it's hidden */
+  pointer-events: none; /* prevent accidental clicks while modal is open */
+  opacity: 0;           /* optional: fade it out visually */
+  transition: opacity 0.15s ease;
+}
+
+/* restore visibility when modal is closed (smoother) */
+.stack-ai-button {
+  transition: opacity 0.15s ease;
+}
 
  .stack-ai-button {
      position: fixed;
      bottom: 30px;
      right: 30px;
-     z-index: 999;
+     z-index: 2120;
      width: 180px;
      border-radius: 50px;
      background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
@@ -24,12 +39,10 @@
  }
 
  @keyframes pulse {
-
      0%,
      100% {
          opacity: 1;
      }
-
      50% {
          opacity: 0.8;
      }
@@ -38,12 +51,14 @@
  .stack-ai-modal {
      position: fixed;
      right: 0;
-     top: 0;
+     /* Use top offset so modal sits below the navbar/header */
+     top: var(--stack-ai-top);
      width: 100%;
      max-width: 420px;
-     height: 100vh;
+     /* Make modal height account for the top offset */
+     height: calc(100vh - var(--stack-ai-top));
      background-color: white;
-     z-index: 1000;
+     z-index: 2100;
      transform: translateX(100%);
      transition: transform 0.3s ease;
      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
@@ -57,12 +72,14 @@
 
  .stack-ai-overlay {
      position: fixed;
-     top: 0;
+     /* Start overlay below the navbar/header too */
+     top: var(--stack-ai-top);
      left: 0;
      width: 100%;
-     height: 100%;
+     /* Overlay should cover the remaining viewport */
+     height: calc(100vh - var(--stack-ai-top));
      background-color: rgba(0, 0, 0, 0.3);
-     z-index: 998;
+     z-index: 2090;
      opacity: 0;
      visibility: hidden;
      transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -117,7 +134,6 @@
          opacity: 0;
          transform: translateY(10px);
      }
-
      to {
          opacity: 1;
          transform: translateY(0);
@@ -175,13 +191,11 @@
  }
 
  @keyframes bounce {
-
      0%,
      100% {
          opacity: 0.3;
          transform: translateY(0);
      }
-
      50% {
          opacity: 1;
          transform: translateY(-10px);
@@ -223,11 +237,9 @@
          width: 60px;
          padding: 0.75rem ! important;
      }
-
      .stack-ai-button .btn-text {
          display: none;
      }
-
      .msg-bubble {
          max-width: 90%;
      }
@@ -238,11 +250,9 @@
          bottom: 20px;
          right: 20px;
      }
-
      .stack-ai-modal {
          max-width: 100%;
      }
-
      .stack-ai-input {
          font-size: 16px;
      }

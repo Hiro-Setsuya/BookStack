@@ -154,3 +154,42 @@ document.addEventListener("keydown", function (event) {
     closeStackAIModal();
   }
 });
+
+// --- New: compute top offset from navbar/header and set CSS variable ---
+// Finds a header/navbar element and sets --stack-ai-top to its height (px).
+function setChatTopOffset() {
+  // selectors to try (ordered): common navbar/header selectors
+  const selectors = ['.navbar', 'header', '.site-header', '.topbar', '#topbar', '.main-header'];
+  let topElem = null;
+  for (const sel of selectors) {
+    const el = document.querySelector(sel);
+    if (!el) continue;
+    const style = window.getComputedStyle(el);
+    // prefer fixed/sticky or elements at top of page
+    if (style.position === 'fixed' || style.position === 'sticky' || el.getBoundingClientRect().top === 0) {
+      topElem = el;
+      break;
+    }
+    // otherwise pick first header-like element
+    if (!topElem) topElem = el;
+  }
+
+  let topHeight = 0;
+  if (topElem) {
+    topHeight = Math.ceil(topElem.getBoundingClientRect().height);
+  }
+
+  // Set a small minimum if needed (0 ok)
+  if (!topHeight) topHeight = 0;
+
+  document.documentElement.style.setProperty('--stack-ai-top', topHeight + 'px');
+}
+
+// Run at load and on resize
+document.addEventListener('DOMContentLoaded', () => {
+  setChatTopOffset();
+  // Also recalc after a short delay in case dynamic header rendering (e.g., after JS makes it fixed)
+  setTimeout(setChatTopOffset, 300);
+});
+
+window.addEventListener('resize', setChatTopOffset);
