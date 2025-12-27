@@ -1,76 +1,92 @@
 <?php
-// --- BACKEND:  Handle AJAX request for Stack AI Chatbot ---
+// --- BACKEND: Handle AJAX request for Stack AI Chatbot ---
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
-  // Increase PHP timeout for slow CPU
-  set_time_limit(180);
+  // Increase PHP timeout for slow CPU (reduced for safety)
+  set_time_limit(90);
+  header("Content-Type: text/plain");
 
-  $message = $_POST['message'];
+  // Get user message
+  $message = trim($_POST['message']);
+  if ($message === '') {
+    exit("Please enter a question.");
+  }
 
   // Load FAQ data - FIXED FILE PATH (removed extra space)
   $data_file = __DIR__ . '/data.txt';
   if (file_exists($data_file)) {
-    $data = file_get_contents($data_file);
-    // Limit data size to prevent timeout (max 3000 chars)
-    if (strlen($data) > 3000) {
-      $data = substr($data, 0, 3000) . "\n... [truncated for performance]";
-    }
+
+    // Limit data size to prevent timeout (max 2000 chars)
+    $data = substr(file_get_contents($data_file), 0, 2000);
+
   } else {
-    $data = "No reference data available.";
+    $data = "BookStack is an ebook e-commerce platform.";
   }
 
   // System prompt for ebook chatbot - OPTIMIZED for faster response
-  $prompt = "You are Stack AI, a helpful assistant for BookStack ebook store.\n\nBookStack Info:\n$data\n\nRules: Answer based on info above. Be friendly and concise (under 100 words). If info not available, say \"Contact support@bookstack.com\".\n\nQuestion: $message\nAnswer:";
+  $prompt = "
+You are Stack AI, a helpful assistant for BookStack ebook store.
 
-  // Prepare data for Ollama - USE STREAMING for faster response
-  $payload = json_encode([
+BookStack Info:
+$data
+
+Rules:
+- Answer based on info above
+- Be friendly and concise (under 80 words)
+- If info not available, say \"Contact support@bookstack.com\"
+
+Question:
+$message
+
+Answer:
+";
+
+  // Prepare data for Ollama - STREAMING DISABLED to prevent PHP timeout
+  $payload = [
     "model" => "llama3.2:latest",
     "prompt" => $prompt,
-    "stream" => false, // Keep false for now, but increased timeout
+    "stream" => false,
     "options" => [
-      "num_predict" => 150, // Limit response length
-      "temperature" => 0.7
+      "num_predict" => 120, // Limit response length
+      "temperature" => 0.6
     ]
+  ];
+
+  // Send to Ollama API (IPv4 forced for Windows compatibility)
+  $ch = curl_init("http://127.0.0.1:11434/api/generate");
+  curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+      "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode($payload),
+    CURLOPT_TIMEOUT => 45,        // Fail fast if model is slow
+    CURLOPT_CONNECTTIMEOUT => 5,
+    CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+    CURLOPT_NOSIGNAL => 1
   ]);
 
-  // Quick connection check first
-  $check = @file_get_contents("http://127.0.0.1:11434/api/version");
-  if ($check === false) {
-    echo "AI service is not running. Please start Ollama and try again.";
+  $response = curl_exec($ch);
+
+  if (curl_errno($ch)) {
+    echo "Connection error: " . htmlspecialchars(curl_error($ch));
     exit;
   }
 
-  // Send to Ollama API
-  $ch = curl_init("http://127.0.0.1:11434/api/generate");
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Content-Type: application/json"
-  ]);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Reduced from 180
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_NOSIGNAL, 1); // Prevent timeout issues
-
-  $response = curl_exec($ch);
-  $curl_error = curl_error($ch);
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
 
-  if ($curl_error) {
-    echo "Connection error: " . htmlspecialchars($curl_error);
+  if ($http_code != 200 || !$response) {
+    echo "AI service error. Please try again.";
     exit;
   }
 
-  if ($http_code != 200) {
-    echo "AI service error (HTTP $http_code). Please try again.";
-    exit;
-  }
+  // Decode Ollama response
+  $decoded = json_decode($response, true);
 
-  $data = json_decode($response, true);
-
-  echo $data["response"] ?? "Error: No response from AI.  Please try again.";
+  // Validate AI response
+  echo $decoded["response"] ?? "Error: No response from AI. Please try again.";
   exit;
 }
 ?>
