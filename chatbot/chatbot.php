@@ -113,8 +113,7 @@ Answer:
     <!-- Header -->
     <div class="stack-ai-header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-2">
-        <span style="font-size: 24px;">🤖</span>
-        <h5 class="mb-0 fw-bold">Stack AI Assistant</h5>
+        <h5 class="mb-0 fw-bold">Stack AI</h5>
       </div>
       <button class="btn btn-sm btn-link text-white" onclick="closeStackAIModal()" style="text-decoration: none;">
         <i class="bi bi-x-lg" style="font-size: 20px;"></i>
@@ -137,9 +136,8 @@ Answer:
   </div>
 
   <!-- Chat Button (Bottom Right) -->
-  <button class="btn btn-md stack-ai-button d-flex align-items-center justify-content-center gap-2 shadow" onclick="openStackAIModal()" id="stackAIButton" title="Ask Stack AI a question">
-    <span class="btn-text">Ask with Stack AI</span>
-    <span>💬</span>
+  <button class="btn btn-md btn-green stack-ai-button d-flex align-items-center justify-content-center gap-2 shadow" onclick="openStackAIModal()" id="stackAIButton" title="Ask Stack AI a question">
+    <span class="btn-text">Chat with Stack AI</span>
   </button>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
