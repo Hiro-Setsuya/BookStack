@@ -2,6 +2,9 @@
 // Email notification functions for BookStack
 require_once __DIR__ . '/../config/mail.php';
 
+// Global IP address for email links
+$GLOBALS['ip'] = "192.168.1.32";
+
 /**
  * Send OTP verification email
  * @param string $email User's email address
@@ -73,6 +76,7 @@ function sendOTPEmail($email, $otp, $userName = '')
  */
 function sendPasswordResetConfirmation($email, $userName = '')
 {
+    global $ip;
     $greeting = !empty($userName) ? "Hi $userName," : "Hi,";
 
     $subject = "Password Successfully Changed - BookStack";
@@ -105,7 +109,7 @@ function sendPasswordResetConfirmation($email, $userName = '')
                 <p>Your password has been successfully changed. You can now log in with your new password.</p>
                 
                 <div style='text-align: center;'>
-                    <a href='http://localhost/BookStack/login.php' class='button'>Login to BookStack</a>
+                    <a href='http://$ip/BookStack/login.php' class='button'>Login to BookStack</a>
                 </div>
                 
                 <div class='warning'>
@@ -116,7 +120,6 @@ function sendPasswordResetConfirmation($email, $userName = '')
                 <ul>
                     <li>Never share your password with anyone</li>
                     <li>Use a unique password for each account</li>
-                    <li>Enable two-factor authentication when available</li>
                 </ul>
                 
                 <p>Best regards,<br><strong>BookStack Team</strong></p>
@@ -141,6 +144,7 @@ function sendPasswordResetConfirmation($email, $userName = '')
  */
 function sendWelcomeEmail($email, $userName)
 {
+    global $ip;
     $subject = "Welcome to BookStack!";
 
     $message = "
@@ -174,7 +178,7 @@ function sendWelcomeEmail($email, $userName)
                 </ul>
                 
                 <div style='text-align: center;'>
-                    <a href='http://localhost/BookStack/ebooks.php' class='button'>Start Browsing</a>
+                    <a href='http://$ip/BookStack/ebooks.php' class='button'>Start Browsing</a>
                 </div>
                 
                 <p>If you have any questions, feel free to contact our support team.</p>

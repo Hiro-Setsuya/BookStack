@@ -28,6 +28,8 @@ VALUES
 
 
 
+
+
 -- Insert Additional Categories (Soon)
 ('Programming Language'),
 ('Web Development'),
