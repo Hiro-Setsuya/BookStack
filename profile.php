@@ -1,4 +1,65 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once 'config/db.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$statusMessage = '';
+$statusType = '';
+
+// Handle form submission for profile update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    $user_name = mysqli_real_escape_string($conn, $_POST['user_name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $phone_number = mysqli_real_escape_string($conn, $_POST['phone_number']);
+
+    // Check if email already exists for another user
+    $check_query = "SELECT user_id FROM users WHERE email = '$email' AND user_id != $user_id";
+    $check_result = executeQuery($check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        $statusMessage = 'Email address is already in use by another account.';
+        $statusType = 'danger';
+    } else {
+        $update_query = "UPDATE users SET user_name = '$user_name', email = '$email', phone_number = '$phone_number' WHERE user_id = $user_id";
+        $result = executeQuery($update_query);
+
+        if ($result) {
+            $statusMessage = 'Profile updated successfully!';
+            $statusType = 'success';
+        } else {
+            $statusMessage = 'Error updating profile: ' . mysqli_error($conn);
+            $statusType = 'danger';
+        }
+    }
+}
+
+// Fetch user data from database
+$query = "SELECT user_id, user_name, email, phone_number, role, is_account_verified, created_at FROM users WHERE user_id = $user_id";
+$result = executeQuery($query);
+
+if ($result && mysqli_num_rows($result) > 0) {
+    $user = mysqli_fetch_assoc($result);
+} else {
+    header('Location: login.php');
+    exit;
+}
+
+// Get user initials for avatar
+$name_parts = explode(' ', $user['user_name']);
+$initials = strtoupper(substr($name_parts[0], 0, 1));
+if (isset($name_parts[1])) {
+    $initials .= strtoupper(substr($name_parts[1], 0, 1));
+}
+
+// Get member since date
+$member_since = date('F Y', strtotime($user['created_at']));
+?>
 <!doctype html>
 <html lang="en">
 
@@ -42,7 +103,7 @@
             </div>
             <div class="ms-auto d-none d-lg-flex align-items-center gap-3">
                 <i class="bi bi-bell fs-5 text-muted"></i>
-                <div class="rounded-circle" style="width: 35px; height: 35px; background: linear-gradient(135deg, #2ecc71 0%, #27a961 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;">AJ</div>
+                <div class="rounded-circle" style="width: 35px; height: 35px; background: linear-gradient(135deg, #2ecc71 0%, #27a961 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;"><?= htmlspecialchars($initials) ?></div>
             </div>
         </div>
     </nav>
@@ -52,8 +113,8 @@
             <div class="col-lg-3 mb-4">
                 <div class="sidebar-section-label mb-3">Account</div>
                 <nav class="nav flex-column mb-4">
-                    <a class="sidebar-link active" href="#"><i class="bi bi-person me-2"></i> General Profile</a>
-                    <a class="sidebar-link" href="orders.php"><i class="bi bi-book me-2"></i> My Books</a>
+                    <a class="sidebar-link active" href="profile.php"><i class="bi bi-person me-2"></i> General Profile</a>
+                    <a class="sidebar-link" href="my-ebooks.php"><i class="bi bi-book me-2"></i> My E-Books</a>
                     <a class="sidebar-link" href="orders.php"><i class="bi bi-credit-card me-2"></i> Billing & Orders</a>
                     <a class="sidebar-link" href="change-password.php"><i class="bi bi-shield-lock me-2"></i> Security</a>
                 </nav>
@@ -81,65 +142,101 @@
                     <p>Manage your personal information and preferences.</p>
                 </div>
 
+                <!-- Status Message -->
+                <?php if (!empty($statusMessage)): ?>
+                    <div class="alert alert-<?= $statusType ?> alert-dismissible fade show" role="alert">
+                        <?= htmlspecialchars($statusMessage) ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
                 <div class="card profile-card p-4 mb-4">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div class="d-flex align-items-center gap-3">
                             <div class="position-relative">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #2ecc71 0%, #27a961 100%); color: white; font-size: 2rem; font-weight: 700;">AJ</div>
-                                <button class="position-absolute bottom-0 end-0 btn btn-sm btn-primary rounded-circle p-2" style="transform: translate(-8px, -8px); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" title="Change photo">
-                                    <i class="bi bi-camera-fill"></i>
-                                </button>
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background: linear-gradient(135deg, #2ecc71 0%, #27a961 100%); color: white; font-size: 2rem; font-weight: 700;"><?= htmlspecialchars($initials) ?></div>
                             </div>
                             <div>
-                                <h5 class="mb-1 fw-bold">Alex Johnson</h5>
-                                <p class="mb-2 text-muted small">alex.j@bookstack.com</p>
-                                <span class="badge bg-success">Active Member</span>
+                                <h5 class="mb-1 fw-bold d-flex align-items-center gap-2">
+                                    <?= htmlspecialchars($user['user_name']) ?>
+                                    <?php if ($user['is_account_verified']): ?>
+                                        <i class="bi bi-patch-check-fill text-primary" title="Verified Account" style="font-size: 1.2rem;"></i>
+                                    <?php endif; ?>
+                                </h5>
+                                <p class="mb-2 text-muted small"><?= htmlspecialchars($user['email']) ?></p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-success">Member since <?= $member_since ?></span>
+                                    <?php if ($user['is_account_verified']): ?>
+                                        <span class="badge bg-primary"><i class="bi bi-check-circle me-1"></i>Verified</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle me-1"></i>Unverified</span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
-                        <button class="btn btn-outline-secondary btn-sm">View Public Profile</button>
                     </div>
                 </div>
 
-                <div class="card profile-card p-4 bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-                        <h5 class="fw-bold mb-0">Personal Information</h5>
-                        <button class="btn btn-link btn-sm text-primary p-0" title="Edit">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                    </div>
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-semibold">First Name</label>
-                            <input type="text" class="form-control form-control-custom" value="Alex" placeholder="First Name">
+                <form method="POST" action="">
+                    <div class="card profile-card p-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                            <h5 class="fw-bold mb-0">Personal Information</h5>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-semibold">Last Name</label>
-                            <input type="text" class="form-control form-control-custom" value="Johnson" placeholder="Last Name">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-semibold">Email Address</label>
-                            <div class="input-group">
-                                <span class="input-group-text border-0 bg-light"><i class="bi bi-envelope text-muted"></i></span>
-                                <input type="email" class="form-control form-control-custom border-start-0" value="alex.j@bookstack.com" placeholder="Email">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label small fw-semibold">Username</label>
+                                <input type="text" name="user_name" class="form-control form-control-custom" value="<?= htmlspecialchars($user['user_name']) ?>" placeholder="Full Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light"><i class="bi bi-envelope text-muted"></i></span>
+                                    <input type="email" name="email" class="form-control form-control-custom border-start-0" value="<?= htmlspecialchars($user['email']) ?>" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light"><i class="bi bi-telephone text-muted"></i></span>
+                                    <input type="text" name="phone_number" class="form-control form-control-custom border-start-0" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>" placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">User ID</label>
+                                <input type="text" class="form-control form-control-custom" value="#<?= htmlspecialchars($user['user_id']) ?>" readonly disabled>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label small fw-semibold">Account Status</label>
+                                <div class="d-flex align-items-center gap-3 p-3 rounded" style="background-color: <?= $user['is_account_verified'] ? '#d1f2eb' : '#fff3cd' ?>;">
+                                    <?php if ($user['is_account_verified']): ?>
+                                        <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                                        <div class="flex-grow-1">
+                                            <strong class="text-success">Account Verified</strong>
+                                            <p class="mb-0 small text-muted">Your account is verified and you can purchase ebooks.</p>
+                                        </div>
+                                    <?php else: ?>
+                                        <i class="bi bi-shield-exclamation text-warning" style="font-size: 2rem;"></i>
+                                        <div class="flex-grow-1">
+                                            <strong class="text-warning">Account Not Verified</strong>
+                                            <p class="mb-0 small text-muted">Please verify your account to purchase ebooks. Click the button to request verification.</p>
+                                        </div>
+                                        <a href="request-verification.php" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-shield-check me-1"></i>Verify Now
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-semibold">Phone Number</label>
-                            <div class="input-group">
-                                <span class="input-group-text border-0 bg-light"><i class="bi bi-telephone text-muted"></i></span>
-                                <input type="text" class="form-control form-control-custom border-start-0" value="+1 (555) 000-0000" placeholder="Phone">
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
-                        <a href="#" class="text-danger small fw-semibold text-decoration-none">Deactivate Account</a>
-                        <div class="gap-2 d-flex">
-                            <button class="btn btn-outline-secondary">Cancel</button>
-                            <button class="btn btn-green px-4">Save Changes</button>
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                            <a href="#" class="text-danger small fw-semibold text-decoration-none">Deactivate Account</a>
+                            <div class="gap-2 d-flex">
+                                <a href="profile.php" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" name="update_profile" class="btn btn-green px-4">Save Changes</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
