@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   </div>
 
   <!-- Chat Button (Bottom Right) -->
-  <button class="btn btn-lg stack-ai-button d-flex align-items-center justify-content-center gap-2 shadow" onclick="openStackAIModal()" id="stackAIButton" title="Ask Stack AI a question">
+  <button class="btn btn-md stack-ai-button d-flex align-items-center justify-content-center gap-2 shadow" onclick="openStackAIModal()" id="stackAIButton" title="Ask Stack AI a question">
     <span class="btn-text">Ask with Stack AI</span>
     <span>💬</span>
   </button>
