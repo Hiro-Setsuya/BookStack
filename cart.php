@@ -151,7 +151,7 @@ $total = $subtotal - $discount_amount + $tax;
     <div class="container-fluid">
       <a href="index.php" class="navbar-brand d-flex align-items-center gap-2">
         <img src="assets/logo.svg" height="28" alt="Logo">
-        <span>BookStack</span>
+        <span style="font-weight:700; color: var(--primary-color);">BookStack</span>
       </a>
       <div class="ms-auto d-flex align-items-center gap-2">
         <?php if (isset($_SESSION['user_id'])): ?>
