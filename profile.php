@@ -201,6 +201,10 @@ $member_since = date('F Y', strtotime($user['created_at']));
                                     <input type="text" name="phone_number" class="form-control form-control-custom border-start-0" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>" placeholder="Phone Number">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">User ID</label>
+                                <input type="text" class="form-control form-control-custom" value="#<?= htmlspecialchars($user['user_id']) ?>" readonly disabled>
+                            </div>
                             <div class="col-md-12">
                                 <label class="form-label small fw-semibold">Account Status</label>
                                 <div class="d-flex align-items-center gap-3 p-3 rounded" style="background-color: <?= $user['is_account_verified'] ? '#d1f2eb' : '#fff3cd' ?>;">
