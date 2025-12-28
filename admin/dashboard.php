@@ -158,10 +158,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
                     <a href="reports.php" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
 
-                    <hr class="mx-4 my-2 text-muted opacity-25">
-
-                    <a href="#" class="nav-link"><i class="bi bi-gear me-3"></i>Settings</a>
-                    <a href="logout.php" class="nav-link text-danger"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
+                    <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
 
                     <div class="px-3 mt-3">
                         <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
