@@ -178,13 +178,6 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             <main class="main-content w-100">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                     <h5 class="fw-bold mb-0">Dashboard Overview</h5>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="input-group bg-white rounded-3 shadow-sm d-none d-sm-flex" style="width: 250px;">
-                            <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" class="form-control border-0 bg-transparent ps-0" placeholder="Search anything...">
-                        </div>
-                        <button class="btn btn-green px-3 fw-semibold">+ Add E-Book</button>
-                    </div>
                 </div>
 
                 <div class="row g-3 mb-4 text-center">
