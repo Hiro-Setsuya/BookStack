@@ -178,8 +178,10 @@ main {
 }
 
 .form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.25rem rgba(76, 153, 230, 0.25);
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.25) !important;
+  background-color: white !important;
+  color: inherit !important;
 }
 
 .btn-primary {
@@ -197,7 +199,16 @@ main {
 }
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.25rem rgba(76, 153, 230, 0.3);
+  box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.3) !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-primary:active,
+.btn-primary:active:focus {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.3) !important;
 }
 
 .btn-primary:disabled {
