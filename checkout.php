@@ -67,93 +67,19 @@
     </div>
   </div>
 
-  <div class="container mt-3 mt-lg-5">
-    <div class="row">
-      <div class="col">
+  <div class="container mt-3 mt-lg-5 px-4">
+    <div class="row px-md-5">
+      <div class="col px-md-5">
         <div class="h2 fw-bold">Checkout</div>
         <div class="text-muted">Complete your purchase to access your ebook instantly.</div>
       </div>
     </div>
   </div>
 
-  <div class="container mt-4 px-3">
-    <div class="row">
-      <div class="col-xl-8 mb-3">
-
-        <div class="card shadow-sm rounded-4 p-3 p-lg-4 p-xl-5 mb-4">
-          <div class="h5 fw-semibold mb-4">Contact Information</div>
-
-          <div class="mb-3">
-            <div class="card-text mb-1">Email Address</div>
-            <input class="form-control" type="text" placeholder="sample@gmail.com">
-          </div>
-
-          <div class="mb-3">
-            <div class="row">
-              <div class="col">
-                <div class="card-text mb-1">First Name</div>
-                <input class="form-control" type="text" placeholder="Rowel Gabriel">
-              </div>
-              <div class="col">
-                <div class="card-text mb-1">Last Name</div>
-                <input class="form-control" type="text" placeholder="Mangabat">
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <div class="card-text mb-1">Institutio / School ID (optional)</div>
-            <input class="form-control" type="text" placeholder="sample@gmail.com">
-          </div>
-
-        </div>
-
-        <div class="card shadow-sm rounded-4 p-3 p-lg-4 p-xl-5">
-          <div class="h5 fw-semibold mb-4">Payment Method</div>
-
-          <div class="mb-3">
-            <div class="row g-3">
-              <div class="col-lg-6">
-                <input type="radio" class="btn-check" name="options-base" id="creditcard" autocomplete="off" checked>
-                <label class="btn p-3 bg-light shadow-sm w-100 text-start" for="creditcard">
-                  <span class="fw-semibold">Credit Card</span>
-                  <span class="text-muted d-block">Visa, Mastercard, Amex</span>
-                </label>
-              </div>
-
-              <div class="col-lg-6">
-                <input type="radio" class="btn-check" name="options-base" id="paypal" autocomplete="off">
-                <label class="btn p-3 bg-light shadow-sm w-100 text-start" for="paypal">
-                  <span class="fw-semibold">PayPal</span>
-                  <span class="text-muted d-block">Fast & Secure Checkout</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <div class="card-text mb-1">Card Number</div>
-            <input class="form-control" type="text" placeholder="0000 0000 0000 0000">
-          </div>
-
-          <div class="mb-3">
-            <div class="row">
-              <div class="col">
-                <div class="card-text mb-1">Expiration</div>
-                <input class="form-control" type="text" placeholder="MM/YY">
-              </div>
-              <div class="col">
-                <div class="card-text mb-1">CVC</div>
-                <input class="form-control" type="text" placeholder="123">
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="col-xl-4 mb-3 sticky-summary">
-        <div class="card shadow-sm rounded-4 p-4 position-sticky" style="top:90px;">
+  <div class="container mt-3 px-4">
+    <div class="row px-md-5">
+      <div class="col px-md-5">
+        <div class="card shadow-sm rounded-4 p-4 p-md-5">
           <div class="card-title fs-4 fw-bold mb-4">Order Summary</div>
           <div class="mb-4">
             <div class="d-flex gap-3">
@@ -181,10 +107,31 @@
             <div class="fs-5 fw-bold">Total</div>
             <div class="fs-5 fw-semibold">₱70.00</div>
           </div>
-          <button class="btn btn-green">Confirm Purchase</button>
         </div>
       </div>
+    </div>
+  </div>
 
+  <div class="container mt-3 px-4">
+    <div class="row px-md-5">
+      <div class="col px-md-5">
+        <div class="card shadow-sm rounded-4 overflow-hidden">
+          <div class="card-header fs-4 fw-bold mb-4 py-3 px-3 px-lg-5 px-md-5 text-green">
+            <i class="bi bi-credit-card me-2"></i>Payment Method
+          </div>
+          <div class="card-body px-4 px-md-5">
+            <p class="text-center">Complete your purchase securely with PayPal:</p>
+            <div id="paypal-button-container" class="mt-2 w-100 px-md-5">
+              <button class="btn-green w-100 rounded-3 py-2">
+                <img src="assets/paypal.svg" class="img-fluid paypal-logo">
+              </button>
+              <div class="alert alert-info mt-3 border-0" style="background-color: #9e9e9e50;">
+                <i class="bi bi-info-circle"></i> <strong>Note:</strong> This is a test payment interface. Use PayPal sandbox credentials.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
