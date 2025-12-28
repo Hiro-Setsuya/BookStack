@@ -79,10 +79,12 @@
   <div class="container mt-3 px-4">
     <div class="row px-md-5">
       <div class="col px-md-5">
-        <div class="card shadow-sm rounded-4 p-4 p-md-5">
-          <div class="card-title fs-4 fw-bold mb-4">Order Summary</div>
-          <div class="mb-4">
-            <div class="d-flex gap-3">
+        <div class="card shadow-sm rounded-4 overflow-hidden">
+          <div class="card-header fs-4 fw-bold mb-4 py-3 px-3 px-lg-5 px-md-5 text-green">
+            Order Summary
+          </div>
+          <div class="card-body px-4 px-md-5">
+            <div class="d-flex gap-3 mb-4">
               <img src="https://m.media-amazon.com/images/I/519LoIgUAFL.jpg" height="120" class="flex-shrink-0">
               <div class="flex-grow-1 overflow-hidden">
                 <div class="fs-5 fw-bold text-truncate">Sample Book 1</div>
@@ -90,23 +92,24 @@
               </div>
               <div class="fw-semibold text-nowrap">₱100.00</div>
             </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="fs-6 fw-semibold">Subtotal</div>
+              <div class="fs-6">₱100.00</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3 text-green">
+              <div class="fs-6 fw-semibold">Discount (30%)</div>
+              <div class="fs-6">₱30.00</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="fs-6 fw-semibold">Tax (Estimated)</div>
+              <div class="fs-6">₱0.00</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center border-top border-2 mb-3">
+              <div class="fs-5 fw-bold">Total</div>
+              <div class="fs-5 fw-semibold">₱70.00</div>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="fs-6 fw-semibold">Subtotal</div>
-            <div class="fs-6">₱100.00</div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mb-3 text-green">
-            <div class="fs-6 fw-semibold">Discount (30%)</div>
-            <div class="fs-6">₱30.00</div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="fs-6 fw-semibold">Tax (Estimated)</div>
-            <div class="fs-6">₱0.00</div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center border-top border-2 mb-3">
-            <div class="fs-5 fw-bold">Total</div>
-            <div class="fs-5 fw-semibold">₱70.00</div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -121,6 +124,7 @@
           </div>
           <div class="card-body px-4 px-md-5">
             <p class="text-center">Complete your purchase securely with PayPal:</p>
+            <!-- di pa ito final, inaayos ko pa paypal integ hahaha -->
             <div id="paypal-button-container" class="mt-2 w-100 px-md-5">
               <button class="btn-green w-100 rounded-3 py-2">
                 <img src="assets/paypal.svg" class="img-fluid paypal-logo">
