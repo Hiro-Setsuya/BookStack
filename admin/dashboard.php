@@ -155,6 +155,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <a href="manage-categories.php" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
                     <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
                     <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
+                    <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
                     <a href="reports.php" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
 
                     <hr class="mx-4 my-2 text-muted opacity-25">
