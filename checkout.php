@@ -1,3 +1,55 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+if (!isset($_SESSION['user_id'])) {
+  header('Location: login.php?redirect=checkout.php');
+  exit;
+}
+
+$items_param = $_GET['items'] ?? '';
+$item_ids = [];
+if (!empty($items_param)) {
+  $parts = explode(',', $items_param);
+  foreach ($parts as $p) {
+    $id = intval(trim($p));
+    if ($id > 0) $item_ids[] = $id;
+  }
+}
+
+if (empty($item_ids)) {
+  header('Location: cart.php');
+  exit;
+}
+
+$ids_list = implode(',', array_map('intval', $item_ids));
+$query = "SELECT ebook_id, title, author, price, cover_image FROM ebooks WHERE ebook_id IN ($ids_list)";
+$result = executeQuery($query);
+
+$items = [];
+$subtotal = 0.0;
+if ($result && mysqli_num_rows($result) > 0) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $row['quantity'] = 1;
+    $row['total'] = $row['price'];
+    $subtotal += $row['total'];
+    $items[] = $row;
+  }
+}
+
+$discount_percent = 0;
+$discount_amount = 0;
+if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30') {
+  $discount_percent = 30;
+  $discount_amount = $subtotal * ($discount_percent / 100);
+}
+
+$taxable_amount = $subtotal - $discount_amount;
+$tax_rate = 0.12;
+$tax = $taxable_amount * $tax_rate;
+$total = $subtotal - $discount_amount + $tax;
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -84,30 +136,42 @@
             Order Summary
           </div>
           <div class="card-body px-4 px-md-5">
-            <div class="d-flex gap-3 mb-4">
-              <img src="https://m.media-amazon.com/images/I/519LoIgUAFL.jpg" height="120" class="flex-shrink-0">
-              <div class="flex-grow-1 overflow-hidden">
-                <div class="fs-5 fw-bold text-truncate">Sample Book 1</div>
-                <div class="text-muted text-truncate">Sample Author 1</div>
+            <?php if (empty($items)): ?>
+              <div class="alert alert-info">No items found for checkout.</div>
+            <?php else: ?>
+              <?php foreach ($items as $it): ?>
+                <div class="d-flex gap-3 mb-4">
+                  <img src="<?php echo htmlspecialchars($it['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" height="120" class="flex-shrink-0">
+                  <div class="flex-grow-1 overflow-hidden">
+                    <div class="fs-5 fw-bold text-truncate"><?php echo htmlspecialchars($it['title']); ?></div>
+                    <div class="text-muted text-truncate"><?php echo htmlspecialchars($it['author'] ?? 'Unknown'); ?></div>
+                  </div>
+                  <div class="fw-semibold text-nowrap">₱<?php echo number_format($it['price'], 2); ?></div>
+                </div>
+              <?php endforeach; ?>
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="fs-6 fw-semibold">Subtotal</div>
+                <div class="fs-6">₱<?php echo number_format($subtotal, 2); ?></div>
               </div>
-              <div class="fw-semibold text-nowrap">₱100.00</div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="fs-6 fw-semibold">Subtotal</div>
-              <div class="fs-6">₱100.00</div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-3 text-green">
-              <div class="fs-6 fw-semibold">Discount (30%)</div>
-              <div class="fs-6">₱30.00</div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="fs-6 fw-semibold">Tax (Estimated)</div>
-              <div class="fs-6">₱0.00</div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-top border-2 mb-3">
-              <div class="fs-5 fw-bold">Total</div>
-              <div class="fs-5 fw-semibold">₱70.00</div>
-            </div>
+
+              <?php if ($discount_percent > 0): ?>
+                <div class="d-flex justify-content-between align-items-center mb-3 text-green">
+                  <div class="fs-6 fw-semibold">Discount (<?php echo $discount_percent; ?>%)</div>
+                  <div class="fs-6">-₱<?php echo number_format($discount_amount, 2); ?></div>
+                </div>
+              <?php endif; ?>
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="fs-6 fw-semibold">Tax (Estimated)</div>
+                <div class="fs-6">₱<?php echo number_format($tax, 2); ?></div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center border-top border-2 mb-3">
+                <div class="fs-5 fw-bold">Total</div>
+                <div class="fs-5 fw-semibold">₱<?php echo number_format($total, 2); ?></div>
+              </div>
+            <?php endif; ?>
           </div>
 
         </div>
