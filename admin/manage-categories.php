@@ -100,10 +100,13 @@ if ($categoriesResult) {
 // Calculate statistics
 $totalCategories = count($categories);
 $totalEbooks = 0;
+$emptyCategories = 0;
 foreach ($categories as $cat) {
     $totalEbooks += $cat['ebook_count'];
+    if ($cat['ebook_count'] == 0) {
+        $emptyCategories++;
+    }
 }
-$hiddenCategories = $totalCategories - $activeCategories;
 ?>
 <!doctype html>
 <html lang="en">
@@ -275,7 +278,7 @@ $hiddenCategories = $totalCategories - $activeCategories;
                     <div class="col-12 col-md-4">
                         <div class="card stat-card p-4">
                             <p class="text-muted small mb-1">Empty Categories</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $hiddenCategories; ?></h4>
+                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $emptyCategories; ?></h4>
                         </div>
                     </div>
                 </div>
