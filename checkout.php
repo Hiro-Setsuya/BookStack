@@ -189,13 +189,13 @@ $total = $subtotal - $discount_amount + $tax;
           <div class="card-body px-4 px-md-5">
             <p class="text-center">Complete your purchase securely with PayPal:</p>
             <!-- di pa ito final, inaayos ko pa paypal integ hahaha -->
-            <div id="paypal-button-container" class="mt-2 w-100 px-md-5">
-              <button class="btn-green w-100 rounded-3 py-2">
-                <img src="assets/paypal.svg" class="img-fluid paypal-logo">
-              </button>
-              <div class="alert alert-info mt-3 border-0" style="background-color: #9e9e9e50;">
-                <i class="bi bi-info-circle"></i> <strong>Note:</strong> This is a test payment interface. Use PayPal sandbox credentials.
-              </div>
+            <div id="paypal-button-container" class="mt-2 w-100 text-center" style="max-width: 550px;">
+            </div>
+            <p class="text-muted text-center mt-3 mb-0">
+              <small><i class="bi bi-shield-check"></i> Secure payment powered by PayPal</small>
+            </p>
+            <div class="alert alert-info mt-3 border-0" style="background-color: #9e9e9e50;">
+              <i class="bi bi-info-circle"></i> <strong>Note:</strong> This is a test payment interface. Use PayPal sandbox credentials.
             </div>
           </div>
         </div>
