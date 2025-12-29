@@ -55,6 +55,39 @@ body {
   color: white !important;
 }
 
+/* Navbar dropdown design improvements */
+.dropdown-menu {
+  min-width: 200px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.08);
+  padding: 0.25rem 0;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.dropdown-item .bi {
+  color: var(--primary-color);
+  opacity: 0.95;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: linear-gradient(90deg, rgba(46,204,113,0.08), rgba(46,204,113,0.03));
+  color: var(--text-dark);
+}
+
+.dropdown-divider {
+  margin: 0.25rem 0;
+  border-top-color: var(--border-color);
+}
+
 .btn-outline-green {
   background-color: transparent !important;
   border: 1px solid var(--primary-color) !important;

@@ -8,7 +8,7 @@ session_start();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BookStack - Computer & Tech E-Books</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -63,10 +63,10 @@ session_start();
         <a href="cart.php" class="btn btn-green me-2"><i class="bi bi-cart3"></i></a>
         <?php if (isset($_SESSION['user_id'])): ?>
           <div class="dropdown">
-            <button class="btn btn-green dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button id="userDropdown" class="btn btn-green dropdown-toggle text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name']); ?>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>Profile</a></li>
               <li><a class="dropdown-item" href="orders.php"><i class="bi bi-bag me-2"></i>Orders</a></li>
               <li>
@@ -114,8 +114,36 @@ session_start();
       </div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <?php include 'chatbot/chatbot.php'; ?>
+  <script>
+    // Lightweight dropdown toggle fallback (index-only)
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('userDropdown');
+      if (!btn) return;
+      var menu = btn.parentElement.querySelector('.dropdown-menu');
+      if (!menu) return;
+
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var shown = menu.classList.contains('show');
+        if (shown) {
+          menu.classList.remove('show');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          menu.classList.add('show');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.classList.remove('show');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
