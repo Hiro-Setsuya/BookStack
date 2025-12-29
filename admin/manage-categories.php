@@ -9,6 +9,101 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Sync Admin Name from session variable established in login.php
 $adminName = $_SESSION['admin_name'] ?? 'Admin';
+
+// Include database connection
+require_once '../config/db.php';
+
+// Initialize message variables
+$message = '';
+$messageType = '';
+
+// Handle Create Category
+if (isset($_POST['create_category'])) {
+    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
+
+    if (!empty($name)) {
+        $query = "INSERT INTO categories (name) VALUES ('$name')";
+        if (executeQuery($query)) {
+            $message = 'Category created successfully!';
+            $messageType = 'success';
+        } else {
+            $message = 'Error creating category: ' . mysqli_error($conn);
+            $messageType = 'danger';
+        }
+    } else {
+        $message = 'Category name is required!';
+        $messageType = 'warning';
+    }
+}
+
+// Handle Update Category
+if (isset($_POST['update_category'])) {
+    $category_id = (int)$_POST['category_id'];
+    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
+
+    if (!empty($name) && $category_id > 0) {
+        $query = "UPDATE categories SET name='$name' WHERE category_id=$category_id";
+        if (executeQuery($query)) {
+            $message = 'Category updated successfully!';
+            $messageType = 'success';
+        } else {
+            $message = 'Error updating category: ' . mysqli_error($conn);
+            $messageType = 'danger';
+        }
+    } else {
+        $message = 'Invalid data provided!';
+        $messageType = 'warning';
+    }
+}
+
+// Handle Delete Category
+if (isset($_POST['delete_category'])) {
+    $category_id = (int)$_POST['category_id'];
+
+    if ($category_id > 0) {
+        // Check if category has ebooks
+        $checkQuery = "SELECT COUNT(*) as count FROM ebooks WHERE category_id=$category_id";
+        $checkResult = executeQuery($checkQuery);
+        $checkData = mysqli_fetch_assoc($checkResult);
+
+        if ($checkData['count'] > 0) {
+            $message = 'Cannot delete category with existing ebooks. Please reassign ebooks first.';
+            $messageType = 'warning';
+        } else {
+            $query = "DELETE FROM categories WHERE category_id=$category_id";
+            if (executeQuery($query)) {
+                $message = 'Category deleted successfully!';
+                $messageType = 'success';
+            } else {
+                $message = 'Error deleting category: ' . mysqli_error($conn);
+                $messageType = 'danger';
+            }
+        }
+    }
+}
+
+// Fetch all categories with ebook count
+$categoriesQuery = "SELECT c.category_id, c.name, c.created_at, 
+                           COUNT(e.ebook_id) as ebook_count 
+                    FROM categories c 
+                    LEFT JOIN ebooks e ON c.category_id = e.category_id 
+                    GROUP BY c.category_id 
+                    ORDER BY c.name ASC";
+$categoriesResult = executeQuery($categoriesQuery);
+$categories = [];
+if ($categoriesResult) {
+    while ($row = mysqli_fetch_assoc($categoriesResult)) {
+        $categories[] = $row;
+    }
+}
+
+// Calculate statistics
+$totalCategories = count($categories);
+$totalEbooks = 0;
+foreach ($categories as $cat) {
+    $totalEbooks += $cat['ebook_count'];
+}
+$hiddenCategories = $totalCategories - $activeCategories;
 ?>
 <!doctype html>
 <html lang="en">
@@ -147,12 +242,19 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             </nav>
 
             <main class="main-content w-100">
+                <?php if (!empty($message)): ?>
+                    <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
+                        <?php echo htmlspecialchars($message); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                     <div>
                         <h5 class="fw-bold mb-1">Manage Categories</h5>
                         <p class="text-muted small mb-0">Organize e-book genres, edit details, or add new classifications.</p>
                     </div>
-                    <button class="btn btn-primary px-4 shadow-sm" style="background-color: #00a3ff; border: none; border-radius: 10px;">
+                    <button class="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" onclick="resetForm()" style="background-color: #00a3ff; border: none; border-radius: 10px;">
                         <i class="bi bi-plus-lg me-2"></i>Add Category
                     </button>
                 </div>
@@ -161,91 +263,157 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <div class="col-12 col-md-4">
                         <div class="card stat-card p-4">
                             <p class="text-muted small mb-1">Total Categories</p>
-                            <h4 class="fw-bold mb-0 text-secondary">[Total Categories Count]</h4>
+                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalCategories; ?></h4>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Active Genres</p>
-                            <h4 class="fw-bold mb-0 text-secondary">[Active Genres Count]</h4>
+                            <p class="text-muted small mb-1">Total E-Books</p>
+                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalEbooks; ?></h4>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Hidden Categories</p>
-                            <h4 class="fw-bold mb-0 text-secondary">[Hidden Categories Count]</h4>
+                            <p class="text-muted small mb-1">Empty Categories</p>
+                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $hiddenCategories; ?></h4>
                         </div>
                     </div>
                 </div>
 
                 <div class="card data-card border-0 shadow-sm">
-                    <div class="p-3 border-bottom">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            <div class="input-group" style="max-width: 350px;">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                                <input type="text" class="form-control bg-light border-0" placeholder="Search categories...">
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-light border btn-sm text-muted px-3"><i class="bi bi-funnel me-2"></i>Status</button>
-                                <button class="btn btn-light border btn-sm text-muted px-3"><i class="bi bi-sort-down me-2"></i>Sort</button>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
                             <thead>
                                 <tr style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">
                                     <th class="ps-4" style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
                                     <th>Category Name</th>
-                                    <th>Description</th>
                                     <th>Books</th>
-                                    <th>Status</th>
                                     <th class="text-end pe-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="ps-4"><input type="checkbox" class="form-check-input"></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-2 bg-light rounded-3 me-3 text-center" style="width: 35px;">
-                                                <i class="bi bi-tag text-primary"></i>
+                                <?php if (empty($categories)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <div class="placeholder-box py-4 mx-4" style="border: 2px dashed #e5e7eb; border-radius: 8px; color: #9ca3af;">
+                                                <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+                                                <p class="mt-3 mb-0">No categories found. Click "Add Category" to create one.</p>
                                             </div>
-                                            <span class="fw-bold text-dark">[Category Name]</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted small">[Brief description of category...]</td>
-                                    <td><span class="badge bg-light text-dark rounded-pill px-3">[Count]</span></td>
-                                    <td><span class="badge bg-success-subtle text-success px-3 rounded-pill">Active</span></td>
-                                    <td class="text-end pe-4">
-                                        <button class="btn btn-sm text-muted"><i class="bi bi-three-dots"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div class="placeholder-box py-4 mx-4" style="border: 2px dashed #e5e7eb; border-radius: 8px; color: #9ca3af;">
-                                            [Dynamic list of categories will be displayed here]
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($categories as $category): ?>
+                                        <tr>
+                                            <td class="ps-4"><input type="checkbox" class="form-check-input"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="p-2 bg-light rounded-3 me-3 text-center" style="width: 35px;">
+                                                        <i class="bi bi-tag text-primary"></i>
+                                                    </div>
+                                                    <span class="fw-bold text-dark"><?php echo htmlspecialchars($category['name']); ?></span>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-light text-dark rounded-pill px-3"><?php echo $category['ebook_count']; ?></span></td>
+                                            <td class="text-end pe-4">
+                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="editCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
-                    </div>
-
-                    <div class="p-3 border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted small">Showing [X]-[Y] of [Total] categories</span>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-outline-secondary px-3">Previous</button>
-                            <button class="btn btn-sm btn-outline-secondary px-3">Next</button>
-                        </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- Category Modal for Create/Edit -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Add Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="">
+                    <div class="modal-body">
+                        <input type="hidden" name="category_id" id="category_id">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Category Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="create_category" id="submitBtn" class="btn btn-primary">Create Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="">
+                    <div class="modal-body">
+                        <input type="hidden" name="category_id" id="delete_category_id">
+                        <p>Are you sure you want to delete the category "<strong id="delete_category_name"></strong>"?</p>
+                        <p class="text-muted small">This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="delete_category" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script>
+        // Reset form to create mode
+        function resetForm() {
+            document.getElementById('categoryModalLabel').textContent = 'Add Category';
+            document.getElementById('category_id').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('submitBtn').name = 'create_category';
+            document.getElementById('submitBtn').textContent = 'Create Category';
+        }
+
+        // Edit category
+        function editCategory(id, name) {
+            document.getElementById('categoryModalLabel').textContent = 'Edit Category';
+            document.getElementById('category_id').value = id;
+            document.getElementById('name').value = name;
+            document.getElementById('submitBtn').name = 'update_category';
+            document.getElementById('submitBtn').textContent = 'Update Category';
+
+            var modal = new bootstrap.Modal(document.getElementById('categoryModal'));
+            modal.show();
+        }
+
+        // Delete category
+        function deleteCategory(id, name) {
+            document.getElementById('delete_category_id').value = id;
+            document.getElementById('delete_category_name').textContent = name;
+
+            var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
 </body>
 
 </html>
