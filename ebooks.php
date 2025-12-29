@@ -159,13 +159,13 @@ $result = executeQuery($query);
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 px-4">
             <?php
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($ebook = mysqli_fetch_assoc($result)) {
             ?>
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card ebook-card shadow-sm border-0">
+                        <div class="card ebook-card shadow-sm border-0 h-100">
                             <img src="<?php echo htmlspecialchars($ebook['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>"
                                 class="card-img-top ebook-cover"
                                 alt="<?php echo htmlspecialchars($ebook['title']); ?>">
