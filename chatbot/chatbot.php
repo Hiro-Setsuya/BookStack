@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   if (file_exists($data_file)) {
 
     // Limit data size to prevent timeout (max 2000 chars)
-    $data = substr(file_get_contents($data_file), 0, 2000);
+    $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are via PayPal. Users can manage accounts, download ebooks, and ask Stack AI chabot.";
 
   } else {
     $data = "BookStack is an ebook e-commerce platform.";
@@ -45,7 +45,7 @@ Answer:
   $payload = [
     "model" => "llama3.2:1b",
     "prompt" => $prompt,
-    "stream" => false,
+    "stream" => true,
     "options" => [
       "num_predict" => 80, // Limit response length
       "temperature" => 0.5
@@ -55,17 +55,21 @@ Answer:
   // Send to Ollama API (IPv4 forced for Windows compatibility)
   $ch = curl_init("http://127.0.0.1:11434/api/generate");
   curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST => true,
-    CURLOPT_HTTPHEADER => [
-      "Content-Type: application/json"
-    ],
-    CURLOPT_POSTFIELDS => json_encode($payload),
-    CURLOPT_TIMEOUT => 45,        // Fail fast if model is slow
-    CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-    CURLOPT_NOSIGNAL => 1
-  ]);
+  CURLOPT_RETURNTRANSFER => false,
+  CURLOPT_POST => true,
+  CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
+  CURLOPT_POSTFIELDS => json_encode($payload),
+  CURLOPT_TIMEOUT => 60,
+  CURLOPT_CONNECTTIMEOUT => 5,
+  CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+  CURLOPT_NOSIGNAL => 1,
+  CURLOPT_WRITEFUNCTION => function($ch, $chunk) {
+    echo $chunk;
+    flush();
+    return strlen($chunk);
+  }
+]);
+
 
   $response = curl_exec($ch);
 
