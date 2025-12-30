@@ -2,96 +2,92 @@
 // --- BACKEND: Handle AJAX request for Stack AI Chatbot ---
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
 
-  // Increase PHP timeout for slow CPU (reduced for safety)
-  set_time_limit(90);
-  header("Content-Type: text/plain");
+    // Increase PHP timeout slightly (streaming prevents long blocking)
+    set_time_limit(120);
+    header("Content-Type: text/plain; charset=utf-8");
+    header("Cache-Control: no-cache");
+    header("X-Accel-Buffering: no"); // Important for streaming
 
-  // Get user message
-  $message = trim($_POST['message']);
-  if ($message === '') {
-    exit("Please enter a question.");
-  }
+    // Get user message
+    $message = trim($_POST['message']);
+    if ($message === '') {
+        exit("Please enter a question.");
+    }
 
-  // Load FAQ data - FIXED FILE PATH (removed extra space)
-  $data_file = __DIR__ . '/data.txt';
-  if (file_exists($data_file)) {
+    // LIGHTWEIGHT context (DO NOT load full data.txt for every request)
+    // This prevents first-token delays and freezing
+    $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are made via PayPal. Users can manage accounts, access purchases instantly, and contact customer support.";
 
-    // Limit data size to prevent timeout (max 2000 chars)
-    $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are via PayPal. Users can manage accounts, download ebooks, and ask Stack AI chabot.";
+    // System prompt for Stack AI (optimized for speed)
+    $prompt = "
+You are Stack AI, the official assistant of BookStack.
 
-  } else {
-    $data = "BookStack is an ebook e-commerce platform.";
-  }
+Use ONLY the information below.
+Be friendly and concise (max 80 words).
+If the answer is not available, say: Contact support@bookstack.com
 
-  // System prompt for ebook chatbot - OPTIMIZED for faster response
-  $prompt = "
-You are Stack AI, a helpful assistant for BookStack ebook store.
-
-BookStack Info:
+INFO:
 $data
 
-Rules:
-- Answer based on info above
-- Be friendly and concise (under 80 words)
-- If info not available, say \"Contact support@bookstack.com\"
-
-Question:
+QUESTION:
 $message
 
-Answer:
+ANSWER:
 ";
 
-  // Prepare data for Ollama - STREAMING DISABLED to prevent PHP timeout
-  $payload = [
-    "model" => "llama3.2:1b",
-    "prompt" => $prompt,
-    "stream" => true,
-    "options" => [
-      "num_predict" => 80, // Limit response length
-      "temperature" => 0.5
-    ]
-  ];
+    // Ollama payload (STREAMING ENABLED)
+    $payload = [
+        "model" => "llama3.2:1b",
+        "prompt" => $prompt,
+        "stream" => true,
+        "options" => [
+            "num_predict" => 80,
+            "temperature" => 0.5
+        ]
+    ];
 
-  // Send to Ollama API (IPv4 forced for Windows compatibility)
-  $ch = curl_init("http://127.0.0.1:11434/api/generate");
-  curl_setopt_array($ch, [
-  CURLOPT_RETURNTRANSFER => false,
-  CURLOPT_POST => true,
-  CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
-  CURLOPT_POSTFIELDS => json_encode($payload),
-  CURLOPT_TIMEOUT => 60,
-  CURLOPT_CONNECTTIMEOUT => 5,
-  CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-  CURLOPT_NOSIGNAL => 1,
-  CURLOPT_WRITEFUNCTION => function($ch, $chunk) {
-    echo $chunk;
-    flush();
-    return strlen($chunk);
-  }
-]);
+    // Initialize cURL to Ollama
+    $ch = curl_init("http://127.0.0.1:11434/api/generate");
 
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
+        CURLOPT_POSTFIELDS => json_encode($payload),
 
-  $response = curl_exec($ch);
+        // IMPORTANT: streaming mode
+        CURLOPT_RETURNTRANSFER => false,
 
-  if (curl_errno($ch)) {
-    echo "Connection error: " . htmlspecialchars(curl_error($ch));
+        // Timeouts (safe with streaming)
+        CURLOPT_TIMEOUT => 120,
+        CURLOPT_CONNECTTIMEOUT => 5,
+
+        // Windows stability fixes
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+        CURLOPT_NOSIGNAL => 1,
+
+        // Stream chunks as soon as Ollama sends tokens
+        CURLOPT_WRITEFUNCTION => function ($ch, $chunk) {
+            $data = json_decode($chunk, true);
+
+            // Ollama streams JSON lines; extract response tokens
+            if (isset($data['response'])) {
+                echo $data['response'];
+                flush();
+            }
+
+            return strlen($chunk);
+        }
+    ]);
+
+    // Execute streaming request
+    curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        echo "\n\n[Connection error: " . curl_error($ch) . "]";
+    }
+
+    curl_close($ch);
     exit;
-  }
-
-  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  curl_close($ch);
-
-  if ($http_code != 200 || !$response) {
-    echo "AI service error. Please try again.";
-    exit;
-  }
-
-  // Decode Ollama response
-  $decoded = json_decode($response, true);
-
-  // Validate AI response
-  echo $decoded["response"] ?? "Error: No response from AI. Please try again.";
-  exit;
 }
 ?>
 
@@ -102,7 +98,8 @@ Answer:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stack AI - ChatBot</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="chatbot/style.css">
 </head>
@@ -114,13 +111,12 @@ Answer:
 
   <!-- Right Side Chat Modal -->
   <div class="stack-ai-modal" id="chatModal">
+
     <!-- Header -->
     <div class="stack-ai-header d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-center gap-2">
-        <h5 class="mb-0 fw-bold">Stack AI</h5>
-      </div>
-      <button class="btn btn-sm btn-link text-white" onclick="closeStackAIModal()" style="text-decoration: none;">
-        <i class="bi bi-x-lg" style="font-size: 20px;"></i>
+      <h5 class="mb-0 fw-bold">Stack AI</h5>
+      <button class="btn btn-sm btn-link text-white" onclick="closeStackAIModal()">
+        <i class="bi bi-x-lg"></i>
       </button>
     </div>
 
@@ -130,7 +126,9 @@ Answer:
     <!-- Footer -->
     <div class="stack-ai-footer">
       <div class="d-flex gap-2 mb-2">
-        <input type="text" id="userMessage" class="form-control stack-ai-input" placeholder="Ask about our books, discounts, delivery..." onkeypress="handleKeyPress(event)">
+        <input type="text" id="userMessage" class="form-control stack-ai-input"
+               placeholder="Ask about our books, discounts, delivery..."
+               onkeypress="handleKeyPress(event)">
         <button class="btn stack-ai-send-btn" onclick="sendStackAIMessage()">
           <i class="bi bi-send"></i>
         </button>
@@ -139,14 +137,14 @@ Answer:
     </div>
   </div>
 
-  <!-- Chat Button (Bottom Right) -->
-  <button class="btn btn-md btn-green stack-ai-button d-flex align-items-center justify-content-center gap-2 shadow" onclick="openStackAIModal()" id="stackAIButton" title="Ask Stack AI a question">
-    <span class="btn-text">Chat with Stack AI</span>
+  <!-- Chat Button -->
+  <button class="btn btn-md btn-green stack-ai-button shadow"
+          onclick="openStackAIModal()" id="stackAIButton">
+    Chat with Stack AI
   </button>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script src="chatbot/script.js"></script>
 
 </body>
-
 </html>
