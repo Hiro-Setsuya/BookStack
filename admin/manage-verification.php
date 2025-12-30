@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_verification_cod
                     .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                     .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
                     .code-box { background: white; border: 3px dashed #667eea; border-radius: 12px; padding: 25px; text-align: center; margin: 20px 0; }
-                    .code { font-size: 36px; font-weight: bold; letter-spacing: 10px; color: #667eea; font-family: monospace; }
+                    .code { font-size: 36px; font-weight: bold; letter-spacing: 2px; color: #667eea; font-family: monospace; word-break: break-all; }
                     .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
                     .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 15px 0; border-radius: 4px; }
                 </style>
@@ -799,6 +799,24 @@ if ($result) {
                                     <pre class="mb-0" style="white-space: pre-wrap; font-size: 0.875rem; background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);"><?= htmlspecialchars($request['content']) ?></pre>
                                 </div>
 
+                                <!-- Verification Code Section (what was sent to user) -->
+                                <?php if (!empty($request['verification_code'])): ?>
+                                    <div class="verification-details mt-3" style="background: #f0f9ff; border-color: #0ea5e9;">
+                                        <h6><i class="bi bi-key me-2"></i>Code Sent to User</h6>
+                                        <div style="background: white; border: 2px dashed #0ea5e9; padding: 1rem; border-radius: 10px; text-align: center;">
+                                            <p class="mb-2" style="font-family: 'Courier New', monospace; font-weight: 700; font-size: 1.2rem; color: #0ea5e9; margin: 0; word-wrap: break-word;">
+                                                <?= htmlspecialchars($request['verification_code']) ?>
+                                            </p>
+                                            <small class="text-muted d-block mt-2">
+                                                <i class="bi bi-clock"></i> Sent: <?= date('M d, Y h:i A', strtotime($request['code_sent_at'])) ?>
+                                            </small>
+                                        </div>
+                                        <small class="text-muted mt-2 d-block">
+                                            <i class="bi bi-<?= $request['contact_method'] === 'email' ? 'envelope' : 'phone' ?>"></i>
+                                            Sent to: <?= htmlspecialchars($request['contact_info']) ?>
+                                        </small>
+                                    </div>
+                                <?php endif; ?>
 
                                 <!-- User Response Section -->
                                 <?php if (!empty($request['user_response'])): ?>
