@@ -3,13 +3,155 @@ session_start();
 require_once '../config/db.php';
 
 // Check if admin is logged in
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['admin_id']) || $_SESSION['admin_role'] !== 'admin') {
     header('Location: login.php');
     exit;
 }
 
-$statusMessage = '';
-$statusType = '';
+// Get status message from session (after redirect)
+if (isset($_SESSION['status_message'])) {
+    $statusMessage = $_SESSION['status_message'];
+    $statusType = $_SESSION['status_type'];
+    unset($_SESSION['status_message']);
+    unset($_SESSION['status_type']);
+} else {
+    $statusMessage = '';
+    $statusType = '';
+}
+
+require_once '../notifications/send-email.php';
+require_once '../notifications/send-sms.php';
+
+// Handle sending verification code to user
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_verification_code'])) {
+    $message_id = (int)$_POST['message_id'];
+    $user_id = (int)$_POST['user_id'];
+    $contact_method = $_POST['contact_method'];
+    $contact_info = $_POST['contact_info'];
+    $user_name = $_POST['user_name'];
+
+    // Generate 6-digit verification code
+    $verification_code = sprintf("%06d", mt_rand(1, 999999));
+
+    // Update message with verification code
+    $update_query = "UPDATE messages SET verification_code = '$verification_code', code_sent_at = NOW() WHERE message_id = $message_id";
+    $update_result = executeQuery($update_query);
+
+    if ($update_result) {
+        $sent_successfully = false;
+
+        // Send via email
+        if ($contact_method === 'email') {
+            $email_subject = "BookStack Account Verification Code";
+            $email_body = "
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+                    .code-box { background: white; border: 3px dashed #667eea; border-radius: 12px; padding: 25px; text-align: center; margin: 20px 0; }
+                    .code { font-size: 36px; font-weight: bold; letter-spacing: 10px; color: #667eea; font-family: monospace; }
+                    .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+                    .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 15px 0; border-radius: 4px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1 style='margin: 0;'>📚 BookStack</h1>
+                        <p style='margin: 10px 0 0 0;'>Account Verification</p>
+                    </div>
+                    <div class='content'>
+                        <p>Hi <strong>" . htmlspecialchars($user_name) . "</strong>,</p>
+                        <p>Your account verification request has been processed. Please use the confirmation code below to complete your verification:</p>
+                        
+                        <div class='code-box'>
+                            <p style='margin: 0 0 10px 0; color: #666; font-size: 14px;'>Your Verification Code</p>
+                            <div class='code'>$verification_code</div>
+                            <p style='margin: 10px 0 0 0; color: #666; font-size: 12px;'>Valid for 24 hours</p>
+                        </div>
+                        
+                        <div class='info-box'>
+                            <p style='margin: 0;'><strong>📌 Important:</strong> Please reply to the verification request with this code to confirm your identity.</p>
+                        </div>
+                        
+                        <p style='margin-top: 20px;'>If you didn't request this verification, please ignore this email or contact support.</p>
+                        
+                        <p style='margin-top: 30px;'>Best regards,<br><strong>BookStack Team</strong></p>
+                    </div>
+                    <div class='footer'>
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                        <p>&copy; 2024 BookStack. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            ";
+
+            $sent_successfully = sendEmail($contact_info, $email_subject, $email_body);
+        }
+        // Send via SMS
+        elseif ($contact_method === 'phone') {
+            $sms_message = "BookStack Verification Code: $verification_code\n\nPlease reply with this code to complete your account verification. Valid for 24 hours.\n\n- BookStack Team";
+            $sent_successfully = sendSMS($contact_info, $sms_message);
+        }
+
+        if ($sent_successfully) {
+            $_SESSION['status_message'] = "Verification code sent successfully via " . strtoupper($contact_method) . " to " . htmlspecialchars($contact_info);
+            $_SESSION['status_type'] = 'success';
+        } else {
+            $_SESSION['status_message'] = "Code generated but failed to send via " . strtoupper($contact_method) . ". Code: $verification_code";
+            $_SESSION['status_type'] = 'warning';
+        }
+    } else {
+        $_SESSION['status_message'] = 'Error generating verification code.';
+        $_SESSION['status_type'] = 'danger';
+    }
+
+    // Redirect to prevent form resubmission
+    header('Location: manage-verification.php');
+    exit;
+}
+
+// Handle matching user response with verification code
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_code_match'])) {
+    $message_id = (int)$_POST['message_id'];
+    $user_id = (int)$_POST['user_id'];
+
+    // Get the message details
+    $check_query = "SELECT verification_code, user_response FROM messages WHERE message_id = $message_id";
+    $check_result = executeQuery($check_query);
+
+    if ($check_result && mysqli_num_rows($check_result) > 0) {
+        $msg_data = mysqli_fetch_assoc($check_result);
+        $sent_code = strtoupper(trim($msg_data['verification_code']));
+        $user_reply = strtoupper(trim($msg_data['user_response']));
+
+        if (!empty($user_reply) && $sent_code === $user_reply) {
+            // Codes match! Mark as verified
+            $update_message = "UPDATE messages SET code_verified = 1, status = 'resolved' WHERE message_id = $message_id";
+            $update_user = "UPDATE users SET is_account_verified = 1 WHERE user_id = $user_id";
+
+            if (executeQuery($update_message) && executeQuery($update_user)) {
+                $_SESSION['status_message'] = '✓ Code matched! User account has been verified successfully.';
+                $_SESSION['status_type'] = 'success';
+            } else {
+                $_SESSION['status_message'] = 'Error updating verification status.';
+                $_SESSION['status_type'] = 'danger';
+            }
+        } else {
+            $_SESSION['status_message'] = "Code mismatch! Sent: $sent_code, User replied: $user_reply. Cannot verify.";
+            $_SESSION['status_type'] = 'warning';
+        }
+    }
+
+    // Redirect to prevent form resubmission
+    header('Location: manage-verification.php');
+    exit;
+}
 
 // Handle verification approval
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_verification'])) {
@@ -22,15 +164,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_verification'
 
     if ($result) {
         // Update message status
-        $update_message = "UPDATE messages SET status = 'resolved' WHERE message_id = $message_id";
+        $update_message = "UPDATE messages SET status = 'resolved', code_verified = TRUE WHERE message_id = $message_id";
         executeQuery($update_message);
 
-        $statusMessage = 'User account verified successfully!';
-        $statusType = 'success';
+        $_SESSION['status_message'] = 'User account verified successfully!';
+        $_SESSION['status_type'] = 'success';
     } else {
-        $statusMessage = 'Error verifying account.';
-        $statusType = 'danger';
+        $_SESSION['status_message'] = 'Error verifying account.';
+        $_SESSION['status_type'] = 'danger';
     }
+
+    // Redirect to prevent form resubmission
+    header('Location: manage-verification.php');
+    exit;
 }
 
 // Handle verification rejection
@@ -39,9 +185,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reject_verification']
 
     $update_message = "UPDATE messages SET status = 'resolved' WHERE message_id = $message_id";
     if (executeQuery($update_message)) {
-        $statusMessage = 'Verification request rejected.';
-        $statusType = 'info';
+        $_SESSION['status_message'] = 'Verification request rejected.';
+        $_SESSION['status_type'] = 'info';
     }
+
+    // Redirect to prevent form resubmission
+    header('Location: manage-verification.php');
+    exit;
 }
 
 // Fetch all verification requests
@@ -55,6 +205,11 @@ $query = "
         m.content,
         m.status,
         m.created_at,
+        m.verification_code,
+        m.code_sent_at,
+        m.user_response,
+        m.responded_at,
+        m.code_verified,
         u.user_name,
         u.email,
         u.phone_number,
@@ -643,19 +798,87 @@ if ($result) {
                                     <h6><i class="bi bi-file-text me-2"></i>Verification Details</h6>
                                     <pre class="mb-0" style="white-space: pre-wrap; font-size: 0.875rem; background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);"><?= htmlspecialchars($request['content']) ?></pre>
                                 </div>
+
+
+                                <!-- User Response Section -->
+                                <?php if (!empty($request['user_response'])): ?>
+                                    <?php
+                                    $sent_code = strtoupper(trim($request['verification_code']));
+                                    $user_reply = strtoupper(trim($request['user_response']));
+                                    $codes_match = ($sent_code === $user_reply);
+                                    ?>
+                                    <div class="verification-details mt-3" style="background: <?= $codes_match ? '#f0fdf4' : '#fef3c7' ?>; border-color: <?= $codes_match ? '#10b981' : '#f59e0b' ?>;">
+                                        <h6><i class="bi bi-chat-left-text me-2"></i>User Response</h6>
+                                        <div style="background: white; padding: 1rem; border-radius: 8px; border: 2px solid <?= $codes_match ? '#10b981' : '#f59e0b' ?>;">
+                                            <p class="mb-2" style="font-size: 0.9rem; font-family: 'Courier New', monospace; font-weight: 700; color: <?= $codes_match ? '#10b981' : '#f59e0b' ?>;">
+                                                <?= nl2br(htmlspecialchars($request['user_response'])) ?>
+                                            </p>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock"></i> Responded: <?= date('M d, Y h:i A', strtotime($request['responded_at'])) ?>
+                                            </small>
+                                            <?php if ($request['code_verified']): ?>
+                                                <span class="badge bg-success ms-2"><i class="bi bi-check-circle-fill"></i> Code Verified</span>
+                                            <?php elseif ($codes_match): ?>
+                                                <span class="badge bg-success ms-2"><i class="bi bi-check-circle"></i> Codes Match!</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-warning ms-2"><i class="bi bi-exclamation-triangle"></i> Does Not Match</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Action Buttons -->
                             <div class="col-md-4">
                                 <?php if ($request['status'] === 'pending' && !$request['is_account_verified']): ?>
                                     <div class="d-grid gap-3">
+                                        <!-- Match & Verify Button (if code sent and user responded) -->
+                                        <?php if (!empty($request['verification_code']) && !empty($request['user_response']) && !$request['code_verified']): ?>
+                                            <form method="POST" action="" class="mb-0">
+                                                <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
+                                                <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
+                                                <button type="submit" name="verify_code_match" class="btn w-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);" onclick="return confirm('🔍 Verify if user response matches the sent code?\n\nSent Code: <?= htmlspecialchars($request['verification_code']) ?>\nUser Reply: <?= htmlspecialchars($request['user_response']) ?>')">
+                                                    <i class="bi bi-shield-check me-2"></i>Match & Verify Code
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+
+                                        <!-- Send Verification Code (only if no code was sent yet) -->
+                                        <?php if (empty($request['verification_code'])): ?>
+                                            <form method="POST" action="" class="mb-0">
+                                                <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
+                                                <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
+                                                <input type="hidden" name="contact_method" value="<?= $request['contact_method'] ?>">
+                                                <input type="hidden" name="contact_info" value="<?= $request['contact_info'] ?>">
+                                                <input type="hidden" name="user_name" value="<?= $request['user_name'] ?>">
+                                                <button type="submit" name="send_verification_code" class="btn w-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);" onclick="return confirm('⚠️ Send a NEW verification code?\n\nNote: User already received a code when they submitted the request.\nOnly send a new code if the original was not received.\n\nMethod: <?= strtoupper($request['contact_method']) ?>\nTo: <?= htmlspecialchars($request['contact_info']) ?>')">
+                                                    <i class="bi bi-send-fill me-2"></i>Resend New Code
+                                                </button>
+                                            </form>
+                                        <?php elseif (!empty($request['user_response'])): ?>
+                                            <div class="alert alert-success mb-0" style="border-radius: 10px; font-size: 0.875rem;">
+                                                <i class="bi bi-check-circle-fill me-2"></i>
+                                                <strong>User Responded</strong>
+                                                <p class="mb-0 mt-1 small">Click "Match & Verify Code" above to check if response matches</p>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="alert alert-info mb-0" style="border-radius: 10px; font-size: 0.875rem;">
+                                                <i class="bi bi-info-circle-fill me-2"></i>
+                                                <strong>Code Already Sent</strong>
+                                                <p class="mb-0 mt-1 small">Waiting for user response. Code sent on <?= date('M d, h:i A', strtotime($request['code_sent_at'])) ?></p>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <!-- Approve Button -->
                                         <form method="POST" action="" class="mb-0">
                                             <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
                                             <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
-                                            <button type="submit" name="approve_verification" class="btn btn-approve w-100" onclick="return confirm('✓ Approve this verification request?\n\nUser: <?= htmlspecialchars($request['user_name']) ?>\nEmail: <?= htmlspecialchars($request['email']) ?>')">
-                                                <i class="bi bi-check-circle-fill me-2"></i>Approve Verification
+                                            <button type="submit" name="approve_verification" class="btn btn-approve w-100" onclick="return confirm('✓ Manually approve without code verification?\n\nUser: <?= htmlspecialchars($request['user_name']) ?>\nEmail: <?= htmlspecialchars($request['email']) ?>\n\nUse this only if you verified the user through other means.')">
+                                                <i class="bi bi-check-circle-fill me-2"></i>Approve Request
                                             </button>
                                         </form>
+
+                                        <!-- Reject Button -->
                                         <form method="POST" action="" class="mb-0">
                                             <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
                                             <button type="submit" name="reject_verification" class="btn btn-reject w-100" onclick="return confirm('✗ Reject this verification request?\n\nThis action cannot be undone.')">
