@@ -58,6 +58,40 @@ function sendSMS($recipient, $message)
         ),
     ];
 
+    // Try cURL first (more reliable), fall back to file_get_contents
+    if (function_exists('curl_init')) {
+        $ch = curl_init($smsConfig['gateway_url']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false || !empty($curlError)) {
+            error_log('SMS Error (cURL): Failed to send SMS to ' . $recipient);
+            error_log('cURL Error: ' . $curlError);
+            error_log('Gateway URL: ' . $smsConfig['gateway_url']);
+            error_log('Payload: ' . json_encode($payload));
+            return false;
+        }
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            error_log('SMS Error: Gateway returned status code ' . $httpCode);
+            error_log('Response: ' . $response);
+            return false;
+        }
+
+        error_log('SMS Success: Sent to ' . $recipient . ' (HTTP ' . $httpCode . ')');
+        return $response;
+    }
+
+    // Fallback to file_get_contents if cURL is not available
     // Configure HTTP request
     $options = [
         'http' => [
@@ -75,9 +109,25 @@ function sendSMS($recipient, $message)
 
     // Log for debugging
     if ($response === false) {
+        $error = error_get_last();
         error_log('SMS Error: Failed to send SMS to ' . $recipient);
         error_log('Gateway URL: ' . $smsConfig['gateway_url']);
+        error_log('Error details: ' . ($error ? $error['message'] : 'Unknown error'));
+        error_log('Payload: ' . json_encode($payload));
         return false;
+    }
+
+    // Check HTTP response code
+    if (isset($http_response_header)) {
+        $status_line = $http_response_header[0];
+        preg_match('/\d{3}/', $status_line, $matches);
+        $status_code = isset($matches[0]) ? (int)$matches[0] : 0;
+
+        if ($status_code < 200 || $status_code >= 300) {
+            error_log('SMS Error: Gateway returned status code ' . $status_code);
+            error_log('Response: ' . $response);
+            return false;
+        }
     }
 
     error_log('SMS Success: Sent to ' . $recipient);
