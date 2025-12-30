@@ -43,12 +43,12 @@ Answer:
 
   // Prepare data for Ollama - STREAMING DISABLED to prevent PHP timeout
   $payload = [
-    "model" => "llama3.2:latest",
+    "model" => "llama3.2:1b",
     "prompt" => $prompt,
     "stream" => false,
     "options" => [
-      "num_predict" => 120, // Limit response length
-      "temperature" => 0.6
+      "num_predict" => 80, // Limit response length
+      "temperature" => 0.5
     ]
   ];
 
