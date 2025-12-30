@@ -19,21 +19,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are made via PayPal. Users can manage accounts, access purchases instantly, and contact customer support.";
 
     // System prompt for Stack AI (optimized for speed)
-    $prompt = "
-You are Stack AI, the official assistant of BookStack.
+    $prompt = "You are Stack AI, the official customer support assistant of BookStack.
 
-Use ONLY the information below.
-Be friendly and concise (max 80 words).
-If the answer is not available, say: Contact support@bookstack.com
+Your role:
+- Help users with ebooks, purchases, accounts, payments, downloads, and general concerns.
+- Respond professionally, friendly, and clearly.
+- Keep answers short (1–3 sentences).
+- If the question is unclear or information is missing, politely ask a follow-up question.
+- Never mention external support emails or links.
+- You ARE the support.
 
-INFO:
+Context:
 $data
 
-QUESTION:
+User Question:
 $message
 
-ANSWER:
-";
+Support Response:";
 
     // Ollama payload (STREAMING ENABLED)
     $payload = [
@@ -41,9 +43,11 @@ ANSWER:
         "prompt" => $prompt,
         "stream" => true,
         "options" => [
-            "num_predict" => 80,
-            "temperature" => 0.5
-        ]
+        "num_predict" => 60,      // shorter = faster
+        "temperature" => 0.3,     // less randomness = faster
+        "top_p" => 0.9,
+        "num_ctx" => 1024         // reduce context size
+      ]
     ];
 
     // Initialize cURL to Ollama
