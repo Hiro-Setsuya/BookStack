@@ -19,23 +19,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are made via PayPal. Users can manage accounts, access purchases instantly, and contact customer support.";
 
     // System prompt for Stack AI (optimized for speed)
-    $prompt = "You are Stack AI, the official customer support assistant of BookStack.
+    $prompt = "You are Stack AI, BookStack customer support.
 
-Your role:
-- Help users with ebooks, purchases, accounts, payments, downloads, and general concerns.
-- Respond professionally, friendly, and clearly.
-- Keep answers short (1–3 sentences).
-- If the question is unclear or information is missing, politely ask a follow-up question.
-- Never mention external support emails or links.
-- You ARE the support.
+Rules:
+- Reply in ONE sentence only.
+- Max 20 words.
+- Be friendly and direct.
+- If unclear, ask ONE short question.
+- No greetings unless the user greets first.
 
 Context:
 $data
 
-User Question:
+User:
 $message
 
-Support Response:";
+Answer:";
+
+
+// Ultra-fast greeting handling (NO AI CALL)
+$lower = strtolower($message);
+if (in_array($lower, ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening'])) {
+    echo "Hello! 👋 How can I help you today?";
+    exit;
+}
+
 
     // Ollama payload (STREAMING ENABLED)
     $payload = [
@@ -43,11 +51,13 @@ Support Response:";
         "prompt" => $prompt,
         "stream" => true,
         "options" => [
-        "num_predict" => 60,      // shorter = faster
-        "temperature" => 0.3,     // less randomness = faster
-        "top_p" => 0.9,
-        "num_ctx" => 1024         // reduce context size
-      ]
+    "num_predict" => 35,     // HARD CAP (this is key)
+    "temperature" => 0.2,    // less thinking
+    "top_p" => 0.85,
+    "num_ctx" => 768,        // smaller context = faster
+    "repeat_penalty" => 1.1
+]
+
     ];
 
     // Initialize cURL to Ollama
