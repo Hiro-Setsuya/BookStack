@@ -110,8 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
     $content_escaped = mysqli_real_escape_string($conn, $content);
     $contact_info_escaped = mysqli_real_escape_string($conn, $contact_info);
 
-    $insert_query = "INSERT INTO messages (user_id, contact_method, contact_info, subject, content, status) 
-                     VALUES ($user_id, '$method', '$contact_info_escaped', '$subject_escaped', '$content_escaped', 'pending')";
+    $insert_query = "INSERT INTO messages (user_id, contact_method, contact_info, subject, content, status, verification_code, code_sent_at) 
+                     VALUES ($user_id, '$method', '$contact_info_escaped', '$subject_escaped', '$content_escaped', 'pending', 'CONFIRM-$verification_code', NOW())";
 
     if (executeQuery($insert_query)) {
         $statusMessage = "Verification request sent successfully! Please check your $method and follow the instructions. Our admin team will review your request.";
