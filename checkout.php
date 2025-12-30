@@ -49,6 +49,8 @@ $tax_rate = 0.12;
 $tax = $taxable_amount * $tax_rate;
 $total = $subtotal - $discount_amount + $tax;
 
+$_SESSION['checkout_total'] = number_format($total, 2, '.', '');
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -204,6 +206,56 @@ $total = $subtotal - $discount_amount + $tax;
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=AfBypM8JUZ8hoyjQWjI6dC1DZbPb12p675WJw-DPgJH-UcrFeped3spRetRIoh1TChzsiLd09WmeuJfy&currency=PHP"></script>
+  <script>
+    window.checkoutTotal = <?php echo json_encode(number_format($total, 2, '.', '')); ?>;
+
+    if (typeof paypal !== 'undefined') {
+      paypal.Buttons({
+        createOrder: function () {
+          return fetch('payment/create-order.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          }).then(function (res) {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+          }).then(function (data) {
+            if (!data.id) throw new Error('No order ID returned');
+            return data.id;
+          }).catch(function (err) {
+            console.error('Create order error:', err);
+            alert('Failed to create order. Check console.');
+          });
+        },
+        onApprove: function (data) {
+          return fetch('payment/capture-order.php?orderID=' + data.orderID)
+            .then(function (res) { return res.json(); })
+            .then(function (details) {
+              if (details.status === 'success') {
+                var payerName = (details.payer && details.payer.name && details.payer.name.given_name) ? details.payer.name.given_name : 'customer';
+                alert('Payment completed successfully by ' + payerName + '!');
+                window.location.href = 'orders.php?payment=success&orderID=' + encodeURIComponent(details.orderID || data.orderID);
+              } else {
+                console.error('Capture failed', details);
+                alert('Payment capture failed. See console for details.');
+              }
+            }).catch(function (err) {
+              console.error('Capture error:', err);
+              alert('Payment capture failed.');
+            });
+        },
+        onError: function (err) {
+          console.error('PayPal Button Error:', err);
+          alert('An error occurred with PayPal. Please try again.');
+        },
+        onCancel: function (data) {
+          alert('Payment cancelled.');
+        }
+      }).render('#paypal-button-container');
+    } else {
+      document.getElementById('paypal-button-container').innerHTML = '<p class="text-danger">PayPal SDK failed to load.</p>';
+    }
+  </script>
 </body>
 
 </html>
