@@ -190,16 +190,24 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
           </div>
           <div class="card-body px-4 px-md-5">
             <p class="text-center">Complete your purchase securely with PayPal:</p>
-            <!-- di pa ito final, inaayos ko pa paypal integ hahaha -->
-            <div id="paypal-button-container" class="mt-2 w-100 text-center" style="max-width: 550px;">
+            <div class="d-flex justify-content-center">
+              <div id="paypal-button-container" class="mt-2 w-100" style="max-width: 550px;">
+              </div>
             </div>
             <p class="text-muted text-center mt-3 mb-0">
               <small><i class="bi bi-shield-check"></i> Secure payment powered by PayPal</small>
             </p>
-            <div class="alert alert-info mt-3 border-0" style="background-color: #9e9e9e50;">
-              <i class="bi bi-info-circle"></i> <strong>Note:</strong> This is a test payment interface. Use PayPal sandbox credentials.
-            </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3 px-4">
+    <div class="row px-md-5">
+      <div class="col px-md-5">
+        <div class="alert alert-info border-0" style="background-color: #9e9e9e50;">
+          <i class="bi bi-info-circle"></i> <strong>Note:</strong> This is a test payment interface. Use PayPal sandbox credentials.
         </div>
       </div>
     </div>
@@ -212,25 +220,29 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
 
     if (typeof paypal !== 'undefined') {
       paypal.Buttons({
-        createOrder: function () {
+        createOrder: function() {
           return fetch('payment/create-order.php', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-          }).then(function (res) {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }).then(function(res) {
             if (!res.ok) throw new Error('Network response was not ok');
             return res.json();
-          }).then(function (data) {
+          }).then(function(data) {
             if (!data.id) throw new Error('No order ID returned');
             return data.id;
-          }).catch(function (err) {
+          }).catch(function(err) {
             console.error('Create order error:', err);
             alert('Failed to create order. Check console.');
           });
         },
-        onApprove: function (data) {
+        onApprove: function(data) {
           return fetch('payment/capture-order.php?orderID=' + data.orderID)
-            .then(function (res) { return res.json(); })
-            .then(function (details) {
+            .then(function(res) {
+              return res.json();
+            })
+            .then(function(details) {
               if (details.status === 'success') {
                 var payerName = (details.payer && details.payer.name && details.payer.name.given_name) ? details.payer.name.given_name : 'customer';
                 alert('Payment completed successfully by ' + payerName + '!');
@@ -239,16 +251,16 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
                 console.error('Capture failed', details);
                 alert('Payment capture failed. See console for details.');
               }
-            }).catch(function (err) {
+            }).catch(function(err) {
               console.error('Capture error:', err);
               alert('Payment capture failed.');
             });
         },
-        onError: function (err) {
+        onError: function(err) {
           console.error('PayPal Button Error:', err);
           alert('An error occurred with PayPal. Please try again.');
         },
-        onCancel: function (data) {
+        onCancel: function(data) {
           alert('Payment cancelled.');
         }
       }).render('#paypal-button-container');
