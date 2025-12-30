@@ -15,7 +15,6 @@ CREATE TABLE users (
 ALTER TABLE users 
 CHANGE COLUMN is_phone_verified is_account_verified BOOLEAN DEFAULT FALSE;
 
-
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
