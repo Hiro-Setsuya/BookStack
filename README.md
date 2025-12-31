@@ -1,89 +1,405 @@
-ebook-ecommerce-system/
+# 📚 BookStack - E-Book Store & Management System
+
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![PayPal](https://img.shields.io/badge/PayPal-00457C?style=flat&logo=paypal&logoColor=white)
+
+BookStack is a comprehensive e-book e-commerce platform built with PHP and MySQL. It provides a complete solution for selling digital books online with features like shopping cart, payment processing, user management, admin dashboard, REST API, and advanced verification systems.
+
+## ✨ Features
+
+### 🛒 Customer Features
+
+- **User Authentication** - Registration, login, password recovery, and email/SMS verification
+- **E-Book Browsing** - Browse books by categories with detailed descriptions
+- **Shopping Cart** - Add multiple books to cart and manage purchases
+- **Secure Checkout** - PayPal integration for safe payments
+- **Order History** - View and track all past purchases
+- **Secure Downloads** - Download purchased e-books securely
+- **Profile Management** - Update personal information and change password
+- **AI Chatbot** - Interactive chatbot for customer support
+
+### 👨‍💼 Admin Features
+
+- **Dashboard** - Overview of sales, orders, and users
+- **E-Book Management** - Add, edit, delete, and manage e-books
+- **Category Management** - Organize books into categories
+- **User Management** - View and manage user accounts
+- **Order Management** - Track and manage all orders
+- **Verification System** - Send verification codes via Email/SMS with reply tracking
+- **Sales Reports** - Generate and view sales analytics
+- **Voucher System** - Create and manage discount vouchers
+
+### 🔧 Technical Features
+
+- **REST API** - Full-featured API with authentication (See [API Documentation](api/README.md))
+- **Email/SMS Integration** - Automated notifications and verification
+- **Reply Processing** - Capture and process email/SMS replies for verification
+- **Partner Integration** - API for third-party integrations
+- **Secure File Handling** - Protected e-book downloads
+- **Session Management** - Secure user sessions
+- **Responsive Design** - Mobile-friendly interface
+
+## 🏗️ Architecture
+
+```
+BookStack/
 │
-├── admin/
-│ ├── index.php # Admin login
-│ ├── dashboard.php # Admin dashboard
-│ ├── manage-ebooks.php # Add/Edit/Delete e-books
-│ ├── manage-categories.php # Manage book categories
-│ ├── manage-users.php # View users
-│ ├── manage-orders.php # View orders
-│ ├── reports.php # Sales reports
-│ └── logout.php
+├── admin/                          # Admin Panel
+│   ├── dashboard.php              # Admin dashboard
+│   ├── login.php                  # Admin login
+│   ├── manage-ebooks.php          # E-book CRUD operations
+│   ├── manage-categories.php      # Category management
+│   ├── manage-users.php           # User management
+│   ├── manage-orders.php          # Order management
+│   ├── manage-reports.php         # Sales reports
+│   ├── manage-verification.php    # Verification system
+│   └── logout.php                 # Admin logout
 │
-├── api/ # REST API (Task 9.5)
-│ ├── ebooks.php # GET e-books
-│ ├── orders.php # GET/POST orders
-│ ├── users.php # GET users (limited)
-│ ├── auth.php # API authentication
-│ └── response.php # JSON response handler
+├── api/                           # REST API
+│   ├── auth.php                   # API authentication
+│   ├── auth-middleware.php        # API middleware
+│   ├── users.php                  # User endpoints
+│   ├── vouchers.php               # Voucher endpoints
+│   ├── response.php               # JSON response handler
+│   ├── process-sms-reply.php      # SMS reply processor
+│   ├── process-email-reply.php    # Email reply processor
+│   ├── check-email-replies.php    # Email reply checker
+│   └── README.md                  # API documentation
+│
 │
 ├── assets/
-│ ├── css/
-│ │ ├── bootstrap.min.css
-│ │ └── style.css
-│ │
-│ ├── js/
-│ │ ├── bootstrap.bundle.min.js
-│ │ ├── cart.js
-│ │ └── validation.js
-│ │
-│ └── images/
-│ ├── logo.png
-│ └── ebooks/
+│   ├── img/
+│   │   ├── ebook_cover/           # Book cover images
+│   │   └── logo/                  # Logo assets
+│   └── js/
+│       └── cart.js                # Shopping cart logic
 │
-├── chatbot/ # Ollama integration (Task 9.2)
-│ ├── chatbot.php
-│ └── ollama-config.php
+├── chatbot/                       # AI Chatbot
+│   ├── chatbot.php               # Chatbot interface
+│   ├── script.js                 # Chatbot JavaScript
+│   ├── style.css                 # Chatbot styles
+│   └── data.txt                  # Chatbot training data
 │
-├── config/
-│ ├── db.php # Database connection
-│ ├── paypal.php # PayPal config
-│ ├── mail.php # Email config
-│ └── sms.php # SMS config
+├── config/                        # Configuration Files
+│   ├── db.php                     # Database connection
+│   ├── mail.php                   # Email configuration
+│   ├── paypal.php                 # PayPal settings
+│   └── sms.php                    # SMS gateway config
 │
-├── includes/
-│ ├── header.php
-│ ├── footer.php
-│ ├── auth.php # Session/auth checks
-│ ├── functions.php # Common helper functions
-│ └── navbar.php
+├── lib/                           # Third-party Libraries
+│   └── PHPMailer-master/         # Email library
 │
-├── uploads/
-│ ├── ebooks/ # Uploaded PDF e-books
-│ └── thumbnails/ # Book cover images
+├── logs/                          # Application logs
 │
-├── payments/ # PayPal integration (Task 9.1)
-│ ├── create-order.php
-│ ├── capture-order.php
-│ └── payment-success.php
+├── notifications/                 # Notification System
+│   ├── send-email.php            # Email sender
+│   └── send-sms.php              # SMS sender
 │
-├── notifications/ # SMS & Email (Task 9.3–9.4)
-│ ├── send-email.php
-│ └── send-sms.php
+├── payment/                       # Payment Processing
+│   ├── create-order.php          # Create PayPal order
+│   └── capture-order.php         # Capture payment
 │
-├── database/
-│ ├── ebook_store_db.sql # SQL schema dump
-│
-├── docs/ # Documentation assets
-│ ├── diagrams/
-│ │ ├── flowchart.png
-│ │ ├── usecase.png
-│ │ ├── class-diagram.png
-│ │ └── activity-diagram.png
-│ └── screenshots/
-│
-├── index.php # Home page
-├── ebooks.php # Browse e-books
-├── ebook-details.php # View single e-book
-├── cart.php # Shopping cart
-├── checkout.php # Checkout page
-├── orders.php # User order history
-├── download.php # Secure e-book download
-├── login.php
-├── register.php
-├── logout.php
-│
-├── .env.example # Environment variables sample
-├── .gitignore # Ignore uploads, secrets
-├── README.md # Project overview
-└── LICENSE
+├── cart.php                       # Shopping cart page
+├── checkout.php                   # Checkout process
+├── ebook-details.php             # E-book details page
+├── ebooks.php                     # E-book listing
+├── download.php                   # Secure download handler
+├── index.php                      # Home page
+├── login.php                      # User login
+├── register.php                   # User registration
+├── forgot-password.php           # Password recovery
+├── change-password.php           # Password change
+├── profile.php                    # User profile
+├── my-ebooks.php                 # Purchased e-books
+├── orders.php                     # Order history
+├── request-verification.php       # Verification request
+├── sql_query_tables.sql          # Database schema
+├── sql_query_insert.sql          # Sample data
+└── style.css                      # Global styles
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **XAMPP** (or any PHP server with MySQL)
+  - PHP 7.4 or higher
+  - MySQL 5.7 or higher
+- **Web Browser** (Chrome, Firefox, Edge, Safari)
+- **PayPal Account** (for payment integration)
+- **Email/SMS Gateway** (optional, for notifications)
+
+### Installation
+
+1. **Clone or Download the Repository**
+
+   ```bash
+   git clone <repository-url>
+   ```
+
+   Or download and extract to `C:\xampp\htdocs\BookStack`
+
+2. **Start XAMPP**
+
+   - Start Apache and MySQL from XAMPP Control Panel
+
+3. **Create Database**
+
+   - Open phpMyAdmin: http://localhost/phpmyadmin
+   - Create a new database named `bookstack_db`
+   - Import the database schema:
+     - Open `sql_query_tables.sql` and execute it
+     - (Optional) Import `sql_query_insert.sql` for sample data
+
+4. **Configure Database Connection**
+
+   Edit `config/db.php`:
+
+   ```php
+   $dbhost = "localhost:3307";  // Change port if needed
+   $dbuser = "root";
+   $dbpass = "";
+   $db = "bookstack_db";
+   ```
+
+5. **Configure Email (Optional)**
+
+   Edit `config/mail.php` with your SMTP settings:
+
+   ```php
+   $mail->Host = 'smtp.gmail.com';
+   $mail->Username = 'your-email@gmail.com';
+   $mail->Password = 'your-app-password';
+   ```
+
+6. **Configure PayPal (Optional)**
+
+   Edit `config/paypal.php`:
+
+   ```php
+   define('PAYPAL_CLIENT_ID', 'your-client-id');
+   define('PAYPAL_SECRET', 'your-secret');
+   ```
+
+7. **Configure SMS Gateway (Optional)**
+
+   Edit `config/sms.php` with your SMS provider credentials
+
+8. **Access the Application**
+   - **Frontend**: http://localhost/BookStack/
+   - **Admin Panel**: http://localhost/BookStack/admin/
+     - Default admin credentials (create in database or register first user as admin)
+
+## 📖 Usage Guide
+
+### For Customers
+
+1. **Register an Account**
+
+   - Go to Register page
+   - Fill in details (name, email, phone, password)
+   - Verify account via email/SMS
+
+2. **Browse E-Books**
+
+   - Browse categories
+   - View book details, author, price, description
+
+3. **Purchase E-Books**
+
+   - Add books to cart
+   - Proceed to checkout
+   - Pay via PayPal
+   - Download from "My E-Books"
+
+4. **Manage Profile**
+   - Update personal information
+   - Change password
+   - View order history
+
+### For Administrators
+
+1. **Login to Admin Panel**
+
+   - Navigate to `/admin/`
+   - Enter admin credentials
+
+2. **Manage E-Books**
+
+   - Add new e-books with title, description, author, price, category
+   - Upload cover images and PDF files
+   - Edit or delete existing e-books
+
+3. **Manage Categories**
+
+   - Create book categories
+   - Organize books by genre/topic
+
+4. **Manage Users**
+
+   - View all registered users
+   - Manage user accounts
+   - Send verification codes
+
+5. **Process Verification**
+
+   - Send verification codes via Email/SMS
+   - Track user responses
+   - Verify user accounts
+
+6. **View Reports**
+   - Monitor sales
+   - Track orders
+   - Generate analytics
+
+## 🔌 API Documentation
+
+The BookStack API provides programmatic access to the platform. See [API Documentation](api/README.md) for detailed endpoint information.
+
+### Quick API Example
+
+**Authentication:**
+
+```bash
+POST /api/auth.php
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user_id": 1,
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+  }
+}
+```
+
+See [BookStack_API.postman_collection.json](api/BookStack_API.postman_collection.json) for Postman collection.
+
+## 🔐 Security Features
+
+- **Password Hashing** - Passwords stored with secure hashing
+- **SQL Injection Protection** - Prepared statements and input validation
+- **Session Management** - Secure session handling
+- **CSRF Protection** - Cross-site request forgery prevention
+- **File Upload Validation** - Secure file handling
+- **Authentication Middleware** - API token-based authentication
+- **Access Control** - Role-based permissions (user/admin)
+
+## 📧 Email & SMS Integration
+
+### Email System
+
+- **PHPMailer** library for reliable email delivery
+- Supports SMTP configuration
+- Email reply processing for verification
+- Automated notifications for orders and verification
+
+### SMS System
+
+- SMS gateway integration
+- Reply capture via webhook or polling
+- Two-way SMS communication
+- Verification code delivery
+
+See [VERIFICATION_REPLY_INTEGRATION.md](VERIFICATION_REPLY_INTEGRATION.md) for detailed setup.
+
+## 🤝 Partner Integration
+
+The system supports third-party integrations through the REST API. See [PARTNER_INTEGRATION.md](api/PARTNER_INTEGRATION.md) for:
+
+- Partner authentication
+- Voucher creation
+- Order processing
+- Webhook notifications
+
+## 🗄️ Database Schema
+
+Key tables:
+
+- **users** - User accounts and authentication
+- **ebooks** - E-book catalog
+- **categories** - Book categories
+- **orders** - Purchase orders
+- **order_items** - Order line items
+- **cart_items** - Shopping cart
+- **downloads** - Download tracking
+- **messages** - Verification messages with reply tracking
+- **vouchers** - Discount vouchers
+- **api_tokens** - API authentication tokens
+
+## 🛠️ Technologies Used
+
+- **Backend**: PHP 7.4+
+- **Database**: MySQL 5.7+
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Libraries**:
+  - PHPMailer (Email)
+  - PayPal SDK (Payments)
+  - JWT (API Authentication)
+- **Server**: Apache (XAMPP)
+
+## 📝 Additional Documentation
+
+- [API Documentation](api/README.md) - Complete REST API reference
+- [Implementation Summary](api/IMPLEMENTATION_SUMMARY.md) - Technical implementation details
+- [Partner Integration Guide](api/PARTNER_INTEGRATION.md) - Third-party integration
+- [Verification System](VERIFICATION_REPLY_INTEGRATION.md) - Email/SMS verification setup
+- [SMS Forwarder Setup](SMS_FORWARDER_SETUP.md) - SMS configuration guide
+
+## 🐛 Troubleshooting
+
+### Database Connection Issues
+
+- Verify MySQL is running in XAMPP
+- Check port number in `config/db.php` (default: 3306 or 3307)
+- Ensure database `bookstack_db` exists
+
+### PayPal Integration Issues
+
+- Verify API credentials in `config/paypal.php`
+- Use sandbox mode for testing
+- Check PayPal dashboard for error logs
+
+### Email Not Sending
+
+- Verify SMTP settings in `config/mail.php`
+- Enable "Less secure app access" for Gmail
+- Use app-specific passwords for Gmail
+
+### File Upload Issues
+
+- Check `php.ini` for `upload_max_filesize` and `post_max_size`
+- Ensure `assets/img/ebook_cover/` has write permissions
+- Verify file path is accessible
+
+## 📄 License
+
+This project is available for educational and commercial use.
+
+## 👥 Contributors
+
+Developed as an e-commerce platform for digital book distribution.
+
+## 📞 Support
+
+For issues or questions:
+
+- Check the documentation files in the project
+- Review API documentation for integration help
+- Examine logs in `/logs/` directory
+
+---
+
+**Built with ❤️ using PHP & MySQL**
