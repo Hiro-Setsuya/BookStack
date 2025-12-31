@@ -1,8 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
-require_once '../notifications/send-email.php';
-require_once '../notifications/send-sms.php';
+require_once '../config/mail.php'; // Use your centralized mail config
 
 // Admin check
 if (!isset($_SESSION['admin_id']) || $_SESSION['admin_role'] !== 'admin') {
@@ -20,13 +19,15 @@ function setFlash($message, $type = 'info')
 // Generate verification code
 function generateCode()
 {
-    return str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+    return 'CONFIRM-' . strtoupper(bin2hex(random_bytes(4)));
 }
 
 // Send verification code via email or SMS
 function sendVerificationCode($message_id, $user_id, $contact_method, $contact_info, $user_name, $conn)
 {
     $verification_code = generateCode();
+
+    // Update the message with verification code
     $stmt = $conn->prepare("UPDATE messages SET verification_code = ?, code_sent_at = NOW() WHERE message_id = ?");
     $stmt->bind_param("si", $verification_code, $message_id);
     if (!$stmt->execute()) {
@@ -37,12 +38,22 @@ function sendVerificationCode($message_id, $user_id, $contact_method, $contact_i
     $sent_successfully = false;
     if ($contact_method === 'email') {
         $subject = "BookStack Account Verification Code";
-        $body = "Hi $user_name, your verification code is: $verification_code (valid for 24 hours)";
+        $body = "
+            <h3>Account Verification Required</h3>
+            <p>Dear $user_name,</p>
+            <p>Your verification code is: <strong>$verification_code</strong></p>
+            <p>Please reply to this email with your verification code to complete the process.</p>
+            <p>This code is valid for 24 hours.</p>
+            <br>
+            <p>Best regards,<br>BookStack Team</p>
+        ";
         $sent_successfully = sendEmail($contact_info, $subject, $body);
-    } elseif ($contact_method === 'phone') {
-        $sms_message = "BookStack Verification Code: $verification_code (valid 24h)";
-        $sent_successfully = sendSMS($contact_info, $sms_message);
     }
+    // Add SMS functionality if needed
+    // elseif ($contact_method === 'phone') {
+    //     $sms_message = "BookStack Verification Code: $verification_code (valid 24h)";
+    //     $sent_successfully = sendSMS($contact_info, $sms_message);
+    // }
 
     if ($sent_successfully) {
         setFlash("Verification code sent successfully via " . strtoupper($contact_method) . " to " . htmlspecialchars($contact_info), "success");
@@ -124,7 +135,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Fetch verification requests
+// Handle refresh button click (to check emails)
+if (isset($_GET['refresh'])) {
+    // Get the base URL for the current site
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $base_url = $protocol . '://' . $host;
+
+    // Use absolute URL for the API call
+    $api_url = $base_url . dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/api/check-email.php';
+
+    // Use cURL to call the check-email.php script
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($error) {
+        setFlash("Curl error: " . $error, "danger");
+    } else if ($http_code !== 200) {
+        setFlash("HTTP error: " . $http_code . " - Response: " . substr($response, 0, 100), "danger");
+    } else {
+        $result = json_decode($response, true);
+
+        if ($result && isset($result['status'])) {
+            if ($result['status'] === 'success') {
+                setFlash("Email check completed: " . $result['message'], "success");
+            } else {
+                setFlash("Email check failed: " . ($result['message'] ?? 'Unknown error'), "danger");
+            }
+        } else {
+            setFlash("Invalid response format: " . substr($response, 0, 100), "danger");
+        }
+    }
+
+    // Redirect to prevent resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+// Fetch verification requests - Only messages that were created as verification requests
 $query = "
 SELECT m.message_id, m.user_id, m.contact_method, m.contact_info, m.subject, m.content, m.status,
        m.created_at, m.verification_code, m.code_sent_at, m.user_response, m.responded_at, m.code_verified,
@@ -138,6 +196,13 @@ ORDER BY CASE WHEN m.status = 'pending' THEN 0 ELSE 1 END, m.created_at DESC
 $result = executeQuery($query);
 $verification_requests = $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
 
+// Get flash messages
+$statusMessage = $_SESSION['status_message'] ?? '';
+$statusType = $_SESSION['status_type'] ?? 'info';
+
+// Clear flash messages
+unset($_SESSION['status_message']);
+unset($_SESSION['status_type']);
 ?>
 
 <!doctype html>
@@ -338,7 +403,7 @@ $verification_requests = $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
                     <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
                     <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
                     <a href="manage-verification.php" class="nav-link active"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-reports.php" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
+                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
 
                     <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
 
@@ -363,8 +428,17 @@ $verification_requests = $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
                 <?php endif; ?>
 
                 <div class="mb-4">
-                    <h5 class="fw-bold mb-0">Manage Verifications</h5>
-                    <p class="text-muted small mb-0">Review and approve user verification requests.</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="fw-bold mb-0">Manage Verifications</h5>
+                            <p class="text-muted small mb-0">Review and approve user verification requests.</p>
+                        </div>
+                        <div>
+                            <a href="?refresh=1" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-envelope-check me-2"></i>Check Email
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row g-3 mb-4 text-center">

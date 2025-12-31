@@ -228,7 +228,8 @@ foreach ($categories as $cat) {
                     <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
                     <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
                     <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-reports.php" class="nav-link"><i class="bi bi-bar-chart me-3"></i>Reports</a>
+                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
+
 
                     <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
 
