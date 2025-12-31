@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $user_id = intval($_GET['id']);
 
         $stmt = $conn->prepare(
-            "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at 
+            "SELECT user_id, user_name, email, phone_number, role, is_account_verified, created_at, updated_at 
              FROM users WHERE user_id = ?"
         );
         $stmt->bind_param("i", $user_id);
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // Get all users with filtering
-    $query = "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at FROM users";
+    $query = "SELECT user_id, user_name, email, phone_number, role, is_account_verified, created_at, updated_at FROM users";
 
     $conditions = [];
     $params = [];
@@ -87,6 +87,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     jsonResponse($users, 200);
+}
+
+// Get single user by ID 
+if (isset($_GET['id'])) {
+    $user_id = intval($_GET['id']);
+
+    $stmt = $conn->prepare(
+        "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at 
+         FROM users WHERE user_id = ?"
+    );
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        jsonResponse(["success" => false, "message" => "User not found"], 404);
+    }
+
+    $user = $result->fetch_assoc();
+    jsonResponse($user, 200);
 }
 
 // Handle POST requests (create user)
