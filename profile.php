@@ -132,7 +132,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
                 </nav>
 
                 <div class="mt-5">
-                    <a href="logout.php" class="sidebar-link text-danger fw-semibold"><i class="bi bi-box-arrow-left me-2"></i> Log Out</a>
+                    <a href="client-logout.php" class="sidebar-link text-danger fw-semibold"><i class="bi bi-box-arrow-left me-2"></i> Log Out</a>
                 </div>
             </div>
 
