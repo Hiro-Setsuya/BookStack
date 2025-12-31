@@ -12,9 +12,6 @@ CREATE TABLE users (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE users 
-CHANGE COLUMN is_phone_verified is_account_verified BOOLEAN DEFAULT FALSE;
-
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -89,15 +86,13 @@ CREATE TABLE messages (
     status ENUM('pending','read','resolved') DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    verification_code VARCHAR(20) DEFAULT NULL,
+    code_sent_at DATETIME DEFAULT NULL,
+    user_response TEXT DEFAULT NULL,
+    responded_at DATETIME DEFAULT NULL,
+    code_verified BOOLEAN DEFAULT FALSE;
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
-
-ALTER TABLE messages 
-ADD COLUMN verification_code VARCHAR(20) DEFAULT NULL,
-ADD COLUMN code_sent_at DATETIME DEFAULT NULL,
-ADD COLUMN user_response TEXT DEFAULT NULL,
-ADD COLUMN responded_at DATETIME DEFAULT NULL,
-ADD COLUMN code_verified BOOLEAN DEFAULT FALSE;
 
 -- Add index for better performance
 CREATE INDEX idx_verification_code ON messages(verification_code);
