@@ -79,7 +79,11 @@ body {
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-  background: linear-gradient(90deg, rgba(46,204,113,0.08), rgba(46,204,113,0.03));
+  background: linear-gradient(
+    90deg,
+    rgba(46, 204, 113, 0.08),
+    rgba(46, 204, 113, 0.03)
+  );
   color: var(--text-dark);
 }
 

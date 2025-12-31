@@ -73,40 +73,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
 </head>
 
 <body>
-    <nav id="navbar" class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
-        <div class="container-fluid">
-            <div class="navbar-brand fw-bold text-green text-gprof">
-                <img src="assets/logo.svg" height="25" alt="Logo">
-                <span>BookStack</span>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item px-lg-3">
-                        <a class="nav-link fw-semibold text-green" href="index.php">
-                            <i class="bi bi-house-door-fill me-2"></i>Home
-                        </a>
-                    </li>
-                    <li class="nav-item px-lg-3">
-                        <a class="nav-link fw-semibold" href="ebooks.php">
-                            <i class="bi bi-book-fill me-2"></i>E-Books
-                        </a>
-                    </li>
-                    <li class="nav-item px-lg-3">
-                        <a class="nav-link fw-semibold" href="ebook-details.php">
-                            <i class="bi bi-grid-fill me-2"></i>Categories
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="ms-auto d-none d-lg-flex align-items-center gap-3">
-                <i class="bi bi-bell fs-5 text-muted"></i>
-                <div class="rounded-circle" style="width: 35px; height: 35px; background: linear-gradient(135deg, #2ecc71 0%, #27a961 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;"><?= htmlspecialchars($initials) ?></div>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/nav.php'; ?>
 
     <div class="container account-container">
         <div class="row">
@@ -240,6 +207,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
             </div>
         </div>
     </div>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

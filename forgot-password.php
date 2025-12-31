@@ -306,17 +306,7 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
-        <div class="container-fluid px-4 px-lg-5">
-            <a class="navbar-brand" href="#">
-                <img src="assets/logo.svg" alt="BookStack Logo" class="logo-img">
-                BookStack
-            </a>
-            <div class="d-none d-sm-flex">
-                <a class="nav-link px-3" href="#">Help</a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/nav.php'; ?>
 
     <?php
     // Mask email: show first 2 chars and domain
@@ -570,13 +560,10 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                 </div>
             </div>
 
-            <div class="card-footer-custom">
-                <p class="mb-0">
-                    Need help? <a href="#">Contact Support</a>
-                </p>
-            </div>
+
         </div>
     </main>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -260,19 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
 
 <body>
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg bg-white border-bottom">
-        <div class="container-fluid px-4 px-lg-5">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
-                <svg class="logo-svg" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.8261 17.4264C16.7203 18.1174 20.2244 18.5217 24 18.5217C27.7756 18.5217 31.2797 18.1174 34.1739 17.4264C36.9144 16.7722 39.9967 15.2331 41.3563 14.1648L24.8486 40.6391C24.4571 41.267 23.5429 41.267 23.1514 40.6391L6.64374 14.1648C8.00331 15.2331 11.0856 16.7722 13.8261 17.4264Z"></path>
-                </svg>
-                <strong>BookStack</strong>
-            </a>
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <a class="nav-link text-secondary" href="profile.php">Back to Profile</a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/nav.php'; ?>
 
     <!-- Main Content -->
     <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
@@ -359,10 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="py-3 text-center text-muted">
-        <small>© 2024 BookStack E-Learning. All rights reserved.</small>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
