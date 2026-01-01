@@ -50,27 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user']) && isset($_PO
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    /* Brand green colors matched from index.php navbar and buttons */
-    .text-green {
-      color: #198754 !important;
-    }
-
-    .btn-green {
-      background-color: #198754 !important;
-      border-color: #198754 !important;
-      color: white !important;
-    }
-
-    .btn-green:hover {
-      background-color: #157347 !important;
-    }
-
-    .active-dot {
-      background-color: #198754 !important;
-      width: 30px !important;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="bg-light">

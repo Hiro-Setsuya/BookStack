@@ -131,80 +131,15 @@ $totalVerified = mysqli_fetch_assoc($totalVerifiedResult)['total'];
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --brand-green: #198754;
-            --sidebar-bg: #ffffff;
-            --main-bg: #f8f9fa;
-        }
+    <link rel="stylesheet" href="style.css">
+</head>
+}
 
-        body {
-            background-color: var(--main-bg);
-            font-family: 'Manrope', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .text-green {
-            color: var(--brand-green) !important;
-        }
-
-        .brand-title {
-            font-size: 1.75rem;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar {
-            width: 260px;
-            height: 100vh;
-            position: fixed;
-            background: var(--sidebar-bg);
-            border-right: 1px solid #e5e7eb;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-link {
-            color: #64748b;
-            font-weight: 500;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            margin: 0.2rem 1rem;
-            text-decoration: none;
-        }
-
-        .nav-link.active {
-            background-color: #f0fdf4;
-            color: var(--brand-green) !important;
-        }
-
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
-            min-height: 100vh;
-        }
-
-        @media (max-width: 991.98px) {
-            .sidebar {
-                transform: translateX(-100%);
-                padding-top: 1rem;
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 1rem;
-            }
-
-            .sidebar .sidebar-brand {
-                display: none;
-            }
-        }
-    </style>
+.sidebar .sidebar-brand {
+display: none;
+}
+}
+</style>
 </head>
 
 <body>

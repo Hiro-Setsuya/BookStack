@@ -33,63 +33,7 @@ if (isset($_POST['confirm_logout']) && $_POST['confirm_logout'] === 'yes') {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2ecc71;
-            --primary-hover: #37b278;
-            --text-dark: #333333;
-            --text-muted: #666666;
-            --bg-light: #f8f9fa;
-            --border-color: #e9ecef;
-            --primary-rgba: rgba(25, 135, 84, 0.9);
-            --input-bg: #b7ffd5;
-            --card-bg: #e1ffee;
-        }
-
-        .bg-primary-custom {
-            background-color: var(--primary-color) !important;
-        }
-
-        .text-muted-custom {
-            color: var(--text-muted) !important;
-        }
-
-        .btn-primary-custom {
-            background-color: var(--primary-color) !important;
-            border-color: var(--primary-color) !important;
-            color: white !important;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: var(--primary-hover) !important;
-            border-color: var(--primary-hover) !important;
-            color: white !important;
-        }
-
-        .text-primary-custom {
-            color: var(--primary-color) !important;
-        }
-
-        .modal-content {
-            border-radius: 1rem !important;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-        }
-
-        .modal-dialog {
-            max-width: 28rem !important;
-        }
-
-        .icon-container {
-            width: 4rem;
-            height: 4rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--card-bg);
-            border-radius: 50%;
-            margin-bottom: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="bg-light">
