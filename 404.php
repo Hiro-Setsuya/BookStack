@@ -29,39 +29,41 @@ function get_home_url()
 <body>
     <?php include 'includes/nav.php'; ?>
 
-    <main class="py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6">
-                    <div class="card shadow-sm border-0 error-container">
-                        <div class="card-body text-center p-4 p-md-5">
-                            <span class="badge error-badge mb-4">404 Error</span>
-                            <!-- Add src for gif -->
-                            <div class="mb-4">
-                                <img
-                                    alt="404 Error Animation"
-                                    class="img-fluid error-gif rounded"
-                                    style="max-width: 220px;" />
-                            </div>
-
-                            <h1 class="error-title display-5 fw-bold mb-3">Page Not Found</h1>
-
-                            <p class="error-text text-muted mb-4 px-3">
-                                We couldn't find the page you're looking for. It might have been moved or deleted.
-                            </p>
-
-                            <a href="<?php echo get_home_url() . '/BookStack/'; ?>"
-                                class="btn btn-green btn-lg d-inline-flex align-items-center gap-2 px-4 py-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                </svg>
-                                Return to Home
-                            </a>
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100 mx-2">
+            <div class="col-12 col-md-6">
+                <div class="error-container">
+                    <div class="text-center">
+                        <div class="mb-5">
+                            <video
+                                autoplay
+                                loop
+                                muted
+                                class="error-gif"
+                                style="max-width: 280px; width: 100%;">
+                                <source src="assets/404.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
                         </div>
+
+                        <h1 class="error-title mb-3">Oops! Page Not Found</h1>
+
+                        <p class="error-text mb-5">
+                            The page you're looking for might have been moved, deleted, or never existed.
+                        </p>
+
+                        <a href="<?php echo get_home_url() . '/BookStack/'; ?>"
+                            class="btn btn-green btn-lg d-inline-flex align-items-center gap-2 px-5 py-2 error-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            Return to Home
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </main>
 
     <?php include 'includes/footer.php'; ?>
