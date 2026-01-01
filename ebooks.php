@@ -51,9 +51,46 @@ if (isset($_SESSION['user_id'])) {
     $count_stmt->close();
 }
 
-// Fetch ebooks from database
-$query = "SELECT ebook_id, title, author, price, cover_image, file_path FROM ebooks ORDER BY created_at DESC";
-$result = executeQuery($query);
+// Handle search functionality
+$search_query = isset($_GET['q']) ? trim($_GET['q']) : '';
+$total_results = 0;
+
+// Fetch ebooks from database with optional search
+if (!empty($search_query)) {
+    $search_term = '%' . mysqli_real_escape_string($conn, $search_query) . '%';
+    $query = "
+        SELECT DISTINCT
+            e.ebook_id,
+            e.title,
+            e.author,
+            e.price,
+            e.cover_image,
+            e.file_path,
+            c.name as category_name
+        FROM ebooks e
+        LEFT JOIN categories c ON e.category_id = c.category_id
+        WHERE 
+            e.title LIKE '$search_term' OR
+            e.author LIKE '$search_term' OR
+            e.description LIKE '$search_term' OR
+            c.name LIKE '$search_term'
+        ORDER BY 
+            CASE 
+                WHEN e.title LIKE '$search_term' THEN 1
+                WHEN e.author LIKE '$search_term' THEN 2
+                WHEN c.name LIKE '$search_term' THEN 3
+                ELSE 4
+            END,
+            e.title ASC
+    ";
+    $result = executeQuery($query);
+    if ($result) {
+        $total_results = mysqli_num_rows($result);
+    }
+} else {
+    $query = "SELECT ebook_id, title, author, price, cover_image, file_path FROM ebooks ORDER BY created_at DESC";
+    $result = executeQuery($query);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,8 +124,19 @@ $result = executeQuery($query);
 
         <div class="row mb-4">
             <div class="col">
-                <h2 class="fw-bold">Tech E-Books</h2>
-                <p class="text-muted">Browse our collection of programming and computer science books</p>
+                <?php if (!empty($search_query)): ?>
+                    <h2 class="fw-bold">Search Results</h2>
+                    <p class="text-muted">
+                        Found <strong><?php echo $total_results; ?></strong> result<?php echo $total_results !== 1 ? 's' : ''; ?>
+                        for "<strong><?php echo htmlspecialchars($search_query); ?></strong>"
+                        <a href="ebooks.php" class="ms-3 text-decoration-none">
+                            <i class="bi bi-x-circle me-1"></i>Clear search
+                        </a>
+                    </p>
+                <?php else: ?>
+                    <h2 class="fw-bold">Tech E-Books</h2>
+                    <p class="text-muted">Browse our collection of programming and computer science books</p>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -136,9 +184,17 @@ $result = executeQuery($query);
             } else {
                 ?>
                 <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <i class="bi bi-info-circle me-2"></i>No e-books available at the moment.
-                    </div>
+                    <?php if (!empty($search_query)): ?>
+                        <div class="text-center py-5">
+                            <i class="bi bi-search" style="font-size: 4rem; color: #d1d5db;"></i>
+                            <h4 class="mt-3">No results found</h4>
+                            <p class="text-muted">Try different keywords or <a href="ebooks.php">browse all ebooks</a></p>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i>No e-books available at the moment.
+                        </div>
+                    <?php endif; ?>
                 </div>
             <?php
             }

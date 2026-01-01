@@ -70,10 +70,22 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                     </a>
                 </li>
             </ul>
+
+            <!-- Mobile Search Form -->
+            <form method="GET" action="ebooks.php" class="d-lg-none px-3 py-2">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="q" placeholder="Search BookStack" />
+                    <button class="btn btn-green" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
         </div>
 
         <div class="ms-auto d-none d-lg-flex align-items-center">
-            <input class="form-control me-2" type="text" placeholder="Search BookStack" style="width: 200px;" />
+            <form method="GET" action="ebooks.php" class="me-2">
+                <input class="form-control" type="text" name="q" placeholder="Search BookStack" style="width: 200px;" />
+            </form>
 
             <!-- Cart with badge -->
             <a href="cart.php" class="btn btn-green me-2 position-relative">
