@@ -136,178 +136,131 @@ $totalVerified = mysqli_fetch_assoc($totalVerifiedResult)['total'];
 
 <body>
 
-    <div class="d-lg-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
-        <div class="navbar-brand fw-bold text-green brand-title">
-            <span>BookStack</span>
-        </div>
-        <button class="btn btn-light border" type="button" onclick="document.getElementById('sidebar-menu').classList.toggle('show')">
-            <i class="bi bi-list"></i>
-        </button>
+    <?php $currentPage = 'users';
+    include '../includes/admin-nav.php'; ?>
+    <?php
+    $success_message = isset($success) ? $success : '';
+    $error_message = isset($error) ? $error : '';
+    include '../includes/notification.php';
+    ?>
+
+    <div class="mb-4">
+        <h5 class="fw-bold mb-0">Manage Users</h5>
+        <p class="text-muted small mb-0">Overview of all system users and account statuses.</p>
     </div>
 
-    <div class="container-fluid p-0">
-        <div class="d-flex">
-            <nav class="sidebar d-flex flex-column pb-4" id="sidebar-menu">
-                <div class="p-4 mb-2 sidebar-brand">
-                    <div class="navbar-brand fw-bold text-green brand-title">
-                        <span>BookStack</span>
-                    </div>
-                </div>
-
-                <div class="nav flex-column mb-auto">
-                    <a href="dashboard.php" class="nav-link"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
-                    <a href="manage-ebooks.php" class="nav-link"><i class="bi bi-journal-text me-3"></i>E-Books</a>
-                    <a href="manage-categories.php" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
-                    <a href="manage-users.php" class="nav-link active"><i class="bi bi-people me-3"></i>Users</a>
-                    <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
-                    <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
-
-                    <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
-
-                    <div class="px-3 mt-3">
-                        <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
-                            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminName); ?>&background=198754&color=fff" class="rounded-circle me-2" width="35" height="35">
-                            <div>
-                                <p class="mb-0 small fw-bold text-dark"><?php echo htmlspecialchars($adminName); ?></p>
-                                <p class="mb-0 text-muted" style="font-size: 0.7rem;">System Administrator</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <main class="main-content w-100">
-                <?php if (isset($success)): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php echo $success; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-                <?php if (isset($error)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php echo $error; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <div class="mb-4">
-                    <h5 class="fw-bold mb-0">Manage Users</h5>
-                    <p class="text-muted small mb-0">Overview of all system users and account statuses.</p>
-                </div>
-
-                <div class="row g-3 mb-4 text-center">
-                    <div class="col-12 col-md-6">
-                        <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Total Registered Users</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalUsers; ?></h4>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Verified Accounts</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalVerified; ?></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card data-card p-3 mb-4">
-                    <form method="GET" action="">
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                                    <input type="text" name="search" class="form-control border-start-0" placeholder="Search users..." value="<?php echo htmlspecialchars($searchTerm); ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <select name="role" class="form-select">
-                                    <option value="">All Roles</option>
-                                    <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>>User</option>
-                                    <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>>Admin</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
-                                    <?php if (!empty($searchTerm) || !empty($filterRole)): ?>
-                                        <a href="manage-users.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="card data-card p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h6 class="fw-bold mb-0">User Directory</h6>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table align-middle">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Role</th>
-                                    <th>Verification</th>
-                                    <th>Joined Date</th>
-                                    <th class="text-end pe-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($users) > 0): ?>
-                                    <?php foreach ($users as $user): ?>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($user['user_name']); ?>&background=random" class="rounded-circle me-2" width="40" height="40">
-                                                    <div>
-                                                        <div class="fw-bold"><?php echo htmlspecialchars($user['user_name']); ?></div>
-                                                        <small class="text-muted"><?php echo htmlspecialchars($user['email']); ?></small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-<?php echo $user['role'] === 'admin' ? 'danger' : 'primary'; ?>">
-                                                    <?php echo ucfirst(htmlspecialchars($user['role'])); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <?php if (isset($user['is_account_verified']) && $user['is_account_verified'] == 1): ?>
-                                                    <span class="badge bg-success">Verified</span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-warning text-dark">Not Verified</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
-                                            <td class="text-end">
-                                                <button class="btn btn-sm btn-outline-primary" onclick='editUser(<?php echo json_encode($user); ?>)' title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(<?php echo $user['user_id']; ?>, '<?php echo htmlspecialchars($user['user_name'], ENT_QUOTES); ?>')" title="Delete">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center py-5 text-muted">
-                                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                                            <p class="mt-2">No users found</p>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-4 d-flex justify-content-between align-items-center">
-                        <span class="text-muted small">Showing <?php echo count($users); ?> of <?php echo $totalUsers; ?> entries</span>
-                    </div>
-                </div>
-            </main>
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-12 col-md-6">
+            <div class="card stat-card p-4">
+                <p class="text-muted small mb-1">Total Registered Users</p>
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalUsers; ?></h4>
+            </div>
         </div>
+        <div class="col-12 col-md-6">
+            <div class="card stat-card p-4">
+                <p class="text-muted small mb-1">Verified Accounts</p>
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalVerified; ?></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card data-card p-3 mb-4">
+        <form method="GET" action="">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0" placeholder="Search users..." value="<?php echo htmlspecialchars($searchTerm); ?>">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="role" class="form-select">
+                        <option value="">All Roles</option>
+                        <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>>User</option>
+                        <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
+                        <?php if (!empty($searchTerm) || !empty($filterRole)): ?>
+                            <a href="manage-users.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card data-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h6 class="fw-bold mb-0">User Directory</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Verification</th>
+                        <th>Joined Date</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($users) > 0): ?>
+                        <?php foreach ($users as $user): ?>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($user['user_name']); ?>&background=random" class="rounded-circle me-2" width="40" height="40">
+                                        <div>
+                                            <div class="fw-bold"><?php echo htmlspecialchars($user['user_name']); ?></div>
+                                            <small class="text-muted"><?php echo htmlspecialchars($user['email']); ?></small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<?php echo $user['role'] === 'admin' ? 'danger' : 'primary'; ?>">
+                                        <?php echo ucfirst(htmlspecialchars($user['role'])); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if (isset($user['is_account_verified']) && $user['is_account_verified'] == 1): ?>
+                                        <span class="badge bg-success">Verified</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-warning text-dark">Not Verified</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary" onclick='editUser(<?php echo json_encode($user); ?>)' title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(<?php echo $user['user_id']; ?>, '<?php echo htmlspecialchars($user['user_name'], ENT_QUOTES); ?>')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                <p class="mt-2">No users found</p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Showing <?php echo count($users); ?> of <?php echo $totalUsers; ?> entries</span>
+        </div>
+    </div>
+    </main>
+    </div>
     </div>
 
     <!-- Create/Edit User Modal -->
@@ -422,6 +375,8 @@ $totalVerified = mysqli_fetch_assoc($totalVerifiedResult)['total'];
             modal.show();
         }
     </script>
+
+    <?php include '../includes/admin-footer.php'; ?>
 </body>
 
 </html>

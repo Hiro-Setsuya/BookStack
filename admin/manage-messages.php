@@ -208,208 +208,156 @@ unset($_SESSION['error_message']);
 
 <body>
 
-    <div class="d-lg-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
-        <div class="navbar-brand fw-bold text-green brand-title">
-            <span>BookStack</span>
+    <?php $currentPage = 'messages';
+    include '../includes/admin-nav.php'; ?>
+
+    <?php include '../includes/notification.php'; ?>
+
+    <header class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h5 class="fw-bold mb-0">Messages</h5>
+            <p class="text-muted small">Manage user communications and support requests.</p>
         </div>
-        <button class="btn btn-light border" type="button" onclick="document.getElementById('sidebar-menu').classList.toggle('show')">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="d-flex gap-2">
+            <a href="?refresh=1<?php echo $filter_status ? '&status=' . $filter_status : ''; ?>" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-envelope-check me-2"></i>Check Email
+            </a>
+            <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+        </div>
+    </header>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo count($all_messages); ?></h4>
+                <p class="text-muted small mb-0">Total Messages</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <h4 class="fw-bold mb-0 text-warning"><?php echo count($pending_messages); ?></h4>
+                <p class="text-muted small mb-0">Pending</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <h4 class="fw-bold mb-0 text-info"><?php echo count($read_messages); ?></h4>
+                <p class="text-muted small mb-0">Read</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <h4 class="fw-bold mb-0 text-success"><?php echo count($resolved_messages); ?></h4>
+                <p class="text-muted small mb-0">Resolved</p>
+            </div>
+        </div>
     </div>
 
-    <div class="container-fluid p-0">
-        <div class="d-flex">
-
-            <nav class="sidebar d-flex flex-column pb-4" id="sidebar-menu">
-                <div class="p-4 mb-2 sidebar-brand">
-                    <div class="navbar-brand fw-bold text-green brand-title">
-                        <span>BookStack</span>
-                    </div>
+    <div class="card message-card">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0">All Conversations</h6>
+                <div class="btn-group btn-group-sm">
+                    <a href="manage-messages.php" class="btn btn-outline-secondary <?php echo $filter_status === null ? 'active' : ''; ?>">All</a>
+                    <a href="manage-messages.php?status=pending" class="btn btn-outline-secondary <?php echo $filter_status === 'pending' ? 'active' : ''; ?>">Pending</a>
+                    <a href="manage-messages.php?status=read" class="btn btn-outline-secondary <?php echo $filter_status === 'read' ? 'active' : ''; ?>">Read</a>
+                    <a href="manage-messages.php?status=resolved" class="btn btn-outline-secondary <?php echo $filter_status === 'resolved' ? 'active' : ''; ?>">Resolved</a>
                 </div>
-
-                <div class="nav flex-column mb-auto">
-                    <a href="dashboard.php" class="nav-link"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
-                    <a href="manage-ebooks.php" class="nav-link"><i class="bi bi-journal-text me-3"></i>E-Books</a>
-                    <a href="manage-categories.php" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
-                    <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
-                    <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
-                    <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-messages.php" class="nav-link active"><i class="bi bi-envelope me-3"></i>Messages</a>
-
-                    <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
-
-                    <div class="px-3 mt-3">
-                        <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
-                            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminName); ?>&background=198754&color=fff" class="rounded-circle me-2" width="35" height="35">
-                            <div>
-                                <p class="mb-0 small fw-bold text-dark"><?php echo htmlspecialchars($adminName); ?></p>
-                                <p class="mb-0 text-muted" style="font-size: 0.7rem;">System Administrator</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <main class="main-content w-100">
-                <header class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <h5 class="fw-bold mb-0">Messages</h5>
-                        <p class="text-muted small">Manage user communications and support requests.</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="?refresh=1<?php echo $filter_status ? '&status=' . $filter_status : ''; ?>" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-envelope-check me-2"></i>Check Email
-                        </a>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
-                            <i class="bi bi-arrow-clockwise me-2"></i>Refresh
-                        </button>
-                    </div>
-                </header>
-
-                <?php if ($success_message): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle-fill me-2"></i><?php echo $success_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($error_message): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $error_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <div class="stat-card text-center">
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo count($all_messages); ?></h4>
-                            <p class="text-muted small mb-0">Total Messages</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card text-center">
-                            <h4 class="fw-bold mb-0 text-warning"><?php echo count($pending_messages); ?></h4>
-                            <p class="text-muted small mb-0">Pending</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card text-center">
-                            <h4 class="fw-bold mb-0 text-info"><?php echo count($read_messages); ?></h4>
-                            <p class="text-muted small mb-0">Read</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card text-center">
-                            <h4 class="fw-bold mb-0 text-success"><?php echo count($resolved_messages); ?></h4>
-                            <p class="text-muted small mb-0">Resolved</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card message-card">
-                    <div class="card-header bg-white">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="fw-bold mb-0">All Conversations</h6>
-                            <div class="btn-group btn-group-sm">
-                                <a href="manage-messages.php" class="btn btn-outline-secondary <?php echo $filter_status === null ? 'active' : ''; ?>">All</a>
-                                <a href="manage-messages.php?status=pending" class="btn btn-outline-secondary <?php echo $filter_status === 'pending' ? 'active' : ''; ?>">Pending</a>
-                                <a href="manage-messages.php?status=read" class="btn btn-outline-secondary <?php echo $filter_status === 'read' ? 'active' : ''; ?>">Read</a>
-                                <a href="manage-messages.php?status=resolved" class="btn btn-outline-secondary <?php echo $filter_status === 'resolved' ? 'active' : ''; ?>">Resolved</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <?php if (!empty($grouped_messages)): ?>
-                            <div class="accordion" id="conversationsAccordion">
-                                <?php foreach ($grouped_messages as $user_id => $user_messages): ?>
-                                    <?php
-                                    $first_message = $user_messages[0];
-                                    $user_name = $first_message['user_name'] ?? 'Unknown User';
-                                    $contact_info = $first_message['contact_info'] ?? $first_message['email'];
-                                    $user_status = $first_message['status'];
-
-                                    // Count unread messages in this conversation
-                                    $unread_count = 0;
-                                    foreach ($user_messages as $msg) {
-                                        if ($msg['status'] === 'pending') $unread_count++;
-                                    }
-                                    ?>
-                                    <div class="card mb-3">
-                                        <div class="card-header conversation-header" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $first_message['message_id']; ?>">
-                                            <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($user_name); ?>&background=198754&color=fff" class="rounded-circle me-3" width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-bold"><?php echo htmlspecialchars($user_name); ?></h6>
-                                                    <small class="text-muted">
-                                                        <i class="bi bi-<?php echo $first_message['contact_method'] === 'email' ? 'envelope' : 'phone'; ?> me-1"></i>
-                                                        <?php echo htmlspecialchars($contact_info); ?>
-                                                    </small>
-                                                </div>
-                                                <div class="ms-auto">
-                                                    <span class="status-badge status-<?php echo $user_status; ?>">
-                                                        <?php echo ucfirst($user_status); ?>
-                                                    </span>
-                                                    <?php if ($unread_count > 0): ?>
-                                                        <span class="badge bg-danger ms-2"><?php echo $unread_count; ?></span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="collapse<?php echo $first_message['message_id']; ?>" class="collapse">
-                                            <div class="card-body">
-                                                <?php foreach ($user_messages as $message): ?>
-                                                    <div class="message-item <?php
-                                                                                if (strpos($message['content'], 'Verification') !== false || strpos($message['subject'], 'Verification') !== false) {
-                                                                                    echo 'verification';
-                                                                                } elseif ($message['user_response']) {
-                                                                                    echo 'sent';
-                                                                                } else {
-                                                                                    echo 'received';
-                                                                                }
-                                                                                ?>">
-                                                        <div class="d-flex justify-content-between">
-                                                            <div>
-                                                                <strong><?php echo htmlspecialchars($message['subject'] ?? 'No Subject'); ?></strong>
-                                                                <div class="small text-muted">
-                                                                    <?php echo date('M j, Y \a\t g:i A', strtotime($message['created_at'])); ?>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewMessageModal<?php echo $message['message_id']; ?>">
-                                                                    <i class="bi bi-eye"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mt-2">
-                                                            <p class="mb-0"><?php echo htmlspecialchars(substr($message['content'], 0, 100)) . (strlen($message['content']) > 100 ? '...' : ''); ?></p>
-                                                        </div>
-                                                    </div>
-                                                <?php endforeach; ?>
-                                                <div class="mt-3">
-                                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#responseModal<?php echo $first_message['message_id']; ?>">
-                                                        <i class="bi bi-reply me-1"></i>Reply
-                                                    </button>
-                                                    <a href="manage-messages.php<?php echo $filter_status ? '?status=' . $filter_status : ''; ?>" class="btn btn-outline-secondary btn-sm ms-1">
-                                                        <i class="bi bi-three-dots me-1"></i>View All
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="text-center py-5">
-                                <i class="bi bi-envelope-open text-muted" style="font-size: 3rem;"></i>
-                                <h5 class="mt-3">No messages found</h5>
-                                <p class="text-muted">Messages from users will appear here</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
+        <div class="card-body">
+            <?php if (!empty($grouped_messages)): ?>
+                <div class="accordion" id="conversationsAccordion">
+                    <?php foreach ($grouped_messages as $user_id => $user_messages): ?>
+                        <?php
+                        $first_message = $user_messages[0];
+                        $user_name = $first_message['user_name'] ?? 'Unknown User';
+                        $contact_info = $first_message['contact_info'] ?? $first_message['email'];
+                        $user_status = $first_message['status'];
+
+                        // Count unread messages in this conversation
+                        $unread_count = 0;
+                        foreach ($user_messages as $msg) {
+                            if ($msg['status'] === 'pending') $unread_count++;
+                        }
+                        ?>
+                        <div class="card mb-3">
+                            <div class="card-header conversation-header" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $first_message['message_id']; ?>">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($user_name); ?>&background=198754&color=fff" class="rounded-circle me-3" width="40" height="40">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold"><?php echo htmlspecialchars($user_name); ?></h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-<?php echo $first_message['contact_method'] === 'email' ? 'envelope' : 'phone'; ?> me-1"></i>
+                                            <?php echo htmlspecialchars($contact_info); ?>
+                                        </small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <span class="status-badge status-<?php echo $user_status; ?>">
+                                            <?php echo ucfirst($user_status); ?>
+                                        </span>
+                                        <?php if ($unread_count > 0): ?>
+                                            <span class="badge bg-danger ms-2"><?php echo $unread_count; ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="collapse<?php echo $first_message['message_id']; ?>" class="collapse">
+                                <div class="card-body">
+                                    <?php foreach ($user_messages as $message): ?>
+                                        <div class="message-item <?php
+                                                                    if (strpos($message['content'], 'Verification') !== false || strpos($message['subject'], 'Verification') !== false) {
+                                                                        echo 'verification';
+                                                                    } elseif ($message['user_response']) {
+                                                                        echo 'sent';
+                                                                    } else {
+                                                                        echo 'received';
+                                                                    }
+                                                                    ?>">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <strong><?php echo htmlspecialchars($message['subject'] ?? 'No Subject'); ?></strong>
+                                                    <div class="small text-muted">
+                                                        <?php echo date('M j, Y \a\t g:i A', strtotime($message['created_at'])); ?>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewMessageModal<?php echo $message['message_id']; ?>">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                <p class="mb-0"><?php echo htmlspecialchars(substr($message['content'], 0, 100)) . (strlen($message['content']) > 100 ? '...' : ''); ?></p>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#responseModal<?php echo $first_message['message_id']; ?>">
+                                            <i class="bi bi-reply me-1"></i>Reply
+                                        </button>
+                                        <a href="manage-messages.php<?php echo $filter_status ? '?status=' . $filter_status : ''; ?>" class="btn btn-outline-secondary btn-sm ms-1">
+                                            <i class="bi bi-three-dots me-1"></i>View All
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-5">
+                    <i class="bi bi-envelope-open text-muted" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">No messages found</h5>
+                    <p class="text-muted">Messages from users will appear here</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    </main>
+    </div>
     </div>
 
     <!-- Message Detail Modals -->
@@ -522,7 +470,4 @@ unset($_SESSION['error_message']);
         </div>
     <?php endforeach; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-
-</html>
+    <?php include '../includes/admin-footer.php'; ?>

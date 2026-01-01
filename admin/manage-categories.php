@@ -128,137 +128,94 @@ foreach ($categories as $cat) {
 
 <body>
 
-    <div class="d-lg-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
-        <div class="navbar-brand fw-bold text-green brand-title">
-            <span>BookStack</span>
+    <?php $currentPage = 'categories';
+    include '../includes/admin-nav.php'; ?>
+    <?php
+    $message = !empty($message) ? $message : '';
+    $messageType = !empty($messageType) ? $messageType : '';
+    include '../includes/notification.php';
+    ?>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h5 class="fw-bold mb-1">Manage Categories</h5>
+            <p class="text-muted small mb-0">Organize e-book genres, edit details, or add new classifications.</p>
         </div>
-        <button class="btn btn-light border" type="button" onclick="document.getElementById('sidebar-menu').classList.toggle('show')">
-            <i class="bi bi-list"></i>
+        <button class="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" onclick="resetForm()" style="background-color: #00a3ff; border: none; border-radius: 10px;">
+            <i class="bi bi-plus-lg me-2"></i>Add Category
         </button>
     </div>
 
-    <div class="container-fluid p-0">
-        <div class="d-flex">
-
-            <nav class="sidebar d-flex flex-column pb-4" id="sidebar-menu">
-                <div class="p-4 mb-2 sidebar-brand">
-                    <div class="navbar-brand fw-bold text-green brand-title">
-                        <span>BookStack</span>
-                    </div>
-                </div>
-
-                <div class="nav flex-column mb-auto">
-                    <a href="dashboard.php" class="nav-link"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
-                    <a href="manage-ebooks.php" class="nav-link"><i class="bi bi-journal-text me-3"></i>E-Books</a>
-                    <a href="manage-categories.php" class="nav-link active"><i class="bi bi-layers me-3"></i>Categories</a>
-                    <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
-                    <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
-                    <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
-
-
-                    <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
-
-                    <div class="px-3 mt-3">
-                        <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
-                            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminName); ?>&background=198754&color=fff" class="rounded-circle me-2" width="35" height="35">
-                            <div>
-                                <p class="mb-0 small fw-bold text-dark"><?php echo htmlspecialchars($adminName); ?></p>
-                                <p class="mb-0 text-muted" style="font-size: 0.7rem;">System Administrator</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <main class="main-content w-100">
-                <?php if (!empty($message)): ?>
-                    <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($message); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                    <div>
-                        <h5 class="fw-bold mb-1">Manage Categories</h5>
-                        <p class="text-muted small mb-0">Organize e-book genres, edit details, or add new classifications.</p>
-                    </div>
-                    <button class="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" onclick="resetForm()" style="background-color: #00a3ff; border: none; border-radius: 10px;">
-                        <i class="bi bi-plus-lg me-2"></i>Add Category
-                    </button>
-                </div>
-
-                <div class="row g-3 mb-4 text-center">
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Total Categories</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalCategories; ?></h4>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Total E-Books</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalEbooks; ?></h4>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4">
-                            <p class="text-muted small mb-1">Empty Categories</p>
-                            <h4 class="fw-bold mb-0 text-secondary"><?php echo $emptyCategories; ?></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card data-card border-0 shadow-sm">
-                    <div class="table-responsive">
-                        <table class="table align-middle mb-0">
-                            <thead>
-                                <tr style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">
-                                    <th>Category Name</th>
-                                    <th>Books</th>
-                                    <th class="text-end pe-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($categories)): ?>
-                                    <tr>
-                                        <td colspan="4" class="text-center py-5">
-                                            <div class="placeholder-box py-4 mx-4" style="border: 2px dashed #e5e7eb; border-radius: 8px; color: #9ca3af;">
-                                                <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
-                                                <p class="mt-3 mb-0">No categories found. Click "Add Category" to create one.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php foreach ($categories as $category): ?>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="p-2 bg-light rounded-3 me-3 text-center" style="width: 35px;">
-                                                        <i class="bi bi-tag text-primary"></i>
-                                                    </div>
-                                                    <span class="fw-bold text-dark"><?php echo htmlspecialchars($category['name']); ?></span>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-light text-dark rounded-pill px-3"><?php echo $category['ebook_count']; ?></span></td>
-                                            <td class="text-end pe-4">
-                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="editCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Delete">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4">
+                <p class="text-muted small mb-1">Total Categories</p>
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalCategories; ?></h4>
+            </div>
         </div>
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4">
+                <p class="text-muted small mb-1">Total E-Books</p>
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo $totalEbooks; ?></h4>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4">
+                <p class="text-muted small mb-1">Empty Categories</p>
+                <h4 class="fw-bold mb-0 text-secondary"><?php echo $emptyCategories; ?></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card data-card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">
+                        <th>Category Name</th>
+                        <th>Books</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($categories)): ?>
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="placeholder-box py-4 mx-4" style="border: 2px dashed #e5e7eb; border-radius: 8px; color: #9ca3af;">
+                                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+                                    <p class="mt-3 mb-0">No categories found. Click "Add Category" to create one.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($categories as $category): ?>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2 bg-light rounded-3 me-3 text-center" style="width: 35px;">
+                                            <i class="bi bi-tag text-primary"></i>
+                                        </div>
+                                        <span class="fw-bold text-dark"><?php echo htmlspecialchars($category['name']); ?></span>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-light text-dark rounded-pill px-3"><?php echo $category['ebook_count']; ?></span></td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="editCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </main>
+    </div>
     </div>
 
     <!-- Category Modal for Create/Edit -->
@@ -342,6 +299,5 @@ foreach ($categories as $cat) {
             modal.show();
         }
     </script>
-</body>
 
-</html>
+    <?php include '../includes/admin-footer.php'; ?>

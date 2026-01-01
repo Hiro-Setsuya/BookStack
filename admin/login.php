@@ -81,12 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user']) && isset($_PO
           <h2 class="fw-bold mb-1">Admin Portal</h2>
           <p class="text-muted small mb-4">Welcome back! Please enter your details.</p>
 
-          <?php if ($error_message): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo htmlspecialchars($error_message); ?>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          <?php endif; ?>
+          <?php
+          $error_message = !empty($error_message) ? $error_message : '';
+          include '../includes/notification.php';
+          ?>
 
           <form action="login.php" method="POST">
             <div class="mb-3">

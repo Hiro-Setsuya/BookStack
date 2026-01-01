@@ -112,214 +112,158 @@ try {
 
 <body>
 
-    <div class="d-lg-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
-        <div class="navbar-brand fw-bold text-green brand-title">
-            <span>BookStack</span>
+    <?php $currentPage = 'dashboard';
+    include '../includes/admin-nav.php'; ?>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <h5 class="fw-bold mb-0">Dashboard Overview</h5>
+        <div class="text-muted">
+            Last updated: <?php echo date('M j, Y \a\t g:i A'); ?>
         </div>
-        <button class="btn btn-light border" type="button" onclick="document.getElementById('sidebar-menu').classList.toggle('show')">
-            <i class="bi bi-list"></i>
-        </button>
     </div>
 
-    <div class="container-fluid p-0">
-        <div class="d-flex">
-
-            <nav class="sidebar d-flex flex-column pb-4" id="sidebar-menu">
-                <div class="p-4 mb-2 sidebar-brand">
-                    <div class="navbar-brand fw-bold text-green brand-title">
-                        <span>BookStack</span>
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Total Users</p>
+                        <h3 class="fw-bold mb-0 text-secondary"><?php echo number_format($total_users); ?></h3>
+                    </div>
+                    <div class="p-3 rounded-circle bg-light">
+                        <i class="bi bi-people text-green" style="font-size: 1.5rem;"></i>
                     </div>
                 </div>
-
-                <div class="nav flex-column mb-auto">
-                    <a href="dashboard.php" class="nav-link active">
-                        <i class="bi bi-grid-fill me-3"></i>Dashboard
-                    </a>
-                    <a href="manage-ebooks.php" class="nav-link">
-                        <i class="bi bi-journal-text me-3"></i>E-Books
-                    </a>
-                    <a href="manage-categories.php" class="nav-link">
-                        <i class="bi bi-layers me-3"></i>Categories
-                    </a>
-                    <a href="manage-users.php" class="nav-link">
-                        <i class="bi bi-people me-3"></i>Users
-                    </a>
-                    <a href="manage-orders.php" class="nav-link">
-                        <i class="bi bi-cart me-3"></i>Orders
-                    </a>
-                    <a href="manage-verification.php" class="nav-link">
-                        <i class="bi bi-shield-check me-3"></i>Verifications
-                    </a>
-                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
-
-
-                    <a href="logout.php" class="nav-link text-danger mt-2">
-                        <i class="bi bi-box-arrow-left me-3"></i>Logout
-                    </a>
-
-                    <div class="px-3 mt-3">
-                        <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
-                            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminName); ?>&background=198754&color=fff" class="rounded-circle me-2" width="35" height="35">
-                            <div>
-                                <p class="mb-0 small fw-bold text-dark"><?php echo htmlspecialchars($adminName); ?></p>
-                                <p class="mb-0 text-muted" style="font-size: 0.7rem;">System Administrator</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <main class="main-content w-100">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                    <h5 class="fw-bold mb-0">Dashboard Overview</h5>
-                    <div class="text-muted">
-                        Last updated: <?php echo date('M j, Y \a\t g:i A'); ?>
-                    </div>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p class="text-muted small mb-1">Total Users</p>
-                                    <h3 class="fw-bold mb-0 text-secondary"><?php echo number_format($total_users); ?></h3>
-                                </div>
-                                <div class="p-3 rounded-circle bg-light">
-                                    <i class="bi bi-people text-green" style="font-size: 1.5rem;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p class="text-muted small mb-1">Total Sales</p>
-                                    <h3 class="fw-bold mb-0 text-secondary">₱<?php echo number_format($total_sales, 2); ?></h3>
-                                </div>
-                                <div class="p-3 rounded-circle bg-light">
-                                    <i class="bi bi-cash-coin text-success" style="font-size: 1.5rem;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card stat-card p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p class="text-muted small mb-1">Total E-Books</p>
-                                    <h3 class="fw-bold mb-0 text-secondary"><?php echo number_format($total_ebooks); ?></h3>
-                                </div>
-                                <div class="p-3 rounded-circle bg-light">
-                                    <i class="bi bi-journal text-primary" style="font-size: 1.5rem;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Compact Sales Chart -->
-                <div class="card data-card p-4 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h6 class="fw-bold mb-1">Sales Overview</h6>
-                            <p class="text-muted small mb-0">Last 3 months revenue</p>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="salesChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Recent Orders -->
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card data-card p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h6 class="fw-bold mb-0">Recent Orders</h6>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Student</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (!empty($recent_orders)): ?>
-                                            <?php foreach ($recent_orders as $order): ?>
-                                                <tr>
-                                                    <td>#<?php echo $order['order_id']; ?></td>
-                                                    <td><?php echo htmlspecialchars($order['user_name']); ?></td>
-                                                    <td>₱<?php echo number_format($order['total_amount'], 2); ?></td>
-                                                    <td>
-                                                        <span class="status-badge status-<?php echo $order['status']; ?>">
-                                                            <?php echo ucfirst($order['status']); ?>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="4" class="text-center py-3 text-muted">
-                                                    No recent orders
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Users -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card data-card p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h6 class="fw-bold mb-0">Recent Users</h6>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Verified</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (!empty($recent_users)): ?>
-                                            <?php foreach ($recent_users as $user): ?>
-                                                <tr>
-                                                    <td><?php echo htmlspecialchars($user['user_name']); ?></td>
-                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                    <td>
-                                                        <span class="status-badge <?php echo $user['is_account_verified'] ? 'verified-yes' : 'verified-no'; ?>">
-                                                            <?php echo $user['is_account_verified'] ? 'Yes' : 'No'; ?>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="3" class="text-center py-3 text-muted">
-                                                    No recent users
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Total Sales</p>
+                        <h3 class="fw-bold mb-0 text-secondary">₱<?php echo number_format($total_sales, 2); ?></h3>
+                    </div>
+                    <div class="p-3 rounded-circle bg-light">
+                        <i class="bi bi-cash-coin text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card stat-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Total E-Books</p>
+                        <h3 class="fw-bold mb-0 text-secondary"><?php echo number_format($total_ebooks); ?></h3>
+                    </div>
+                    <div class="p-3 rounded-circle bg-light">
+                        <i class="bi bi-journal text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compact Sales Chart -->
+    <div class="card data-card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h6 class="fw-bold mb-1">Sales Overview</h6>
+                <p class="text-muted small mb-0">Last 3 months revenue</p>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card data-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold mb-0">Recent Orders</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Student</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($recent_orders)): ?>
+                                <?php foreach ($recent_orders as $order): ?>
+                                    <tr>
+                                        <td>#<?php echo $order['order_id']; ?></td>
+                                        <td><?php echo htmlspecialchars($order['user_name']); ?></td>
+                                        <td>₱<?php echo number_format($order['total_amount'], 2); ?></td>
+                                        <td>
+                                            <span class="status-badge status-<?php echo $order['status']; ?>">
+                                                <?php echo ucfirst($order['status']); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" class="text-center py-3 text-muted">
+                                        No recent orders
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="col-md-6 mb-4">
+            <div class="card data-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-bold mb-0">Recent Users</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($recent_users)): ?>
+                                <?php foreach ($recent_users as $user): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($user['user_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                        <td>
+                                            <span class="status-badge <?php echo $user['is_account_verified'] ? 'verified-yes' : 'verified-no'; ?>">
+                                                <?php echo $user['is_account_verified'] ? 'Yes' : 'No'; ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3" class="text-center py-3 text-muted">
+                                        No recent users
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
@@ -390,6 +334,8 @@ try {
             });
         });
     </script>
+
+    <?php include '../includes/admin-footer.php'; ?>
 </body>
 
 </html>

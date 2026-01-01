@@ -160,222 +160,179 @@ if ($totalEbooks > 0) {
 
 <body>
 
-    <div class="d-lg-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
-        <div class="navbar-brand fw-bold text-green brand-title">
-            <span>BookStack</span>
+    <?php $currentPage = 'ebooks';
+    include '../includes/admin-nav.php'; ?>
+    <?php
+    $message = !empty($message) ? $message : '';
+    $messageType = !empty($messageType) ? $messageType : '';
+    include '../includes/notification.php';
+    ?>
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h5 class="fw-bold mb-1">Manage E-Books</h5>
+            <p class="text-muted small mb-0">Manage your digital library inventory, upload ebooks, and update pricing.</p>
         </div>
-        <button class="btn btn-light border" type="button" onclick="document.getElementById('sidebar-menu').classList.toggle('show')">
-            <i class="bi bi-list"></i>
-        </button>
     </div>
 
-    <div class="container-fluid p-0">
-        <div class="d-flex">
-
-            <nav class="sidebar d-flex flex-column pb-4" id="sidebar-menu">
-                <div class="p-4 mb-2 sidebar-brand">
-                    <div class="navbar-brand fw-bold text-green brand-title">
-                        <span>BookStack</span>
-                    </div>
-                </div>
-
-                <div class="nav flex-column mb-auto">
-                    <a href="dashboard.php" class="nav-link"><i class="bi bi-grid-fill me-3"></i>Dashboard</a>
-                    <a href="manage-ebooks.php" class="nav-link active"><i class="bi bi-journal-text me-3"></i>E-Books</a>
-                    <a href="manage-categories.php" class="nav-link"><i class="bi bi-layers me-3"></i>Categories</a>
-                    <a href="manage-users.php" class="nav-link"><i class="bi bi-people me-3"></i>Users</a>
-                    <a href="manage-orders.php" class="nav-link"><i class="bi bi-cart me-3"></i>Orders</a>
-                    <a href="manage-verification.php" class="nav-link"><i class="bi bi-shield-check me-3"></i>Verifications</a>
-                    <a href="manage-messages.php" class="nav-link"><i class="bi bi-envelope me-3"></i>Messages</a>
-
-
-                    <a href="logout.php" class="nav-link text-danger mt-2"><i class="bi bi-box-arrow-left me-3"></i>Logout</a>
-
-                    <div class="px-3 mt-3">
-                        <div class="d-flex align-items-center px-3 py-2 bg-light rounded-3">
-                            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($adminName); ?>&background=198754&color=fff" class="rounded-circle me-2" width="35" height="35">
-                            <div>
-                                <p class="mb-0 small fw-bold text-dark"><?php echo htmlspecialchars($adminName); ?></p>
-                                <p class="mb-0 text-muted" style="font-size: 0.7rem;">System Administrator</p>
+    <div class="row g-4">
+        <div class="col-12 col-xl-8">
+            <div class="card data-card p-4 mb-4">
+                <form method="GET" action="" class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Search books</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" name="search" class="form-control border-start-0" placeholder="Title or author" value="<?php echo htmlspecialchars($searchTerm); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold">Category</label>
+                            <select name="category" class="form-select form-select-sm">
+                                <option value="0" <?php echo $filterCategory == 0 ? 'selected' : ''; ?>>All Categories</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?php echo $cat['category_id']; ?>" <?php echo $filterCategory == $cat['category_id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-bold">&nbsp;</label>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
+                                <?php if (!empty($searchTerm) || $filterCategory > 0): ?>
+                                    <a href="manage-ebooks.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                </div>
-            </nav>
+                </form>
 
-            <main class="main-content w-100">
-                <?php if (!empty($message)): ?>
-                    <div class="alert alert-<?php echo $messageType; ?> alert-dismissible fade show" role="alert">
-                        <?php echo htmlspecialchars($message); ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
-                <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <h5 class="fw-bold mb-1">Manage E-Books</h5>
-                        <p class="text-muted small mb-0">Manage your digital library inventory, upload ebooks, and update pricing.</p>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-12 col-xl-8">
-                        <div class="card data-card p-4 mb-4">
-                            <form method="GET" action="" class="mb-4">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold">Search books</label>
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                                            <input type="text" name="search" class="form-control border-start-0" placeholder="Title or author" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label small fw-bold">Category</label>
-                                        <select name="category" class="form-select form-select-sm">
-                                            <option value="0" <?php echo $filterCategory == 0 ? 'selected' : ''; ?>>All Categories</option>
-                                            <?php foreach ($categories as $cat): ?>
-                                                <option value="<?php echo $cat['category_id']; ?>" <?php echo $filterCategory == $cat['category_id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['name']); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="form-label small fw-bold">&nbsp;</label>
-                                        <div class="d-flex gap-2">
-                                            <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
-                                            <?php if (!empty($searchTerm) || $filterCategory > 0): ?>
-                                                <a href="manage-ebooks.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
+                <div class="table-responsive">
+                    <table class="table align-middle border-top">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">COVER</th>
+                                <th>BOOK DETAILS</th>
+                                <th>PRICE</th>
+                                <th>CATEGORY</th>
+                                <th class="text-end">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($ebooks)): ?>
+                                <tr>
+                                    <td colspan="5" class="text-center py-5 text-muted">
+                                        <i class="bi bi-book" style="font-size: 3rem; opacity: 0.3;"></i>
+                                        <p class="mt-3">No e-books found. Click "Add E-Book" to create one.</p>
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($ebooks as $ebook): ?>
+                                    <tr>
+                                        <td>
+                                            <?php if (!empty($ebook['cover_image'])): ?>
+                                                <?php
+                                                $coverSrc = $ebook['cover_image'];
+                                                // Check if it's a URL (http/https) or data URL (base64), if not prepend ../
+                                                if (!preg_match('/^(https?:\/\/|data:)/i', $coverSrc)) {
+                                                    $coverSrc = '../' . $coverSrc;
+                                                }
+                                                ?>
+                                                <img src="<?php echo htmlspecialchars($coverSrc); ?>" alt="Cover" style="width: 60px; height: 80px; object-fit: cover; border-radius: 4px;">
+                                            <?php else: ?>
+                                                <div style="width: 60px; height: 80px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-book text-muted"></i>
+                                                </div>
                                             <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div class="table-responsive">
-                                <table class="table align-middle border-top">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 80px;">COVER</th>
-                                            <th>BOOK DETAILS</th>
-                                            <th>PRICE</th>
-                                            <th>CATEGORY</th>
-                                            <th class="text-end">ACTIONS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (empty($ebooks)): ?>
-                                            <tr>
-                                                <td colspan="5" class="text-center py-5 text-muted">
-                                                    <i class="bi bi-book" style="font-size: 3rem; opacity: 0.3;"></i>
-                                                    <p class="mt-3">No e-books found. Click "Add E-Book" to create one.</p>
-                                                </td>
-                                            </tr>
-                                        <?php else: ?>
-                                            <?php foreach ($ebooks as $ebook): ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php if (!empty($ebook['cover_image'])): ?>
-                                                            <?php
-                                                            $coverSrc = $ebook['cover_image'];
-                                                            // Check if it's a URL (http/https) or data URL (base64), if not prepend ../
-                                                            if (!preg_match('/^(https?:\/\/|data:)/i', $coverSrc)) {
-                                                                $coverSrc = '../' . $coverSrc;
-                                                            }
-                                                            ?>
-                                                            <img src="<?php echo htmlspecialchars($coverSrc); ?>" alt="Cover" style="width: 60px; height: 80px; object-fit: cover; border-radius: 4px;">
-                                                        <?php else: ?>
-                                                            <div style="width: 60px; height: 80px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                                                                <i class="bi bi-book text-muted"></i>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="fw-bold text-dark"><?php echo htmlspecialchars($ebook['title']); ?></div>
-                                                        <div class="text-muted small"><?php echo htmlspecialchars($ebook['author']); ?></div>
-                                                    </td>
-                                                    <td>₱<?php echo number_format($ebook['price'], 2); ?></td>
-                                                    <td>
-                                                        <?php if ($ebook['category_name']): ?>
-                                                            <?php echo htmlspecialchars($ebook['category_name']); ?>
-                                                        <?php else: ?>
-                                                            <span class="text-muted">Uncategorized</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-outline-primary mb-1" onclick='editEbook(<?php echo json_encode($ebook); ?>)' title="Edit">
-                                                            <i class="bi bi-pencil"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteEbook(<?php echo $ebook['ebook_id']; ?>, '<?php echo htmlspecialchars(addslashes($ebook['title'])); ?>')" title="Delete">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <p class="text-muted small mb-0">Showing <?php echo $totalEbooks > 0 ? '1-' . $totalEbooks : '0'; ?> of <?php echo $totalEbooks; ?> books</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-xl-4">
-                        <div class="card data-card p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h6 class="fw-bold mb-0">Add New E-Book</h6>
-                                <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
-                            </div>
-
-                            <form id="sidebarForm" method="POST" action="">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Title</label>
-                                    <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
-                                    <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
-                                    <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
-                                </div>
-                                <div class="row g-2 mb-3">
-                                    <div class="col-7">
-                                        <label class="form-label small fw-bold">Category</label>
-                                        <select class="form-select form-select-sm" name="category_id">
-                                            <option value="">Select category</option>
-                                            <?php foreach ($categories as $cat): ?>
-                                                <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-5">
-                                        <label class="form-label small fw-bold">Price (₱)</label>
-                                        <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Cover Image</label>
-                                    <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL or path">
-                                    <small class="text-muted" style="font-size: 0.7rem;">URL or relative path</small>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label small fw-bold">Google Drive File ID</label>
-                                    <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
-                                    <small class="text-muted" style="font-size: 0.7rem;">From Google Drive share link</small>
-                                </div>
-                                <div class="d-grid">
-                                    <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-dark"><?php echo htmlspecialchars($ebook['title']); ?></div>
+                                            <div class="text-muted small"><?php echo htmlspecialchars($ebook['author']); ?></div>
+                                        </td>
+                                        <td>₱<?php echo number_format($ebook['price'], 2); ?></td>
+                                        <td>
+                                            <?php if ($ebook['category_name']): ?>
+                                                <?php echo htmlspecialchars($ebook['category_name']); ?>
+                                            <?php else: ?>
+                                                <span class="text-muted">Uncategorized</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm btn-outline-primary mb-1" onclick='editEbook(<?php echo json_encode($ebook); ?>)' title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteEbook(<?php echo $ebook['ebook_id']; ?>, '<?php echo htmlspecialchars(addslashes($ebook['title'])); ?>')" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-            </main>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <p class="text-muted small mb-0">Showing <?php echo $totalEbooks > 0 ? '1-' . $totalEbooks : '0'; ?> of <?php echo $totalEbooks; ?> books</p>
+                </div>
+            </div>
         </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card data-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Add New E-Book</h6>
+                    <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
+                </div>
+
+                <form id="sidebarForm" method="POST" action="">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Title</label>
+                        <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                        <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-7">
+                            <label class="form-label small fw-bold">Category</label>
+                            <select class="form-select form-select-sm" name="category_id">
+                                <option value="">Select category</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label small fw-bold">Price (₱)</label>
+                            <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Cover Image</label>
+                        <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL or path">
+                        <small class="text-muted" style="font-size: 0.7rem;">URL or relative path</small>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Google Drive File ID</label>
+                        <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
+                        <small class="text-muted" style="font-size: 0.7rem;">From Google Drive share link</small>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </main>
+    </div>
     </div>
 
     <!-- E-Book Modal for Create/Edit -->
@@ -518,7 +475,4 @@ if ($totalEbooks > 0) {
         }
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-
-</html>
+    <?php include '../includes/admin-footer.php'; ?>
