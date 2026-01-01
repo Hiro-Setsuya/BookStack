@@ -1,0 +1,28 @@
+# Enable rewrite engine
+
+RewriteEngine On
+
+# Set base directory
+
+RewriteBase /BookStack/
+
+# Custom 404 error page
+
+ErrorDocument 404 /BookStack/404.php
+
+# Prevent directory listing
+
+Options -Indexes
+
+# Protect sensitive files
+
+<FilesMatch "^(\.htaccess|\.env|sql*query*.\*\.sql)$">
+Order allow,deny
+Deny from all
+</FilesMatch>
+
+# Handle missing files/directories
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /BookStack/404.php [L]
