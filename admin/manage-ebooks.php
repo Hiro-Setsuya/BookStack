@@ -214,7 +214,7 @@ if ($totalEbooks > 0) {
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
                         <h5 class="fw-bold mb-1">Manage E-Books</h5>
-                        <p class="text-muted small mb-0">Manage your digital library inventory, upload new files, and update pricing.</p>
+                        <p class="text-muted small mb-0">Manage your digital library inventory, upload ebooks, and update pricing.</p>
                     </div>
                 </div>
 
@@ -302,7 +302,7 @@ if ($totalEbooks > 0) {
                                                         <?php endif; ?>
                                                     </td>
                                                     <td class="text-end">
-                                                        <button class="btn btn-sm btn-outline-primary me-2" onclick='editEbook(<?php echo json_encode($ebook); ?>)' title="Edit">
+                                                        <button class="btn btn-sm btn-outline-primary mb-1" onclick='editEbook(<?php echo json_encode($ebook); ?>)' title="Edit">
                                                             <i class="bi bi-pencil"></i>
                                                         </button>
                                                         <button class="btn btn-sm btn-outline-danger" onclick="deleteEbook(<?php echo $ebook['ebook_id']; ?>, '<?php echo htmlspecialchars(addslashes($ebook['title'])); ?>')" title="Delete">
