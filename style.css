@@ -866,16 +866,18 @@ body::before {
   margin-bottom: auto;
 }
 
+/* 404 Error Page Styles */
 .error-container {
   background-color: white;
-  border: 1px solid var(--border-color);
-  border-radius: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  width: 100%;
-  padding: 3rem 2rem;
+  border-radius: 1rem !important;
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.error-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(46, 204, 113, 0.15) !important;
 }
 
 .error-container::before {
@@ -884,40 +886,53 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: var(--primary-color);
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--primary-hover)
+  );
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
 }
 
 .error-badge {
-  display: inline-block;
-  background-color: var(--input-bg);
+  background: linear-gradient(135deg, var(--input-bg), #d4ffe6);
   color: var(--primary-hover);
-  padding: 0.5rem 1.25rem;
+  padding: 0.6rem 1.5rem;
   border-radius: 50px;
   font-weight: 700;
   font-size: 0.75rem;
-  margin-bottom: 2rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  border: 2px solid rgba(46, 204, 113, 0.2);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.15);
 }
 
 .error-gif {
-  width: 100%;
-  max-width: 220px;
-  height: auto;
-  margin-bottom: 2rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .error-title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
   color: var(--text-dark);
+  letter-spacing: -0.5px;
 }
 
 .error-text {
   color: var(--text-muted);
   font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+  line-height: 1.7;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
