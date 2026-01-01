@@ -213,8 +213,8 @@ if ($totalEbooks > 0) {
 
                 <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                        <h3 class="fw-bold mb-1">Manage E-Books</h3>
-                        <p class="text-muted small">Manage your digital library inventory, upload new files, and update pricing.</p>
+                        <h5 class="fw-bold mb-1">Manage E-Books</h5>
+                        <p class="text-muted small mb-0">Manage your digital library inventory, upload new files, and update pricing.</p>
                     </div>
                 </div>
 

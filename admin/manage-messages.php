@@ -253,7 +253,7 @@ unset($_SESSION['error_message']);
             <main class="main-content w-100">
                 <header class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                        <h3 class="fw-bold mb-0">Messages</h3>
+                        <h5 class="fw-bold mb-0">Messages</h5>
                         <p class="text-muted small">Manage user communications and support requests.</p>
                     </div>
                     <div class="d-flex gap-2">
