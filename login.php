@@ -97,12 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h2 class="fw-bold mb-2">Welcome Back</h2>
                     <p class="text-muted small mb-4">Sign in to continue to your library</p>
 
-                    <?php if (!empty($error)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> <?php echo htmlspecialchars($error); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $error_message = !empty($error) ? $error : '';
+                    include 'includes/notification.php';
+                    ?>
 
                     <form method="POST" action="">
                         <div class="mb-3">

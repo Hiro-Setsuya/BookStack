@@ -273,12 +273,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <!-- Status Message -->
-                            <?php if (!empty($statusMessage)): ?>
-                                <div class="alert alert-<?= $statusType ?> alert-dismissible fade show" role="alert">
-                                    <?= htmlspecialchars($statusMessage) ?>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            <?php endif; ?>
+                            <?php
+                            $success_message = ($statusType === 'success' && !empty($statusMessage)) ? $statusMessage : '';
+                            $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
+                            $warning_message = ($statusType === 'warning' && !empty($statusMessage)) ? $statusMessage : '';
+                            $info_message = ($statusType === 'info' && !empty($statusMessage)) ? $statusMessage : '';
+                            include 'includes/notification.php';
+                            ?>
 
                             <!-- Form -->
                             <form method="POST" action="" id="resetPasswordForm">

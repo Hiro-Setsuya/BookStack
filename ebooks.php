@@ -78,13 +78,12 @@ $result = executeQuery($query);
     <?php include 'includes/nav.php'; ?>
     <!-- Content -->
     <div class="container mt-5 pt-5">
-        <?php if ($message): ?>
-            <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
-                <i class="bi bi-<?php echo $message_type === 'success' ? 'check-circle' : ($message_type === 'warning' ? 'exclamation-triangle' : 'x-circle'); ?> me-2"></i>
-                <?php echo htmlspecialchars($message); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        <?php endif; ?>
+        <?php
+        $message = !empty($message) ? $message : '';
+        $message_type = !empty($message_type) ? $message_type : '';
+        $messageType = $message_type;
+        include 'includes/notification.php';
+        ?>
 
         <div class="row mb-4">
             <div class="col">

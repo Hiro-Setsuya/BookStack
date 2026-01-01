@@ -116,12 +116,13 @@ $member_since = date('F Y', strtotime($user['created_at']));
                 </div>
 
                 <!-- Status Message -->
-                <?php if (!empty($statusMessage)): ?>
-                    <div class="alert alert-<?= $statusType ?> alert-dismissible fade show" role="alert">
-                        <?= htmlspecialchars($statusMessage) ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
+                <?php
+                $success_message = ($statusType === 'success' && !empty($statusMessage)) ? $statusMessage : '';
+                $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
+                $warning_message = ($statusType === 'warning' && !empty($statusMessage)) ? $statusMessage : '';
+                $info_message = ($statusType === 'info' && !empty($statusMessage)) ? $statusMessage : '';
+                include 'includes/notification.php';
+                ?>
 
                 <div class="card profile-card p-4 mb-4">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">

@@ -131,19 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
 
                     <!-- Alert Messages -->
-                    <?php if (!empty($error)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> <?php echo htmlspecialchars($error); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!empty($success)): ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Success!</strong> <?php echo htmlspecialchars($success); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $error_message = !empty($error) ? $error : '';
+                    $success_message = !empty($success) ? $success : '';
+                    include 'includes/notification.php';
+                    ?>
 
                     <!-- Form -->
                     <form method="POST" action="">

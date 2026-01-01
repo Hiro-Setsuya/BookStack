@@ -348,12 +348,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
                 <?php if ($showAccountInput): ?>
                     <!-- Account Identification Form -->
-                    <?php if (!empty($statusMessage)): ?>
-                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
-                            <?php echo htmlspecialchars($statusMessage); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $success_message = ($statusType === 'success' && !empty($statusMessage)) ? $statusMessage : '';
+                    $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
+                    $warning_message = ($statusType === 'warning' && !empty($statusMessage)) ? $statusMessage : '';
+                    $info_message = ($statusType === 'info' && !empty($statusMessage)) ? $statusMessage : '';
+                    include 'includes/notification.php';
+                    ?>
 
                     <form method="POST" action="forgot-password.php">
                         <div class="mb-4">
@@ -408,10 +409,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
                             </p>
                         </div>
                     <?php elseif (!empty($statusMessage)): ?>
-                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
-                            <?php echo htmlspecialchars($statusMessage); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                        <?php
+                        $success_message = ($statusType === 'success') ? $statusMessage : '';
+                        $error_message = ($statusType === 'danger') ? $statusMessage : '';
+                        $warning_message = ($statusType === 'warning') ? $statusMessage : '';
+                        $info_message = ($statusType === 'info') ? $statusMessage : '';
+                        include 'includes/notification.php';
+                        ?>
                     <?php endif; ?>
 
                     <?php if (isInCooldown()): ?>
@@ -483,12 +487,13 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
                 <?php else: ?>
                     <!-- Delivery Method Selection -->
-                    <?php if (!empty($statusMessage)): ?>
-                        <div class="alert alert-<?php echo $statusType; ?> alert-dismissible fade show" role="alert">
-                            <?php echo htmlspecialchars($statusMessage); ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $success_message = ($statusType === 'success' && !empty($statusMessage)) ? $statusMessage : '';
+                    $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
+                    $warning_message = ($statusType === 'warning' && !empty($statusMessage)) ? $statusMessage : '';
+                    $info_message = ($statusType === 'info' && !empty($statusMessage)) ? $statusMessage : '';
+                    include 'includes/notification.php';
+                    ?>
 
                     <form method="POST" action="forgot-password.php">
                         <div class="mb-4">
