@@ -111,45 +111,7 @@
 <body class="font-sans antialiased">
   <div class="d-flex flex-column min-vh-100">
     <!-- Top Navigation -->
-    <header class="sticky-top border-bottom bg-white bg-opacity-80 backdrop-blur" data-bs-theme="light">
-      <div class="container py-2">
-        <div class="d-flex align-items-center justify-content-between">
-          <!-- Logo -->
-          <a href="#" class="d-flex align-items-center gap-2 text-decoration-none">
-            <div style="color: var(--bs-primary); width: 32px; height: 32px;">
-              <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"></path>
-              </svg>
-            </div>
-            <h1 class="h5 fw-bold mb-0">EduBooks</h1>
-          </a>
-
-          <!-- Search -->
-          <div class="d-none d-md-flex w-50">
-            <div class="input-group">
-              <span class="input-group-text bg-gray-200 border-0">
-                <span class="material-symbols-outlined">search</span>
-              </span>
-              <input type="text" class="form-control border-0 bg-gray-100" placeholder="Search by title, author, or ISBN" />
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-light rounded-circle position-relative">
-              <span class="material-symbols-outlined">shopping_cart</span>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.5rem; padding: 2px 4px;">
-                <span class="visually-hidden">New alerts</span>
-              </span>
-            </button>
-            <button class="btn btn-light rounded-circle">
-              <span class="material-symbols-outlined">person</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
+    <?php include 'includes/nav.php' ?>
     <!-- Main Content -->
     <main class="flex-grow-1 py-5">
       <div class="container">
