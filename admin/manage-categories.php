@@ -215,7 +215,6 @@ foreach ($categories as $cat) {
                         <table class="table align-middle mb-0">
                             <thead>
                                 <tr style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">
-                                    <th class="ps-4" style="width: 40px;"><input type="checkbox" class="form-check-input"></th>
                                     <th>Category Name</th>
                                     <th>Books</th>
                                     <th class="text-end pe-4">Actions</th>
@@ -234,7 +233,6 @@ foreach ($categories as $cat) {
                                 <?php else: ?>
                                     <?php foreach ($categories as $category): ?>
                                         <tr>
-                                            <td class="ps-4"><input type="checkbox" class="form-check-input"></td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="p-2 bg-light rounded-3 me-3 text-center" style="width: 35px;">
