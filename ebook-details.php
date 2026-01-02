@@ -1,10 +1,86 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+// Get ebook ID from URL
+$ebook_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Fetch ebook details
+$ebook_query = "SELECT e.*, c.name as category_name 
+                FROM ebooks e 
+                LEFT JOIN categories c ON e.category_id = c.category_id 
+                WHERE e.ebook_id = $ebook_id";
+$ebook_result = executeQuery($ebook_query);
+$ebook = mysqli_fetch_assoc($ebook_result);
+
+if (!$ebook) {
+  header('Location: 404.php');
+  exit();
+}
+
+// Check if user is logged in
+$is_logged_in = isset($_SESSION['user_id']);
+$user_id = $is_logged_in ? $_SESSION['user_id'] : 0;
+
+// Check if user has purchased this ebook
+$has_purchased = false;
+if ($is_logged_in) {
+  $purchase_query = "SELECT COUNT(*) as count 
+                       FROM order_items oi 
+                       INNER JOIN orders o ON oi.order_id = o.order_id 
+                       WHERE o.user_id = $user_id 
+                       AND oi.ebook_id = $ebook_id 
+                       AND o.status = 'completed'";
+  $purchase_result = executeQuery($purchase_query);
+  $purchase_data = mysqli_fetch_assoc($purchase_result);
+  $has_purchased = $purchase_data['count'] > 0;
+}
+
+// Fetch all ratings for this ebook
+$ratings_query = "SELECT r.*, u.user_name 
+                  FROM ratings r 
+                  INNER JOIN users u ON r.user_id = u.user_id 
+                  WHERE r.ebook_id = $ebook_id 
+                  ORDER BY r.created_at DESC";
+$ratings_result = executeQuery($ratings_query);
+
+// Calculate average rating
+$avg_query = "SELECT AVG(rating) as avg_rating, COUNT(*) as total_ratings 
+              FROM ratings 
+              WHERE ebook_id = $ebook_id";
+$avg_result = executeQuery($avg_query);
+$avg_data = mysqli_fetch_assoc($avg_result);
+$avg_rating = round($avg_data['avg_rating'], 1);
+$total_ratings = $avg_data['total_ratings'];
+
+// Check if user has already rated this ebook
+$user_has_rated = false;
+if ($is_logged_in) {
+  $user_rating_query = "SELECT * FROM ratings WHERE user_id = $user_id AND ebook_id = $ebook_id";
+  $user_rating_result = executeQuery($user_rating_query);
+  $user_has_rated = mysqli_num_rows($user_rating_result) > 0;
+}
+
+// Handle rating submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_rating']) && $is_logged_in && $has_purchased && !$user_has_rated) {
+  $rating = intval($_POST['rating']);
+  $review = mysqli_real_escape_string($conn, $_POST['review']);
+
+  $insert_query = "INSERT INTO ratings (user_id, ebook_id, rating, review) 
+                     VALUES ($user_id, $ebook_id, $rating, '$review')";
+  if (executeQuery($insert_query)) {
+    header("Location: ebook-details.php?id=$ebook_id&success=1");
+    exit();
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>E-Book Details - EduBooks</title>
+  <title><?php echo htmlspecialchars($ebook['title']); ?> - BookStack</title>
 
   <!-- Google Fonts: Manrope -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,6 +94,32 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Star Rating Input */
+    .rating-input {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 5px;
+      font-size: 2.5rem;
+    }
+
+    .rating-input input {
+      display: none;
+    }
+
+    .rating-input label {
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.2s;
+    }
+
+    .rating-input label:hover,
+    .rating-input label:hover~label,
+    .rating-input input:checked~label {
+      color: #ffc107;
+    }
+  </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -25,187 +127,218 @@
     <!-- Top Navigation -->
     <?php include 'includes/nav.php' ?>
     <!-- Main Content -->
-    <main class="flex-grow-1 py-5">
-      <div class="container">
-        <!-- Breadcrumbs -->
-        <nav aria-label="breadcrumb" class="mb-4">
-          <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Textbooks</a></li>
-            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Computer Science</a></li>
-            <li class="breadcrumb-item active fw-semibold" aria-current="page">Introduction to Algorithms, 4th Edition</li>
-          </ol>
-        </nav>
+    <main class="flex-grow-1 py-5" style="margin-top: 80px;">
+      <div class="container" style="max-width: 1400px;">
 
         <!-- Product Hero -->
-        <div class="row g-5 mb-5">
+        <div class="row g-4 mb-5 justify-content-center">
           <!-- Left: Image -->
-          <div class="col-lg-4">
-            <div class="position-relative border rounded-3 overflow-hidden" style="aspect-ratio: 3/4; background-color: #ffffff;">
-              <div class="w-100 h-100 book-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFFW8znAfEJu1SPsJuZy_bT8MLaVfqxiK-Jej9UTEG8MSjYkurk4m8ss6ZEYGPiFYJiyH-EcUXC-Ews4s68KKP8RtxlgScgnlu8VVFxNCacTo7Wnzh13cU4z0HBiw0RpFILmjdJGxqOyA1_mMnrY4XVUz0EVTIv7saInHd96IXd2AmCpNPqgZR0857h3a5KydlFEFybWr16JemI1PXQpbswOAoSRAuJAe8PGzTAkrAQC0qxwy0Te1M5sJ_xIlEw56jWF5LTqLsw5I');"></div>
-              <span class="position-absolute top-3 start-3 badge bg-info text-primary fw-bold">Best Seller</span>
+          <div class="col-12 col-sm-8 col-md-5 col-lg-4 col-xl-3">
+            <div class="position-relative rounded-3 overflow-hidden shadow" style="aspect-ratio: 2/3; background-color: #f8f9fa; max-width: 350px; margin: 0 auto; border: 1px solid #e0e0e0;">
+              <img src="<?php echo htmlspecialchars($ebook['cover_image']); ?>"
+                alt="<?php echo htmlspecialchars($ebook['title']); ?>"
+                class="w-100 h-100"
+                style="object-fit: cover; object-position: center;"
+                onerror="this.style.objectFit='contain'; this.style.padding='20px';">
             </div>
-            <button class="btn w-100 mt-3 d-flex align-items-center justify-content-center gap-2" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600;">
-              <span class="material-symbols-outlined">menu_book</span> Read Free Sample
-            </button>
           </div>
 
           <!-- Right: Details -->
-          <div class="col-lg-8">
-            <h1 class="display-5 fw-black mb-2" style="color: #0d121c;">Introduction to Algorithms, 4th Edition</h1>
-            <p style="color: #2ecc71; font-weight: 600;" class="mb-3">By Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein</p>
+          <div class="col-12 col-md-7 col-lg-8 col-xl-9">
+            <div style="max-width: 900px;">
+              <h1 class="h2 h1-lg fw-black mb-2" style="color: #0d121c;"><?php echo htmlspecialchars($ebook['title']); ?></h1>
+              <p style="color: #2ecc71; font-weight: 600;" class="mb-3 fs-5">By <?php echo htmlspecialchars($ebook['author']); ?></p>
 
-            <!-- Rating -->
-            <div class="d-flex align-items-center gap-2 mb-4">
-              <div class="text-warning">
-                ★★★★☆
-              </div>
-              <small class="text-muted">(4.8/5 based on 1,204 reviews)</small>
-            </div>
+              <!-- Rating -->
+              <div class="d-flex align-items-center gap-2 mb-4">
+                <div class="text-warning fs-5">
+                  <?php
+                  $full_stars = floor($avg_rating);
+                  $half_star = ($avg_rating - $full_stars) >= 0.5 ? 1 : 0;
+                  $empty_stars = 5 - $full_stars - $half_star;
 
-            <!-- Pricing Card -->
-            <div class="card p-4 mb-5" style="border-top: 4px solid #2ecc71; box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);">
-              <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
-                <div>
-                  <div class="d-flex align-items-baseline gap-2">
-                    <span class="display-6 fw-black">$45.00</span>
-                    <span class="text-decoration-line-through text-muted">$89.00</span>
-                  </div>
-                  <p class="text-success fw-semibold mb-0">Save 49% • Instant Download</p>
+                  for ($i = 0; $i < $full_stars; $i++) echo '★';
+                  if ($half_star) echo '★';
+                  for ($i = 0; $i < $empty_stars; $i++) echo '☆';
+                  ?>
                 </div>
+                <small class="text-muted">(<?php echo $total_ratings; ?> review<?php echo $total_ratings != 1 ? 's' : ''; ?>)</small>
               </div>
 
-              <!-- Format Selector -->
-              <div class="mb-4">
-                <label class="form-label fw-bold">Select Format:</label>
-                <div class="row g-2">
-                  <div class="col-6 col-sm-3">
-                    <div class="format-option active">
-                      <span class="position-absolute top-2 end-2 badge text-white" style="font-size: 0.6rem; background-color: #2ecc71;">Best</span>
-                      <div class="fw-bold" style="color: #2ecc71;">ePub + PDF</div>
-                      <div style="color: #2ecc71;">$45.00</div>
+              <!-- Pricing Card -->
+              <div class="card p-3 p-md-4 mb-4" style="border-top: 4px solid #2ecc71; box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);">
+                <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-3">
+                  <div>
+                    <div class="d-flex align-items-baseline gap-2">
+                      <span class="h2 fw-black mb-0">₱<?php echo number_format($ebook['price'], 2); ?></span>
                     </div>
-                  </div>
-                  <div class="col-6 col-sm-3">
-                    <div class="format-option">
-                      <div class="fw-bold">PDF Only</div>
-                      <div class="text-muted">$40.00</div>
-                    </div>
-                  </div>
-                  <div class="col-6 col-sm-3">
-                    <div class="format-option">
-                      <div class="fw-bold">Audiobook</div>
-                      <div class="text-muted">$25.00</div>
-                    </div>
-                  </div>
-                  <div class="col-6 col-sm-3">
-                    <div class="format-option opacity-50" style="background-color: #f8f9fa;">
-                      <div class="fw-bold text-muted">Print</div>
-                      <div class="text-muted">Out of Stock</div>
-                    </div>
+                    <p class="text-success fw-semibold mb-0">PDF Format • Instant Download</p>
                   </div>
                 </div>
-              </div>
 
-              <!-- Action Buttons -->
-              <div class="d-grid gap-2 d-sm-flex">
-                <button class="btn d-flex align-items-center justify-content-center gap-2" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
-                  <span class="material-symbols-outlined">shopping_cart</span> Add to Cart
-                </button>
-                <button class="btn" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600;">Buy Now</button>
-              </div>
-
-              <div class="text-center mt-3 small text-muted">
-                <div class="d-inline-flex align-items-center gap-2 mx-2">
-                  <span class="material-symbols-outlined text-success">check_circle</span> Instant Access
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 d-sm-flex">
+                  <button class="btn btn-lg d-flex align-items-center justify-content-center gap-2 flex-grow-1" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
+                    <span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                  </button>
+                  <a href="checkout.php?id=<?php echo $ebook_id; ?>&buy_now=1" class="btn btn-lg flex-grow-1" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600; text-decoration: none;">Buy Now</a>
                 </div>
-                <div class="d-inline-flex align-items-center gap-2 mx-2">
-                  <span class="material-symbols-outlined text-success">lock</span> Secure Payment
+
+                <div class="text-center mt-3 small text-muted">
+                  <div class="d-inline-flex align-items-center gap-2 mx-2">
+                    <span class="material-symbols-outlined text-success">check_circle</span> Instant Access
+                  </div>
+                  <div class="d-inline-flex align-items-center gap-2 mx-2">
+                    <span class="material-symbols-outlined text-success">lock</span> Secure Payment
+                  </div>
+                  <div class="d-inline-flex align-items-center gap-2 mx-2">
+                    <span class="material-symbols-outlined text-success">verified</span> Official Publisher
+                  </div>
                 </div>
-                <div class="d-inline-flex align-items-center gap-2 mx-2">
-                  <span class="material-symbols-outlined text-success">verified</span> Official Publisher
-                </div>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <p class="text-muted">
-              A comprehensive update of the leading algorithms text, with new material on matchings in bipartite graphs, online algorithms, machine learning, and other topics...
-            </p>
-            <a href="#details" class="text-primary fw-bold text-decoration-underline small">Read full description ↓</a>
-          </div>
-        </div>
-
-        <!-- Tabs -->
-        <div id="details" class="mb-5">
-          <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-              <a class="nav-link active fw-bold" href="#">Description</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Table of Contents</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About the Author</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Reviews <span class="badge" style="background-color: #2ecc71;">1.2k</span></a>
-            </li>
-          </ul>
-
-          <div class="row g-4">
-            <div class="col-md-8">
-              <p class="text-muted">
-                Some books on algorithms are rigorous but incomplete; others cover masses of material but lack rigor...
-              </p>
-              <ul class="text-muted">
-                <li>New chapters on matchings in bipartite graphs...</li>
-                <li>New material on topics including solving recurrence equations...</li>
-                <li>140 new exercises and 22 new problems.</li>
-              </ul>
-            </div>
-            <div class="col-md-4">
-              <div class="card p-4 h-100">
-                <h5 class="fw-bold mb-3">Book Details</h5>
-                <dl class="row mb-0 text-sm">
-                  <dt class="col-6 text-muted">ISBN-13</dt>
-                  <dd class="col-6 fw-medium">978-0262046305</dd>
-                  <dt class="col-6 text-muted">Publisher</dt>
-                  <dd class="col-6 fw-medium">MIT Press</dd>
-                  <dt class="col-6 text-muted">Publication Date</dt>
-                  <dd class="col-6 fw-medium">April 5, 2022</dd>
-                  <dt class="col-6 text-muted">Pages</dt>
-                  <dd class="col-6 fw-medium">1312 pages</dd>
-                  <dt class="col-6 text-muted">Language</dt>
-                  <dd class="col-6 fw-medium">English</dd>
-                </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Related Books -->
+        <!-- Description Section -->
         <section class="mb-5">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4">Frequently bought together</h2>
-            <a href="#" class="text-primary fw-bold text-decoration-underline">View all</a>
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h3 class="h4 mb-3 fw-bold">Description</h3>
+              <div style="max-width: 900px;">
+                <p class="text-muted" style="line-height: 1.8;">
+                  <?php echo nl2br(htmlspecialchars($ebook['description'])); ?>
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="row g-4">
-            <!-- Repeat 4–5 cards as needed -->
-            <div class="col-6 col-md-3">
-              <div class="card h-100 border">
-                <div class="ratio ratio-2x3 mb-2">
-                  <div class="book-cover" style="background-image: url('https://lh3.googleusercontent.com/...');"></div>
+        </section>
+
+        <!-- Ratings & Reviews Section -->
+        <section id="ratings-section" class="mb-5">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 fw-bold">Customer Reviews</h2>
+          </div>
+
+          <!-- Rating Summary -->
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body p-4">
+              <div class="row align-items-center g-4">
+                <div class="col-12 col-md-4 text-center border-md-end">
+                  <div class="display-4 fw-bold text-warning"><?php echo $avg_rating > 0 ? $avg_rating : 'N/A'; ?></div>
+                  <div class="text-warning fs-4">
+                    <?php
+                    if ($avg_rating > 0) {
+                      for ($i = 0; $i < $full_stars; $i++) echo '★';
+                      if ($half_star) echo '★';
+                      for ($i = 0; $i < $empty_stars; $i++) echo '☆';
+                    }
+                    ?>
+                  </div>
+                  <p class="text-muted mb-0"><?php echo $total_ratings; ?> review<?php echo $total_ratings != 1 ? 's' : ''; ?></p>
                 </div>
-                <h6 class="fw-bold text-truncate">The Pragmatic Programmer</h6>
-                <p class="text-muted small">David Thomas</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-bold text-primary">$32.00</span>
-                  <button class="btn btn-link p-0 text-muted"><span class="material-symbols-outlined">add_circle</span></button>
+                <div class="col-12 col-md-8">
+                  <?php
+                  // Get rating distribution
+                  for ($star = 5; $star >= 1; $star--) {
+                    $star_query = "SELECT COUNT(*) as count FROM ratings WHERE ebook_id = $ebook_id AND rating = $star";
+                    $star_result = executeQuery($star_query);
+                    $star_data = mysqli_fetch_assoc($star_result);
+                    $star_count = $star_data['count'];
+                    $star_percentage = $total_ratings > 0 ? ($star_count / $total_ratings) * 100 : 0;
+                  ?>
+                    <div class="d-flex align-items-center mb-2">
+                      <span class="text-muted" style="width: 50px;"><?php echo $star; ?> star</span>
+                      <div class="progress flex-grow-1 mx-3" style="height: 10px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: <?php echo $star_percentage; ?>%"></div>
+                      </div>
+                      <span class="text-muted" style="width: 70px;"><?php echo $star_count; ?> (<?php echo round($star_percentage); ?>%)</span>
+                    </div>
+                  <?php } ?>
                 </div>
               </div>
             </div>
-            <!-- Add more as needed -->
+          </div>
+
+          <!-- Add Rating Form -->
+          <?php if ($is_logged_in): ?>
+            <?php if ($has_purchased && !$user_has_rated): ?>
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Rate This Ebook</h5>
+                  <p class="text-muted small mb-3">Share your rating and feedback. Rating is required, but review is optional.</p>
+                  <?php if (isset($_GET['success'])): ?>
+                    <div class="alert alert-success" role="alert">
+                      <i class="bi bi-check-circle-fill"></i> Thank you for your rating and feedback!
+                    </div>
+                  <?php endif; ?>
+                  <form method="POST" action="" id="ratingForm">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Your Rating <span class="text-danger">*</span></label>
+                      <div class="rating-input">
+                        <input type="radio" name="rating" value="5" id="star5" required>
+                        <label for="star5" title="5 stars">★</label>
+                        <input type="radio" name="rating" value="4" id="star4">
+                        <label for="star4" title="4 stars">★</label>
+                        <input type="radio" name="rating" value="3" id="star3">
+                        <label for="star3" title="3 stars">★</label>
+                        <input type="radio" name="rating" value="2" id="star2">
+                        <label for="star2" title="2 stars">★</label>
+                        <input type="radio" name="rating" value="1" id="star1">
+                        <label for="star1" title="1 star">★</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="review" class="form-label fw-bold">Your Review <span class="text-muted fw-normal">(Optional)</span></label>
+                      <textarea class="form-control" id="review" name="review" rows="4" placeholder="Share your experience with this ebook... (Optional)"></textarea>
+                    </div>
+                    <button type="submit" name="submit_rating" class="btn" style="background-color: #2ecc71; color: white;"><i class="bi bi-star-fill"></i> Submit Rating</button>
+                  </form>
+                </div>
+              </div>
+            <?php elseif ($user_has_rated): ?>
+              <div class="alert alert-info mb-4" role="alert">
+                <i class="bi bi-info-circle"></i> You have already reviewed this ebook.
+              </div>
+            <?php else: ?>
+              <div class="alert alert-warning mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> You need to purchase this ebook before you can write a review.
+              </div>
+            <?php endif; ?>
+          <?php else: ?>
+            <div class="alert alert-info mb-4" role="alert">
+              <i class="bi bi-info-circle"></i> Please <a href="login.php" class="alert-link">login</a> to write a review.
+            </div>
+          <?php endif; ?>
+
+          <!-- Display Reviews -->
+          <div class="reviews-list">
+            <h5 class="mb-3">All Reviews</h5>
+            <?php if ($total_ratings > 0): ?>
+              <?php while ($rating = mysqli_fetch_assoc($ratings_result)): ?>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div>
+                        <h6 class="mb-1 fw-bold"><?php echo htmlspecialchars($rating['user_name']); ?></h6>
+                        <div class="text-warning">
+                          <?php
+                          for ($i = 0; $i < $rating['rating']; $i++) echo '★';
+                          for ($i = $rating['rating']; $i < 5; $i++) echo '☆';
+                          ?>
+                        </div>
+                      </div>
+                      <small class="text-muted"><?php echo date('M d, Y', strtotime($rating['created_at'])); ?></small>
+                    </div>
+                    <p class="mb-0"><?php echo nl2br(htmlspecialchars($rating['review'])); ?></p>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+            <?php else: ?>
+              <div class="alert alert-secondary" role="alert">
+                No reviews yet. Be the first to review this ebook!
+              </div>
+            <?php endif; ?>
           </div>
         </section>
       </div>

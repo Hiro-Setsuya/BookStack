@@ -7,13 +7,22 @@ if (!isset($_SESSION['user_id'])) {
   exit;
 }
 
-$items_param = $_GET['items'] ?? '';
+// Handle both "Buy Now" (single item) and cart checkout (multiple items)
 $item_ids = [];
-if (!empty($items_param)) {
-  $parts = explode(',', $items_param);
-  foreach ($parts as $p) {
-    $id = intval(trim($p));
-    if ($id > 0) $item_ids[] = $id;
+
+// Check if this is a "Buy Now" direct purchase
+if (isset($_GET['id']) && isset($_GET['buy_now'])) {
+  $item_ids[] = intval($_GET['id']);
+}
+// Otherwise, check for cart items
+else {
+  $items_param = $_GET['items'] ?? '';
+  if (!empty($items_param)) {
+    $parts = explode(',', $items_param);
+    foreach ($parts as $p) {
+      $id = intval(trim($p));
+      if ($id > 0) $item_ids[] = $id;
+    }
   }
 }
 
