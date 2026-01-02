@@ -186,7 +186,7 @@ $total = $subtotal - $discount_amount + $tax;
         <?php else: ?>
           <div class="select-all-container mb-4">
             <label class="form-check-label fw-semibold d-flex align-items-center gap-3 mb-0" style="cursor: pointer;">
-              <input type="checkbox" class="custom-checkbox" id="selectAll" checked>
+              <input type="checkbox" class="custom-checkbox" id="selectAll">
               <span style="color: #2c3e50; font-size: 0.95rem;">Select All Items</span>
             </label>
           </div>
@@ -194,7 +194,7 @@ $total = $subtotal - $discount_amount + $tax;
             <div class="cart-item-card p-4 mb-3">
               <div class="row align-items-center">
                 <div class="col-auto">
-                  <input type="checkbox" class="custom-checkbox item-checkbox" data-price="<?php echo $item['price']; ?>" data-ebook-id="<?php echo $item['ebook_id']; ?>" checked>
+                  <input type="checkbox" class="custom-checkbox item-checkbox" data-price="<?php echo $item['price']; ?>" data-ebook-id="<?php echo $item['ebook_id']; ?>">
                 </div>
                 <div class="col-lg-2 col-3 mb-3 mb-lg-0">
                   <img src="<?php echo htmlspecialchars($item['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" class="img-fluid book-cover" style="max-height: 140px; object-fit: cover; width: 100%;">
@@ -228,27 +228,27 @@ $total = $subtotal - $discount_amount + $tax;
 
           <div class="d-flex justify-content-between align-items-center mb-3 py-2">
             <span class="text-muted">Selected Items</span>
-            <span class="fw-semibold" style="color: #2ecc71;" id="selectedCount"><?php echo count($cart_items); ?></span>
+            <span class="fw-semibold" style="color: #2ecc71;" id="selectedCount">0</span>
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-3 py-2">
             <span class="text-muted">Subtotal</span>
-            <span class="fw-semibold" id="subtotalAmount">₱<?php echo number_format($subtotal, 2); ?></span>
+            <span class="fw-semibold" id="subtotalAmount">₱0.00</span>
           </div>
 
-          <div class="d-flex justify-content-between align-items-center mb-3 py-2" id="discountRow" style="display: <?php echo $discount_amount > 0 ? 'flex' : 'none'; ?> !important; background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 12px !important;">
+          <div class="d-flex justify-content-between align-items-center mb-3 py-2" id="discountRow" style="display: none !important; background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 12px !important;">
             <span class="fw-semibold" style="color: #2ecc71;">Discount (<span id="discountPercent"><?php echo $discount_percent; ?></span>%)</span>
-            <span class="fw-semibold" style="color: #2ecc71;" id="discountAmount">-₱<?php echo number_format($discount_amount, 2); ?></span>
+            <span class="fw-semibold" style="color: #2ecc71;" id="discountAmount">-₱0.00</span>
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4 py-2">
             <span class="text-muted">Tax</span>
-            <span class="fw-semibold" id="taxAmount">₱<?php echo number_format($tax, 2); ?></span>
+            <span class="fw-semibold" id="taxAmount">₱0.00</span>
           </div>
 
           <div class="d-flex justify-content-between align-items-center py-3 mb-4" style="border-top: 2px solid rgba(46, 204, 113, 0.2);">
             <span class="fs-5 fw-bold" style="color: #2c3e50;">Total</span>
-            <span class="fs-4 fw-bold text-green" id="totalAmount">₱<?php echo number_format($total, 2); ?></span>
+            <span class="fs-4 fw-bold text-green" id="totalAmount">₱0.00</span>
           </div>
 
           <form method="POST" class="mb-4">
@@ -263,8 +263,8 @@ $total = $subtotal - $discount_amount + $tax;
             <?php endif; ?>
           </form>
 
-          <button class="btn btn-green w-100 py-3" id="checkoutBtn" style="border-radius: 12px; font-weight: 600; font-size: 1rem;" <?php echo empty($cart_items) ? 'disabled' : ''; ?>>
-            <i class="bi bi-lock me-2"></i>Proceed to Checkout (<span id="checkoutCount"><?php echo count($cart_items); ?></span>)
+          <button class="btn btn-green w-100 py-3" id="checkoutBtn" style="border-radius: 12px; font-weight: 600; font-size: 1rem;" disabled>
+            <i class="bi bi-lock me-2"></i>Proceed to Checkout (<span id="checkoutCount">0</span>)
           </button>
         </div>
       </div>
