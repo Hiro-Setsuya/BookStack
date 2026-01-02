@@ -27,10 +27,10 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
 
 <nav id="navbar" class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
     <div class="container-fluid">
-        <div class="navbar-brand fw-bold text-green">
+        <a href="index.php" class="navbar-brand fw-bold text-green">
             <img src="assets/logo.svg" height="25" alt="Logo" />
             <span>BookStack</span>
-        </div>
+        </a>
 
         <div class="ms-auto">
             <?php if (isset($_SESSION['user_id'])): ?>
