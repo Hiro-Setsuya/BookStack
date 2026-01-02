@@ -873,6 +873,7 @@ body::before {
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 3rem 2rem;
 }
 
 .error-container:hover {
@@ -919,7 +920,7 @@ body::before {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
 }
 
