@@ -15,97 +15,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet" />
 
   <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-  <style>
-    /* Custom Colors */
-    :root {
-      --bs-primary: #0d59f2;
-      --bs-body-font-family: 'Manrope', sans-serif;
-      --background-light: #f8f9fc;
-      --background-dark: #101622;
-    }
-
-    /* Light Mode */
-    [data-bs-theme="light"] {
-      --bs-body-bg: var(--background-light);
-      --bs-body-color: #0d121c;
-    }
-
-    /* Dark Mode */
-    [data-bs-theme="dark"] {
-      --bs-body-bg: var(--background-dark);
-      --bs-body-color: #ffffff;
-      --bs-border-color: #333;
-    }
-
-    /* Buttons & Cards */
-    .btn-primary {
-      background-color: var(--bs-primary);
-      border-color: var(--bs-primary);
-    }
-
-    .btn-primary:hover {
-      background-color: #0b4bd0;
-      border-color: #0b4bd0;
-    }
-
-    .card,
-    .bg-white {
-      background-color: #ffffff !important;
-    }
-
-    [data-bs-theme="dark"] .card,
-    [data-bs-theme="dark"] .bg-white {
-      background-color: #1e293b !important;
-      border-color: #2d3748 !important;
-    }
-
-    .text-primary {
-      color: var(--bs-primary) !important;
-    }
-
-    /* Book image hover */
-    .book-cover {
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.5s;
-    }
-
-    .book-cover:hover {
-      transform: scale(1.05);
-    }
-
-    /* Format selector */
-    .format-option {
-      border: 2px solid #e0e0e0;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .format-option.active {
-      border-color: var(--bs-primary);
-      background-color: rgba(13, 89, 242, 0.1);
-    }
-
-    /* Custom scrollbar */
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    /* Material icons */
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-    }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="font-sans antialiased">
@@ -133,15 +45,15 @@
               <div class="w-100 h-100 book-cover" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFFW8znAfEJu1SPsJuZy_bT8MLaVfqxiK-Jej9UTEG8MSjYkurk4m8ss6ZEYGPiFYJiyH-EcUXC-Ews4s68KKP8RtxlgScgnlu8VVFxNCacTo7Wnzh13cU4z0HBiw0RpFILmjdJGxqOyA1_mMnrY4XVUz0EVTIv7saInHd96IXd2AmCpNPqgZR0857h3a5KydlFEFybWr16JemI1PXQpbswOAoSRAuJAe8PGzTAkrAQC0qxwy0Te1M5sJ_xIlEw56jWF5LTqLsw5I');"></div>
               <span class="position-absolute top-3 start-3 badge bg-info text-primary fw-bold">Best Seller</span>
             </div>
-            <button class="btn btn-outline-secondary w-100 mt-3 d-flex align-items-center justify-content-center gap-2">
+            <button class="btn w-100 mt-3 d-flex align-items-center justify-content-center gap-2" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600;">
               <span class="material-symbols-outlined">menu_book</span> Read Free Sample
             </button>
           </div>
 
           <!-- Right: Details -->
           <div class="col-lg-8">
-            <h1 class="display-5 fw-black mb-2">Introduction to Algorithms, 4th Edition</h1>
-            <p class="text-primary mb-3">By Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein</p>
+            <h1 class="display-5 fw-black mb-2" style="color: #0d121c;">Introduction to Algorithms, 4th Edition</h1>
+            <p style="color: #2ecc71; font-weight: 600;" class="mb-3">By Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein</p>
 
             <!-- Rating -->
             <div class="d-flex align-items-center gap-2 mb-4">
@@ -152,7 +64,7 @@
             </div>
 
             <!-- Pricing Card -->
-            <div class="card p-4 mb-5">
+            <div class="card p-4 mb-5" style="border-top: 4px solid #2ecc71; box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);">
               <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
                 <div>
                   <div class="d-flex align-items-baseline gap-2">
@@ -160,14 +72,6 @@
                     <span class="text-decoration-line-through text-muted">$89.00</span>
                   </div>
                   <p class="text-success fw-semibold mb-0">Save 49% • Instant Download</p>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-outline-secondary rounded-circle">
-                    <span class="material-symbols-outlined">favorite</span>
-                  </button>
-                  <button class="btn btn-outline-secondary rounded-circle">
-                    <span class="material-symbols-outlined">share</span>
-                  </button>
                 </div>
               </div>
 
@@ -177,9 +81,9 @@
                 <div class="row g-2">
                   <div class="col-6 col-sm-3">
                     <div class="format-option active">
-                      <div class="fw-bold text-primary">ePub + PDF</div>
-                      <div class="text-primary">$45.00</div>
-                      <div class="position-absolute top-0 end-0 translate-middle badge bg-primary text-white" style="font-size: 0.6rem;">Best</div>
+                      <span class="position-absolute top-2 end-2 badge text-white" style="font-size: 0.6rem; background-color: #2ecc71;">Best</span>
+                      <div class="fw-bold" style="color: #2ecc71;">ePub + PDF</div>
+                      <div style="color: #2ecc71;">$45.00</div>
                     </div>
                   </div>
                   <div class="col-6 col-sm-3">
@@ -205,10 +109,10 @@
 
               <!-- Action Buttons -->
               <div class="d-grid gap-2 d-sm-flex">
-                <button class="btn btn-primary d-flex align-items-center justify-content-center gap-2">
+                <button class="btn d-flex align-items-center justify-content-center gap-2" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
                   <span class="material-symbols-outlined">shopping_cart</span> Add to Cart
                 </button>
-                <button class="btn btn-outline-secondary">Buy Now</button>
+                <button class="btn" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600;">Buy Now</button>
               </div>
 
               <div class="text-center mt-3 small text-muted">
@@ -245,7 +149,7 @@
               <a class="nav-link" href="#">About the Author</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Reviews <span class="badge bg-secondary">1.2k</span></a>
+              <a class="nav-link" href="#">Reviews <span class="badge" style="background-color: #2ecc71;">1.2k</span></a>
             </li>
           </ul>
 
@@ -308,7 +212,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-top py-5">
+    <footer class="bg-light border-top py-5">
       <div class="container">
         <div class="row g-4 mb-4">
           <div class="col-lg-4">
@@ -318,7 +222,7 @@
                   <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"></path>
                 </svg>
               </div>
-              <span class="h5 fw-bold">EduBooks</span>
+              <span class="h5 fw-bold text-success">BookStack</span>
             </a>
             <p class="text-muted small">The premier digital textbook platform...</p>
             <div class="d-flex gap-3">

@@ -937,3 +937,43 @@ body::before {
   margin-left: auto;
   margin-right: auto;
 }
+
+/* Ebook Details Page Styles */
+.book-cover {
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+.book-cover:hover {
+  transform: scale(1.05);
+}
+
+.format-option {
+  border: 2px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.format-option:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(46, 204, 113, 0.05);
+}
+
+.format-option.active {
+  border-color: var(--primary-color);
+  background-color: rgba(46, 204, 113, 0.1);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
