@@ -108,6 +108,127 @@ if (!empty($search_query)) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Responsive ebook cover sizes */
+        .ebook-cover-container {
+            min-height: 180px;
+            height: 180px;
+        }
+
+        /* Responsive typography */
+        .ebook-title {
+            font-size: 0.8rem;
+            line-height: 1.2;
+            min-height: 2.4rem;
+        }
+
+        .ebook-author {
+            font-size: 0.7rem;
+        }
+
+        .ebook-price {
+            font-size: 0.95rem;
+        }
+
+        .ebook-btn {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.5rem;
+        }
+
+        .ebook-card-body {
+            padding: 0.5rem;
+        }
+
+        @media (min-width: 576px) {
+            .ebook-cover-container {
+                min-height: 240px;
+                height: 240px;
+            }
+
+            .ebook-title {
+                font-size: 0.95rem;
+                line-height: 1.3;
+                min-height: 2.6rem;
+            }
+
+            .ebook-author {
+                font-size: 0.8rem;
+            }
+
+            .ebook-price {
+                font-size: 1.05rem;
+            }
+
+            .ebook-btn {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .ebook-card-body {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .ebook-cover-container {
+                min-height: 280px;
+                height: 280px;
+            }
+
+            .ebook-title {
+                font-size: 1rem;
+                line-height: 1.3;
+                min-height: 2.6rem;
+            }
+
+            .ebook-author {
+                font-size: 0.875rem;
+            }
+
+            .ebook-price {
+                font-size: 1.15rem;
+            }
+
+            .ebook-btn {
+                font-size: 0.9rem;
+                padding: 0.45rem 0.7rem;
+            }
+
+            .ebook-card-body {
+                padding: 1rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .ebook-cover-container {
+                min-height: 320px;
+                height: 320px;
+            }
+
+            .ebook-title {
+                font-size: 1.1rem;
+                line-height: 1.4;
+                min-height: 3rem;
+            }
+
+            .ebook-author {
+                font-size: 0.9375rem;
+            }
+
+            .ebook-price {
+                font-size: 1.25rem;
+            }
+
+            .ebook-btn {
+                font-size: 0.9375rem;
+                padding: 0.5rem 0.75rem;
+            }
+
+            .ebook-card-body {
+                padding: 1.25rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -140,38 +261,40 @@ if (!empty($search_query)) {
             </div>
         </div>
 
-        <div class="row g-4 px-4">
+        <div class="row g-3 px-2 px-sm-4">
             <?php
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($ebook = mysqli_fetch_assoc($result)) {
             ?>
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                         <div class="card ebook-card shadow-sm border-0 h-100">
-                            <img src="<?php echo htmlspecialchars($ebook['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>"
-                                class="card-img-top ebook-cover"
-                                alt="<?php echo htmlspecialchars($ebook['title']); ?>">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title ebook-title fw-semibold">
-                                    <?php echo htmlspecialchars($ebook['title']); ?>
-                                </h5>
-                                <p class="card-text ebook-author mb-2">
-                                    <i class="bi bi-person me-1"></i><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?>
+                            <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none bg-light d-flex align-items-center justify-content-center ebook-cover-container" style="overflow: hidden;">
+                                <img src="<?php echo htmlspecialchars($ebook['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>"
+                                    class="ebook-cover w-100 h-100"
+                                    alt="<?php echo htmlspecialchars($ebook['title']); ?>"
+                                    style="object-fit: contain; object-position: center;">
+                            </a>
+                            <div class="card-body d-flex flex-column ebook-card-body">
+                                <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none">
+                                    <h6 class="card-title ebook-title fw-bold text-dark mb-1 mb-sm-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                        <?php echo htmlspecialchars($ebook['title']); ?>
+                                    </h6>
+                                </a>
+                                <p class="card-text ebook-author mb-1 mb-sm-2 text-muted">
+                                    <i class="bi bi-person me-1"></i><span class="d-none d-sm-inline"><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?></span><span class="d-inline d-sm-none"><?php echo htmlspecialchars(strlen($ebook['author']) > 15 ? substr($ebook['author'], 0, 15) . '...' : $ebook['author']); ?></span>
                                 </p>
                                 <div class="mt-auto">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="h5 mb-0 text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
+                                    <div class="mb-2">
+                                        <span class="ebook-price text-green fw-bold d-block">₱<?php echo number_format($ebook['price'], 2); ?></span>
                                     </div>
-                                    <div class="d-grid gap-2">
-                                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-outline-green btn-sm">
-                                            <i class="bi bi-eye me-1"></i>View Details
-                                        </a>
-                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm">
-                                            <i class="bi bi-download me-1"></i>Download
+                                    <div class="d-grid gap-1">
+                                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-outline-green btn-sm ebook-btn">
+                                            <i class="bi bi-eye me-1"></i><span class="d-none d-sm-inline">View Details</span><span class="d-inline d-sm-none">View</span>
                                         </a>
                                         <form method="POST" class="m-0">
                                             <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
-                                            <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100">
-                                                <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                            <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100 ebook-btn">
+                                                <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
                                             </button>
                                         </form>
                                     </div>
