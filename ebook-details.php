@@ -210,61 +210,9 @@
         </section>
       </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-light border-top py-5">
-      <div class="container">
-        <div class="row g-4 mb-4">
-          <div class="col-lg-4">
-            <a href="#" class="d-flex align-items-center gap-2 mb-3 text-decoration-none">
-              <div style="color: var(--bs-primary); width: 24px; height: 24px;">
-                <svg fill="currentColor" viewBox="0 0 48 48">
-                  <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"></path>
-                </svg>
-              </div>
-              <span class="h5 fw-bold text-success">BookStack</span>
-            </a>
-            <p class="text-muted small">The premier digital textbook platform...</p>
-            <div class="d-flex gap-3">
-              <a href="#" class="text-muted"><span class="material-symbols-outlined">thumb_up</span></a>
-              <a href="#" class="text-muted"><span class="material-symbols-outlined">photo_camera</span></a>
-              <a href="#" class="text-muted"><span class="material-symbols-outlined">mail</span></a>
-            </div>
-          </div>
-          <div class="col">
-            <h6 class="fw-bold mb-3">Shop</h6>
-            <ul class="list-unstyled small">
-              <li><a href="#" class="text-muted">Textbooks</a></li>
-              <li><a href="#" class="text-muted">Audiobooks</a></li>
-            </ul>
-          </div>
-          <div class="col">
-            <h6 class="fw-bold mb-3">Support</h6>
-            <ul class="list-unstyled small">
-              <li><a href="#" class="text-muted">Help Center</a></li>
-            </ul>
-          </div>
-          <div class="col">
-            <h6 class="fw-bold mb-3">Legal</h6>
-            <ul class="list-unstyled small">
-              <li><a href="#" class="text-muted">Privacy Policy</a></li>
-            </ul>
-          </div>
-        </div>
-        <hr />
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
-          <p>© 2024 EduBooks Inc. All rights reserved.</p>
-          <div class="d-flex align-items-center gap-2">
-            <span>Secure Payment:</span>
-            <div class="d-flex gap-2 opacity-50">
-              <div class="bg-secondary" style="width: 40px; height: 24px; border-radius: 4px;"></div>
-              <div class="bg-secondary" style="width: 40px; height: 24px; border-radius: 4px;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
+
+  <?php include 'includes/footer.php'; ?>
 
   <!-- Optional: Bootstrap JS (for dropdowns, modals, etc.) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
