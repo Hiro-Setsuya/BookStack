@@ -7,6 +7,20 @@ if (!isset($_SESSION['user_id'])) {
   exit;
 }
 
+// Handle promo code submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'apply_promo') {
+  $_SESSION['promo_code'] = $_POST['promo_code'] ?? '';
+  // Redirect back to checkout with same parameters
+  $redirect_url = 'checkout.php?';
+  if (isset($_GET['id']) && isset($_GET['buy_now'])) {
+    $redirect_url .= 'id=' . intval($_GET['id']) . '&buy_now=1';
+  } elseif (isset($_GET['items'])) {
+    $redirect_url .= 'items=' . urlencode($_GET['items']);
+  }
+  header('Location: ' . $redirect_url);
+  exit;
+}
+
 // Handle both "Buy Now" (single item) and cart checkout (multiple items)
 $item_ids = [];
 
@@ -149,6 +163,44 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
             <?php endif; ?>
           </div>
 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promo Code Section -->
+  <div class="container mt-3 px-4">
+    <div class="row px-md-5">
+      <div class="col px-md-5">
+        <div class="card shadow-sm rounded-4 overflow-hidden">
+          <div class="card-header fs-4 fw-bold mb-4 py-3 px-3 px-lg-5 px-md-5 text-green">
+            <i class="bi bi-tag me-2"></i>Promo Code
+          </div>
+          <div class="card-body px-4 px-md-5">
+            <form method="POST" action="">
+              <input type="hidden" name="action" value="apply_promo">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-8">
+                  <label class="form-label fw-semibold">Have a promo code?</label>
+                  <input class="form-control py-2" type="text" name="promo_code" placeholder="Enter promo code" value="<?php echo htmlspecialchars($_SESSION['promo_code'] ?? ''); ?>" style="border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-green w-100 py-2" style="border-radius: 12px; font-weight: 600;">
+                    <i class="bi bi-check-circle me-1"></i>Apply
+                  </button>
+                </div>
+              </div>
+              <?php if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30'): ?>
+                <div class="alert alert-success mt-3 mb-0" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>Promo code <strong><?php echo htmlspecialchars($_SESSION['promo_code']); ?></strong> applied successfully! You're saving <?php echo $discount_percent; ?>%.
+                </div>
+              <?php elseif (isset($_SESSION['promo_code']) && !empty($_SESSION['promo_code'])): ?>
+                <div class="alert alert-warning mt-3 mb-0" role="alert">
+                  <i class="bi bi-exclamation-triangle me-2"></i>Invalid promo code. Please try again.
+                </div>
+              <?php endif; ?>
+            </form>
+          </div>
         </div>
       </div>
     </div>
