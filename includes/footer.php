@@ -81,7 +81,8 @@ if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
 
 <style>
     .footer {
-        background-color: #198754 !important;
+        /* Updated to use the primary green color from your CSS variables */
+        background-color: #2ecc71 !important;
         width: 100%;
     }
 
