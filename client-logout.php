@@ -36,11 +36,13 @@ if (isset($_POST['confirm_logout']) && $_POST['confirm_logout'] === 'yes') {
     <link rel="stylesheet" href="style.css">
     <style>
         .logout-container {
-            min-height: calc(100vh - 160px);
+            /* Changed min-height to account for the space taken by nav and footer */
+            min-height: calc(100vh - 200px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 0;
+            /* Added 80px top padding to clear the navbar */
+            padding: 80px 0 2rem 0;
         }
 
         .logout-card {
@@ -49,6 +51,8 @@ if (isset($_POST['confirm_logout']) && $_POST['confirm_logout'] === 'yes') {
             border-radius: 1rem;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            /* Ensure the card doesn't touch the very top on small screens */
+            margin-top: 20px;
         }
 
         .icon-container {
