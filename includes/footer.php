@@ -69,7 +69,7 @@ if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
     <div class="border-top border-white border-opacity-25">
         <div class="container-fluid px-4 px-md-5 py-3">
             <div class="row align-items-center">
-                <div class="col-12 text-center text-md-start mb-2">
+                <div class="col-12 text-center mb-2">
                     <small class="text-white-50">
                         © <?php echo date('Y'); ?> BookStack. All rights reserved.
                     </small>
