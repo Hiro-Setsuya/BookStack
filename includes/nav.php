@@ -66,7 +66,7 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                 </li>
                 <li class="nav-item px-lg-3 d-inline-block d-lg-none">
                     <a class="nav-link fw-semibold <?= isActive('cart.php'); ?>" href="cart.php">
-                        <i class="bi bi-cart3-fill me-2"></i>Cart
+                        <i class="bi bi-cart-fill me-2"></i>Cart
                     </a>
                 </li>
             </ul>
