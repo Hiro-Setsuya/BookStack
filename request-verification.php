@@ -42,12 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                .header { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
                 .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-                .code-box { background: white; border: 2px solid #667eea; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
-                .verify-code { font-size: 28px; font-weight: bold; color: #667eea; letter-spacing: 4px; }
+                .code-box { border: 2px solid #2ecc71; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }
+                .verify-code { font-size: 28px; font-weight: bold; color: #2ecc71; letter-spacing: 4px; }
                 .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
-                .btn { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .btn { display: inline-block; padding: 12px 30px; background: #2ecc71; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
             </style>
         </head>
         <body>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
-            --primary-color: #55b6e7;
+            --primary-color: #2ecc71;
             --bg-light: #f8fafb;
         }
 
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
         .method-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #4da5d1 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #249e57ff 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -217,15 +217,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
         }
 
         .btn-verify:hover {
-            background-color: #4da5d1;
-            border-color: #4da5d1;
+            background-color: #37b278;
+            border-color: #37b278;
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(85, 182, 231, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 231, 85, 0.3);
+        }
+
+        .text-green {
+            color: var(--primary-color) !important;
         }
 
         .info-box {
-            background-color: #e7f3ff;
+            background-color: #e7ffefff;
             border-left: 4px solid var(--primary-color);
             padding: 1rem 1.25rem;
             border-radius: 8px;
@@ -260,6 +264,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
             justify-content: center;
             font-weight: 700;
             font-size: 0.9rem;
+        }
+
+        .btn-green {
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: white !important;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-green:hover {
+            background-color: var(--primary-hover) !important;
+            border-color: var(--primary-hover) !important;
+            color: green !important;
         }
     </style>
 </head>
@@ -302,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
                                         </div>
                                         <h5 class="fw-bold mb-2">Email Verification</h5>
                                         <p class="text-muted mb-2">We'll send verification instructions to:</p>
-                                        <p class="fw-semibold text-primary mb-0"><?= htmlspecialchars($user['email']) ?></p>
+                                        <p class="fw-semibold text-green mb-0"><?= htmlspecialchars($user['email']) ?></p>
                                     </div>
                                 </div>
 
@@ -315,7 +333,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
                                         </div>
                                         <h5 class="fw-bold mb-2">SMS Verification</h5>
                                         <p class="text-muted mb-2">We'll send verification code to:</p>
-                                        <p class="fw-semibold text-primary mb-0"><?= htmlspecialchars($user['phone_number'] ?: 'No phone number provided') ?></p>
+                                        <p class="fw-semibold text-green mb-0"><?= htmlspecialchars($user['phone_number'] ?: 'No phone number provided') ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -335,7 +353,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
                             <!-- Submit Button -->
                             <div class="d-flex gap-3 justify-content-center mt-4">
                                 <a href="profile.php" class="btn btn-outline-secondary px-4">Cancel</a>
-                                <button type="submit" name="request_verification" class="btn btn-verify">
+                                <button type="submit" name="request_verification" class="btn btn-green">
                                     <i class="bi bi-send-fill me-2"></i>Request Verification
                                 </button>
                             </div>
