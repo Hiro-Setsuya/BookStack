@@ -81,6 +81,15 @@ try {
         ORDER BY created_at DESC
         LIMIT 3
     ");
+
+    // // If no data, provide sample data for demonstration
+    // if (empty($monthly_sales)) {
+    //     $monthly_sales = [
+    //         ['month' => 'Jan', 'monthly_sales' => 25450.00],
+    //         ['month' => 'Dec', 'monthly_sales' => 18920.50],
+    //         ['month' => 'Nov', 'monthly_sales' => 32100.75]
+    //     ];
+    // }
 } catch (Exception $e) {
     // Handle database error gracefully
     $total_users = 0;
@@ -283,8 +292,8 @@ try {
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Sales ($)',
-                    sales,
+                    label: 'Sales (₱)',
+                    data: sales,
                     backgroundColor: '#198754',
                     borderColor: '#198754',
                     borderWidth: 1
@@ -303,7 +312,10 @@ try {
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                return value.toLocaleString('en-PH', {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0
+                                });
                             },
                             maxTicksLimit: 5
                         }
