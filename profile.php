@@ -30,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $result = executeQuery($update_query);
 
         if ($result) {
+            // ADD THIS LINE BELOW:
+            $_SESSION['user_name'] = $user_name;
+
             $statusMessage = 'Profile updated successfully!';
             $statusType = 'success';
         } else {
