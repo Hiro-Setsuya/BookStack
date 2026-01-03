@@ -34,11 +34,11 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
 
         <div class="ms-auto">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="profile.php" class="btn btn-green d-lg-none d-inline-block me-2">
-                    <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?>
+                <a href="profile.php" class="btn btn-green d-lg-none d-inline-block me-1">
+                    <i class="bi bi-person-circle"></i><span class="d-none d-sm-inline ms-2"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
                 </a>
             <?php else: ?>
-                <a href="login.php" class="btn btn-green d-lg-none d-inline-block me-2 fw-normal">Sign In</a>
+                <a href="login.php" class="btn btn-green d-lg-none d-inline-block me-1 fw-normal"><i class="bi-person-circle"></i><span class="d-none d-sm-inline ms-2">Sign In</span></a>
             <?php endif; ?>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -100,10 +100,10 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
             <!-- Profile or Sign In button -->
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="profile.php" class="btn btn-green text-nowrap">
-                    <i class="bi bi-person-circle me-1"></i><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Profile'); ?>
+                    <i class="bi bi-person-circle me-2"></i><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Profile'); ?>
                 </a>
             <?php else: ?>
-                <a href="login.php" class="btn btn-green text-nowrap fw-normal">Sign In</a>
+                <a href="login.php" class="btn btn-green text-nowrap fw-normal"><i class="bi bi-person-circle me-2"></i>Sign In</a>
             <?php endif; ?>
         </div>
     </div>
