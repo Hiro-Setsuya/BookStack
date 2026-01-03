@@ -86,7 +86,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
             <div class="col-lg-3 mb-4">
                 <div class="sidebar-section-label mb-3">Account</div>
                 <nav class="nav flex-column mb-4">
-                    <a class="sidebar-link active" href="profile.php"><i class="bi bi-person me-2"></i> General Profile</a>
+                    <a class="sidebar-link active" href="profile.php"><i class="bi bi-person me-2"></i> Profile</a>
                     <a class="sidebar-link" href="my-ebooks.php"><i class="bi bi-book me-2"></i> My E-Books</a>
                 </nav>
 
