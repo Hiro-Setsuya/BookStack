@@ -51,6 +51,20 @@ if (isset($_SESSION['user_id'])) {
     $count_stmt->close();
 }
 
+// Get user's purchased ebooks if logged in
+$purchased_ebooks = [];
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $purchased_query = "SELECT DISTINCT oi.ebook_id 
+                        FROM order_items oi 
+                        INNER JOIN orders o ON oi.order_id = o.order_id 
+                        WHERE o.user_id = $user_id AND o.status = 'completed'";
+    $purchased_result = executeQuery($purchased_query);
+    while ($row = mysqli_fetch_assoc($purchased_result)) {
+        $purchased_ebooks[] = $row['ebook_id'];
+    }
+}
+
 // Handle search functionality
 $search_query = isset($_GET['q']) ? trim($_GET['q']) : '';
 $total_results = 0;
@@ -133,6 +147,22 @@ if (!empty($search_query)) {
         .ebook-btn {
             font-size: 0.75rem;
             padding: 0.35rem 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .ebook-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .price-link {
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .price-link:hover {
+            opacity: 0.8;
         }
 
         .ebook-card-body {
@@ -265,6 +295,7 @@ if (!empty($search_query)) {
             <?php
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($ebook = mysqli_fetch_assoc($result)) {
+                    $is_purchased = in_array($ebook['ebook_id'], $purchased_ebooks);
             ?>
                     <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                         <div class="card ebook-card shadow-sm border-0 h-100">
@@ -284,20 +315,32 @@ if (!empty($search_query)) {
                                     <i class="bi bi-person me-1"></i><span class="d-none d-sm-inline"><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?></span><span class="d-inline d-sm-none"><?php echo htmlspecialchars(strlen($ebook['author']) > 15 ? substr($ebook['author'], 0, 15) . '...' : $ebook['author']); ?></span>
                                 </p>
                                 <div class="mt-auto">
-                                    <div class="mb-2">
-                                        <span class="ebook-price text-green fw-bold d-block">₱<?php echo number_format($ebook['price'], 2); ?></span>
-                                    </div>
-                                    <div class="d-grid gap-1">
-                                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-outline-green btn-sm ebook-btn">
-                                            <i class="bi bi-eye me-1"></i><span class="d-none d-sm-inline">View Details</span><span class="d-inline d-sm-none">View</span>
-                                        </a>
-                                        <form method="POST" class="m-0">
-                                            <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
-                                            <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100 ebook-btn">
-                                                <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <?php if ($is_purchased): ?>
+                                        <div class="mb-2">
+                                            <span class="badge bg-success w-100 py-2">
+                                                <i class="bi bi-check-circle me-1"></i>Purchased
+                                            </span>
+                                        </div>
+                                        <div class="d-grid">
+                                            <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm ebook-btn">
+                                                <i class="bi bi-download me-1"></i><span class="d-none d-sm-inline">Download</span><span class="d-inline d-sm-none">Get</span>
+                                            </a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="mb-2 text-center">
+                                            <a href="checkout.php?id=<?php echo $ebook['ebook_id']; ?>&buy_now=1" class="price-link m-1 d-inline-block" onclick="return confirm('Proceed to checkout for <?php echo htmlspecialchars(addslashes($ebook['title'])); ?>?');">
+                                                <span class="ebook-price text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
+                                            </a>
+                                        </div>
+                                        <div class="d-grid">
+                                            <form method="POST" class="m-0">
+                                                <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
+                                                <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100 ebook-btn">
+                                                    <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

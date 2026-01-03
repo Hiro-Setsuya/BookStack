@@ -114,8 +114,15 @@ $member_since = date('F Y', strtotime($user['created_at']));
 
                 <!-- Status Message -->
                 <?php
+                // Check for session error message first
+                if (isset($_SESSION['error_message'])) {
+                    $error_message = $_SESSION['error_message'];
+                    unset($_SESSION['error_message']);
+                } else {
+                    $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
+                }
+
                 $success_message = ($statusType === 'success' && !empty($statusMessage)) ? $statusMessage : '';
-                $error_message = ($statusType === 'danger' && !empty($statusMessage)) ? $statusMessage : '';
                 $warning_message = ($statusType === 'warning' && !empty($statusMessage)) ? $statusMessage : '';
                 $info_message = ($statusType === 'info' && !empty($statusMessage)) ? $statusMessage : '';
                 include 'includes/notification.php';

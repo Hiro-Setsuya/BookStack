@@ -77,6 +77,14 @@ $user = mysqli_fetch_assoc($user_result);
                     <p>View and download your purchased e-books.</p>
                 </div>
 
+                <?php if (isset($_GET['payment']) && $_GET['payment'] === 'success'): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <strong>Payment Successful!</strong> Your e-book purchase has been completed. You can now download your e-books below.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
                 <?php if (mysqli_num_rows($result) > 0): ?>
                     <div class="row g-4">
                         <?php while ($ebook = mysqli_fetch_assoc($result)): ?>

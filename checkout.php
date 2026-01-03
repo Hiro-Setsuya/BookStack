@@ -7,6 +7,18 @@ if (!isset($_SESSION['user_id'])) {
   exit;
 }
 
+// Check if user account is verified
+$user_id = $_SESSION['user_id'];
+$verify_query = "SELECT is_account_verified FROM users WHERE user_id = $user_id";
+$verify_result = executeQuery($verify_query);
+$user_data = mysqli_fetch_assoc($verify_result);
+
+if (!$user_data || !$user_data['is_account_verified']) {
+  $_SESSION['error_message'] = 'Your account must be verified before you can purchase e-books. Please verify your account first.';
+  header('Location: profile.php');
+  exit;
+}
+
 // Handle promo code submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'apply_promo') {
   $_SESSION['promo_code'] = $_POST['promo_code'] ?? '';
@@ -39,6 +51,9 @@ else {
     }
   }
 }
+
+// Store items in session for payment processing
+$_SESSION['checkout_items'] = $item_ids;
 
 if (empty($item_ids)) {
   header('Location: cart.php');
@@ -271,8 +286,8 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
             .then(function(details) {
               if (details.status === 'success') {
                 var payerName = (details.payer && details.payer.name && details.payer.name.given_name) ? details.payer.name.given_name : 'customer';
-                alert('Payment completed successfully by ' + payerName + '!');
-                window.location.href = 'orders.php?payment=success&orderID=' + encodeURIComponent(details.orderID || data.orderID);
+                alert('Payment completed successfully! Redirecting to your e-books...');
+                window.location.href = 'my-ebooks.php?payment=success&orderID=' + encodeURIComponent(details.orderID || data.orderID);
               } else {
                 console.error('Capture failed', details);
                 alert('Payment capture failed. See console for details.');
