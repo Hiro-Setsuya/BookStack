@@ -88,14 +88,11 @@ $member_since = date('F Y', strtotime($user['created_at']));
                 <nav class="nav flex-column mb-4">
                     <a class="sidebar-link active" href="profile.php"><i class="bi bi-person me-2"></i> General Profile</a>
                     <a class="sidebar-link" href="my-ebooks.php"><i class="bi bi-book me-2"></i> My E-Books</a>
-                    <a class="sidebar-link" href="orders.php"><i class="bi bi-credit-card me-2"></i> Billing & Orders</a>
-                    <a class="sidebar-link" href="change-password.php"><i class="bi bi-shield-lock me-2"></i> Security</a>
                 </nav>
 
                 <div class="sidebar-section-label mb-3">Preferences</div>
                 <nav class="nav flex-column">
-                    <a class="sidebar-link" href="#"><i class="bi bi-bell me-2"></i> Notifications</a>
-                    <a class="sidebar-link" href="#"><i class="bi bi-universal-access me-2"></i> Accessibility</a>
+                    <a class="sidebar-link" href="about.php"><i class="bi bi-info-circle me-2"></i> About</a>
                     <div class="sidebar-link d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-moon me-2"></i> Dark Mode</span>
                         <div class="form-check form-switch">
