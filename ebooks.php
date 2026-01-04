@@ -80,7 +80,9 @@ if (!empty($search_query)) {
             e.price,
             e.cover_image,
             e.file_path,
-            c.name as category_name
+            c.name as category_name,
+            (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = e.ebook_id) as avg_rating,
+            (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = e.ebook_id) as total_ratings
         FROM ebooks e
         LEFT JOIN categories c ON e.category_id = c.category_id
         WHERE 
@@ -102,7 +104,7 @@ if (!empty($search_query)) {
         $total_results = mysqli_num_rows($result);
     }
 } else {
-    $query = "SELECT ebook_id, title, author, price, cover_image, file_path FROM ebooks ORDER BY created_at DESC";
+    $query = "SELECT ebook_id, title, author, price, cover_image, file_path, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as total_ratings FROM ebooks ORDER BY created_at DESC";
     $result = executeQuery($query);
 }
 ?>
@@ -155,21 +157,48 @@ if (!empty($search_query)) {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
+        .ebook-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-btn {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.5rem;
+        }
+
+        .price-btn:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+
         .price-link {
             text-decoration: none;
             cursor: pointer;
-            transition: opacity 0.2s ease;
-        }
-
-        .price-link:hover {
-            opacity: 0.8;
+            transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+            display: inline-block;
+            padding: 0.08rem 0.25rem;
+            border-radius: 0.25rem;
         }
 
         .ebook-card-body {
             padding: 0.5rem;
         }
 
+        .rating-stars {
+            color: #ffc107;
+            font-size: 0.7rem;
+        }
+
         @media (min-width: 576px) {
+            .rating-stars {
+                font-size: 0.8rem;
+            }
+
             .ebook-cover-container {
                 min-height: 240px;
                 height: 240px;
@@ -200,6 +229,10 @@ if (!empty($search_query)) {
         }
 
         @media (min-width: 768px) {
+            .rating-stars {
+                font-size: 0.875rem;
+            }
+
             .ebook-cover-container {
                 min-height: 280px;
                 height: 280px;
@@ -307,10 +340,35 @@ if (!empty($search_query)) {
                             </a>
                             <div class="card-body d-flex flex-column ebook-card-body">
                                 <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none">
-                                    <h6 class="card-title ebook-title fw-bold text-dark mb-1 mb-sm-2 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    <h6 class="card-title ebook-title fw-bold text-dark mb-0 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                         <?php echo htmlspecialchars($ebook['title']); ?>
                                     </h6>
                                 </a>
+                                <div class="rating-stars mb-1">
+                                    <?php
+                                    $avg_rating = isset($ebook['avg_rating']) && $ebook['avg_rating'] !== null ? round(floatval($ebook['avg_rating']), 1) : 0;
+                                    $total_ratings = isset($ebook['total_ratings']) ? intval($ebook['total_ratings']) : 0;
+                                    $full_stars = floor($avg_rating);
+                                    $half_star = ($avg_rating - $full_stars) >= 0.5 ? 1 : 0;
+                                    $empty_stars = 5 - $full_stars - $half_star;
+
+                                    for ($i = 0; $i < $full_stars; $i++) {
+                                        echo '<i class="bi bi-star-fill"></i>';
+                                    }
+                                    if ($half_star) {
+                                        echo '<i class="bi bi-star-half"></i>';
+                                    }
+                                    for ($i = 0; $i < $empty_stars; $i++) {
+                                        echo '<i class="bi bi-star"></i>';
+                                    }
+
+                                    if ($total_ratings > 0) {
+                                        echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(' . number_format($avg_rating, 1) . ')</span>';
+                                    } else {
+                                        echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(0)</span>';
+                                    }
+                                    ?>
+                                </div>
                                 <p class="card-text ebook-author mb-1 mb-sm-2 text-muted">
                                     <i class="bi bi-person me-1"></i><span class="d-none d-sm-inline"><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?></span><span class="d-inline d-sm-none"><?php echo htmlspecialchars(strlen($ebook['author']) > 15 ? substr($ebook['author'], 0, 15) . '...' : $ebook['author']); ?></span>
                                 </p>
@@ -327,15 +385,15 @@ if (!empty($search_query)) {
                                             </a>
                                         </div>
                                     <?php else: ?>
-                                        <div class="mb-2 text-center">
-                                            <a href="checkout.php?id=<?php echo $ebook['ebook_id']; ?>&buy_now=1" class="price-link m-1 d-inline-block" onclick="return confirm('Proceed to checkout for <?php echo htmlspecialchars(addslashes($ebook['title'])); ?>?');">
+                                        <div class="mb-2 d-grid">
+                                            <button type="button" class="btn w-100 price-btn" style="background: #fff; border: 1px solid #dee2e6; height: 38px; font-size: 0.9rem; color: inherit;" aria-label="Buy <?php echo htmlspecialchars($ebook['title']); ?>" onclick="if(confirm('Proceed to checkout for <?php echo htmlspecialchars(addslashes($ebook['title'])); ?>?')){ window.location.href='checkout.php?id=<?php echo $ebook['ebook_id']; ?>&buy_now=1'; }">
                                                 <span class="ebook-price text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
-                                            </a>
+                                            </button>
                                         </div>
                                         <div class="d-grid">
                                             <form method="POST" class="m-0">
                                                 <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
-                                                <button type="submit" name="add_to_cart" class="btn btn-green btn-sm w-100 ebook-btn">
+                                                <button type="submit" name="add_to_cart" class="btn btn-green w-100" style="border: 1px solid rgba(0,0,0,0.1); height: 38px; font-size: 0.9rem;">
                                                     <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
                                                 </button>
                                             </form>
