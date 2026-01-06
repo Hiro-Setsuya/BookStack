@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <!-- Mobile Logo (Visible only on smaller screens) -->
                     <div class="d-flex d-lg-none align-items-center gap-2 mb-4 justify-content-center">
                         <img src="assets/logo.svg" height="25" width="25" alt="Logo">
-                        <span class="fs-4 fw-bold">EduBooks</span>
+                        <span class="fs-4 fw-bold">BookStack</span>
                     </div>
                     <!-- Header -->
                     <div class="mb-4 text-center text-lg-start">
