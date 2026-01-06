@@ -115,11 +115,18 @@ CREATE TABLE vouchers (
     voucher_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     external_system ENUM('travel_agency','ebook_store') NOT NULL,
-    code VARCHAR(50) NOT NULL,
-    discount_amount DECIMAL(10,2),
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_type ENUM('percentage','fixed') DEFAULT 'fixed',
+    discount_amount DECIMAL(10,2) NOT NULL,
+    min_order_amount DECIMAL(10,2) DEFAULT 0.00,
+    max_uses INT DEFAULT 1,
+    times_used INT DEFAULT 0,
     is_redeemed BOOLEAN DEFAULT FALSE,
     issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
     redeemed_at DATETIME NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_code (code),
+    INDEX idx_user_vouchers (user_id, is_redeemed),
+    INDEX idx_expiration (expires_at)
 );
