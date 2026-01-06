@@ -13,6 +13,7 @@ $navItems = [
     'categories' => ['icon' => 'bi-layers', 'label' => 'Categories', 'url' => 'manage-categories.php'],
     'users' => ['icon' => 'bi-people', 'label' => 'Users', 'url' => 'manage-users.php'],
     'orders' => ['icon' => 'bi-cart', 'label' => 'Orders', 'url' => 'manage-orders.php'],
+    'vouchers' => ['icon' => 'bi-ticket-perforated', 'label' => 'Vouchers', 'url' => 'manage-vouchers.php'],
     'verifications' => ['icon' => 'bi-shield-check', 'label' => 'Verifications', 'url' => 'manage-verification.php'],
     'messages' => ['icon' => 'bi-envelope', 'label' => 'Messages', 'url' => 'manage-messages.php']
 ];
