@@ -85,11 +85,13 @@ $member_since = date('F Y', strtotime($user['created_at']));
 
     <div class="container account-container py-4">
         <div class="row">
-            <div class="col-lg-3 mb-4">
+            <!-- Sidebar for desktop -->
+            <div class="col-lg-3 mb-4 d-none d-lg-block">
                 <div class="sidebar-section-label mb-3">Account</div>
                 <nav class="nav flex-column mb-4">
                     <a class="sidebar-link active" href="profile.php"><i class="bi bi-person me-2"></i> Profile</a>
                     <a class="sidebar-link" href="my-ebooks.php"><i class="bi bi-book me-2"></i> My E-Books</a>
+                    <a class="sidebar-link" href="my-vouchers.php"><i class="bi bi-ticket-perforated me-2"></i> My Vouchers</a>
                 </nav>
 
                 <div class="sidebar-section-label mb-3">Preferences</div>
@@ -142,6 +144,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
                             </h5>
                             <p class="mb-2 text-muted small text-break"><?= htmlspecialchars($user['email']) ?></p>
                             <div class="d-flex gap-2 flex-wrap justify-content-center justify-content-sm-start">
+                                <span class="badge bg-secondary">#<?= htmlspecialchars($user['user_id']) ?></span>
                                 <span class="badge bg-success">Member since <?= $member_since ?></span>
                                 <?php if ($user['is_account_verified']): ?>
                                     <span class="badge bg-primary"><i class="bi bi-check-circle me-1"></i>Verified</span>
@@ -153,34 +156,63 @@ $member_since = date('F Y', strtotime($user['created_at']));
                     </div>
                 </div>
 
-                <form method="POST" action="">
+                <form method="POST" action="" id="profileForm">
                     <div class="card profile-card p-3 p-md-4 border-0 shadow-sm bg-white">
-                        <div class="mb-4 border-bottom pb-3">
+                        <div class="mb-4 border-bottom pb-3 d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold mb-0">Personal Information</h5>
+                            <button type="button" id="editBtn" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </button>
                         </div>
                         <div class="row g-3">
                             <div class="col-12">
                                 <label class="form-label small fw-semibold">Username</label>
-                                <input type="text" name="user_name" class="form-control form-control-custom" value="<?= htmlspecialchars($user['user_name']) ?>" required>
+                                <input type="text" name="user_name" id="user_name" class="form-control form-control-custom" value="<?= htmlspecialchars($user['user_name']) ?>" required disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Email Address</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-                                    <input type="email" name="email" class="form-control form-control-custom" value="<?= htmlspecialchars($user['email']) ?>" required>
+                                    <input type="email" name="email" id="email" class="form-control form-control-custom" value="<?= htmlspecialchars($user['email']) ?>" required disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Phone Number</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-muted"></i></span>
-                                    <input type="text" name="phone_number" class="form-control form-control-custom" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>">
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control form-control-custom" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>" disabled>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label small fw-semibold">User ID</label>
-                                <input type="text" class="form-control bg-light" value="#<?= htmlspecialchars($user['user_id']) ?>" readonly disabled>
+
+                            <!-- Account Menu Section (Mobile Only) -->
+                            <div class="col-12 mt-3 d-lg-none">
+                                <div class="p-3 rounded" style="background-color: #f8f9fa;">
+                                    <nav class="nav flex-column gap-1">
+                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark" href="profile.php" style="background-color: white;">
+                                            <i class="bi bi-person me-3 text-primary"></i>
+                                            <span>Profile</span>
+                                        </a>
+                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="my-ebooks.php">
+                                            <i class="bi bi-book me-3 text-muted"></i>
+                                            <span>My E-Books</span>
+                                        </a>
+                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="my-vouchers.php">
+                                            <i class="bi bi-ticket-perforated me-3 text-muted"></i>
+                                            <span>My Vouchers</span>
+                                        </a>
+                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="about.php">
+                                            <i class="bi bi-info-circle me-3 text-muted"></i>
+                                            <span>About</span>
+                                        </a>
+                                        <hr class="my-2">
+                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger hover-bg-white" href="client-logout.php">
+                                            <i class="bi bi-box-arrow-left me-3"></i>
+                                            <span>Log Out</span>
+                                        </a>
+                                    </nav>
+                                </div>
                             </div>
+
                             <div class="col-12">
                                 <label class="form-label small fw-semibold">Account Status</label>
                                 <div class="d-flex align-items-center flex-column flex-sm-row gap-3 p-3 rounded" style="background-color: <?= $user['is_account_verified'] ? '#d1f2eb' : '#fff3cd' ?>;">
@@ -202,10 +234,10 @@ $member_since = date('F Y', strtotime($user['created_at']));
                             </div>
                         </div>
 
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4 border-top gap-3">
+                        <div id="formActions" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4 border-top gap-3" style="display: none !important;">
                             <a href="#" class="text-danger small fw-semibold text-decoration-none order-2 order-md-1">Deactivate Account</a>
                             <div class="d-flex gap-2 w-100 w-md-auto order-1 order-md-2">
-                                <a href="profile.php" class="btn btn-outline-secondary flex-grow-1">Cancel</a>
+                                <button type="button" id="cancelBtn" class="btn btn-outline-secondary flex-grow-1">Cancel</button>
                                 <button type="submit" name="update_profile" class="btn btn-green px-md-4 flex-grow-1">Save Changes</button>
                             </div>
                         </div>
@@ -218,6 +250,62 @@ $member_since = date('F Y', strtotime($user['created_at']));
     <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script>
+        // Profile Edit Mode Functionality
+        const editBtn = document.getElementById('editBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const formActions = document.getElementById('formActions');
+        const userNameInput = document.getElementById('user_name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone_number');
+
+        // Store original values
+        const originalValues = {
+            user_name: userNameInput.value,
+            email: emailInput.value,
+            phone_number: phoneInput.value
+        };
+
+        // Enable edit mode
+        editBtn.addEventListener('click', function() {
+            userNameInput.disabled = false;
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+
+            editBtn.style.display = 'none';
+            formActions.style.display = 'flex';
+            formActions.style.removeProperty('display');
+
+            // Focus on first field
+            userNameInput.focus();
+        });
+
+        // Cancel edit mode
+        cancelBtn.addEventListener('click', function() {
+            // Restore original values
+            userNameInput.value = originalValues.user_name;
+            emailInput.value = originalValues.email;
+            phoneInput.value = originalValues.phone_number;
+
+            // Disable fields
+            userNameInput.disabled = true;
+            emailInput.disabled = true;
+            phoneInput.disabled = true;
+
+            // Toggle buttons
+            editBtn.style.display = 'block';
+            formActions.style.display = 'none';
+        });
+
+        // Enable fields before form submission to ensure values are sent
+        const profileForm = document.getElementById('profileForm');
+        profileForm.addEventListener('submit', function(e) {
+            userNameInput.disabled = false;
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+        });
+    </script>
 </body>
 
 </html>
