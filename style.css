@@ -79,9 +79,11 @@ body {
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-  background: linear-gradient(90deg,
-      rgba(46, 204, 113, 0.08),
-      rgba(46, 204, 113, 0.03));
+  background: linear-gradient(
+    90deg,
+    rgba(46, 204, 113, 0.08),
+    rgba(46, 204, 113, 0.03)
+  );
   color: var(--text-dark);
 }
 
@@ -448,9 +450,11 @@ main {
 .main-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top right,
-      var(--primary-rgba),
-      var(--primary-rgba));
+  background: linear-gradient(
+    to top right,
+    var(--primary-rgba),
+    var(--primary-rgba)
+  );
   mix-blend-mode: multiply;
 }
 
@@ -482,7 +486,7 @@ main {
   color: #9ca3af;
 }
 
-.form-control:focus+.input-icon {
+.form-control:focus + .input-icon {
   color: var(--primary-color);
 }
 
@@ -509,9 +513,11 @@ body::before {
   left: -10%;
   width: 50%;
   height: 50%;
-  background: radial-gradient(circle,
-      rgba(46, 204, 113, 0.1) 0%,
-      rgba(5, 10, 8, 0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(46, 204, 113, 0.1) 0%,
+    rgba(5, 10, 8, 0) 70%
+  );
   z-index: -1;
 }
 
@@ -770,94 +776,265 @@ body::before {
   margin-bottom: auto;
 }
 
-/* Profile Page Styles */
-:root {
-  --profile-margin-top: 100px;
+/* Account Menu Navigation Styles */
+.hover-bg-white {
+  transition: all 0.2s ease;
 }
 
-.sidebar-link {
-  color: var(--text-muted);
+.hover-bg-white:hover {
+  background-color: white !important;
+  transform: translateX(4px);
+}
+
+.hover-bg-white:hover i {
+  color: var(--primary-color) !important;
+}
+
+.nav-link {
+  transition: all 0.2s ease;
   text-decoration: none;
-  padding: 10px 15px;
-  display: block;
-  border-radius: 8px;
-  transition: 0.3s;
-  font-weight: 500;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-  background-color: var(--border-color);
-  color: var(--primary-color);
-  font-weight: 600;
+.nav-link:hover {
+  text-decoration: none;
 }
 
-.profile-card {
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  background-color: white;
-  transition: box-shadow 0.3s;
+/* Mobile Responsive Styles for Profile Page */
+@media (max-width: 991.98px) {
+  .account-container {
+    margin-top: 80px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .sidebar-link {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+
+  .profile-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .profile-card {
+    padding: 1.5rem !important;
+  }
+
+  .btn-green,
+  .btn-outline-secondary {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  /* Collapsible sidebar on mobile */
+  #accountSidebar.collapse:not(.show) {
+    display: none;
+  }
+
+  #accountSidebar.collapsing {
+    transition: height 0.35s ease;
+  }
 }
 
-.profile-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+@media (max-width: 767.98px) {
+  .account-container {
+    margin-top: 70px;
+  }
+
+  .profile-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .profile-header p {
+    font-size: 0.875rem;
+  }
+
+  .profile-card {
+    padding: 1.25rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .sidebar-link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .sidebar-section-label {
+    font-size: 0.7rem;
+  }
+
+  .form-control-custom,
+  .form-control {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .input-group-text {
+    padding: 10px 12px;
+  }
+
+  .btn-green,
+  .btn-outline-secondary {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  /* Make sidebar horizontal scroll on mobile */
+  .nav.flex-column {
+    flex-direction: row !important;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+  }
+
+  .nav.flex-column .sidebar-link {
+    display: inline-block;
+    margin-right: 0.5rem;
+  }
+
+  /* Avatar sizing for mobile */
+  .rounded-circle[style*="width: 80px"] {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.5rem !important;
+  }
+
+  /* Improve badge readability */
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.35em 0.65em;
+  }
 }
 
-.form-control-custom {
-  background-color: var(--bg-light);
-  border: 1px solid var(--border-color);
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.95rem;
+@media (max-width: 575.98px) {
+  .account-container {
+    margin-top: 60px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .profile-header {
+    margin-bottom: 1rem !important;
+  }
+
+  .profile-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .profile-header p {
+    font-size: 0.8rem;
+  }
+
+  .profile-card {
+    padding: 1rem !important;
+    border-radius: 8px !important;
+  }
+
+  .sidebar-link {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .form-control-custom,
+  .form-control {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .input-group-text {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  /* Avatar sizing for small mobile */
+  .rounded-circle[style*="width: 80px"] {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.25rem !important;
+  }
+
+  /* Username and email text sizing */
+  .profile-card h5 {
+    font-size: 1rem;
+  }
+
+  .profile-card .text-muted.small {
+    font-size: 0.75rem !important;
+  }
+
+  /* Button sizing */
+  .btn-green,
+  .btn-outline-secondary,
+  .btn-primary {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  /* Account status card */
+  .profile-card .fs-2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Deactivate account link */
+  .text-danger.small {
+    font-size: 0.8rem !important;
+  }
+
+  /* Adjust column gutters */
+  .row.g-3 {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+  }
 }
 
-.form-control-custom:focus {
-  background-color: white;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.15);
+/* Touch-friendly improvements for all mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .sidebar-link {
+    padding: 12px 15px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-green,
+  .btn-outline-secondary,
+  .btn-primary {
+    min-height: 44px;
+  }
+
+  .form-control-custom,
+  .form-control {
+    min-height: 44px;
+  }
+
+  .form-check-input {
+    width: 2.5rem;
+    height: 1.25rem;
+  }
 }
 
-.btn-green {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s;
-}
+/* Improve horizontal scrolling for sidebar navigation on mobile */
+@media (max-width: 767.98px) {
+  .nav.flex-column::-webkit-scrollbar {
+    height: 4px;
+  }
 
-.btn-green:hover {
-  background-color: var(--primary-hover);
-  border-color: var(--primary-hover);
-  color: white;
-}
+  .nav.flex-column::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-.profile-header h2 {
-  color: var(--text-dark);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.profile-header p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-.sidebar-section-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-}
-
-.account-container {
-  margin-top: var(--profile-margin-top);
-}
-
-.text-gprof {
-  font-size: 1.25rem;
-  margin-top: auto;
-  margin-bottom: auto;
+  .nav.flex-column::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
 }
 
 /* 404 Error Page Styles */
@@ -882,9 +1059,11 @@ body::before {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(90deg,
-      var(--primary-color),
-      var(--primary-hover));
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--primary-hover)
+  );
   box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
 }
 
@@ -907,7 +1086,6 @@ body::before {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -983,7 +1161,7 @@ body::before {
 }
 
 .category-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

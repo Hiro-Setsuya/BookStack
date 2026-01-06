@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json');
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/paypal.php';
+require_once __DIR__ . '/../includes/voucher-utils.php';
 
 $orderId = $_GET['orderID'] ?? null;
 if (!$orderId) {
@@ -80,6 +81,9 @@ if (isset($responseData['status']) && $responseData['status'] === 'COMPLETED') {
             unset($_SESSION['checkout_total']);
             unset($_SESSION['checkout_items']);
             unset($_SESSION['promo_code']);
+
+            // Check for purchase milestone (buy 3 books, get 20% off)
+            checkPurchaseMilestone($conn, $user_id);
         }
     }
 
