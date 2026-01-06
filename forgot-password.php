@@ -333,7 +333,7 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
     }
     ?>
 
-    <main>
+    <main class="pt-5 mt-5">
         <div class="forgot-password-card">
             <div class="card-body p-4 p-md-5">
                 <!-- Icon & Heading -->
