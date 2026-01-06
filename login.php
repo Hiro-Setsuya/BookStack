@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'includes/voucher-utils.php';
 
 $error = "";
 
@@ -39,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_name'] = $user['user_name'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
+
+                // Issue welcome voucher on first login (if not already issued)
+                issueWelcomeVoucher($conn, $user['user_id']);
 
                 // Redirect to index.php
                 header('Location: index.php');
