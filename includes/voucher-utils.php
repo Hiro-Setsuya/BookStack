@@ -51,7 +51,7 @@ function issueWelcomeVoucher($conn, $user_id)
 
     if (mysqli_num_rows($result) == 0) {
         // First voucher - give 10% welcome discount
-        return createVoucher($conn, $user_id, 'ebook_store', 'percentage', 10, 30, 0, 1);
+        return createVoucher($conn, $user_id, 'ebook_store', 'percentage', 10, 5, 0, 1);
     }
 
     return ['success' => false, 'message' => 'Welcome voucher already issued'];
@@ -65,11 +65,11 @@ function issueVerificationVouchers($conn, $user_id)
     $results = [];
 
     // BookStack verification voucher - 15% off
-    $result1 = createVoucher($conn, $user_id, 'ebook_store', 'percentage', 15, 60, 0, 1);
+    $result1 = createVoucher($conn, $user_id, 'ebook_store', 'percentage', 15, 5, 0, 1);
     $results[] = $result1;
 
-    // Travel Agency partnership voucher - $5 off
-    $result2 = createVoucher($conn, $user_id, 'travel_agency', 'fixed', 5, 60, 20, 1);
+    // Travel Agency partnership voucher - ₱5 off
+    $result2 = createVoucher($conn, $user_id, 'travel_agency', 'fixed', 5, 5, 20, 1);
     $results[] = $result2;
 
     return $results;
@@ -99,7 +99,7 @@ function checkPurchaseMilestone($conn, $user_id)
 
         if (mysqli_num_rows($checkResult) == 0) {
             // Issue 20% off milestone reward
-            return createVoucher($conn, $user_id, 'ebook_store', 'percentage', 20, 90, 0, 1);
+            return createVoucher($conn, $user_id, 'ebook_store', 'percentage', 20, 5, 0, 1);
         }
     }
 

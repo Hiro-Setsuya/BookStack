@@ -77,10 +77,18 @@ if (isset($responseData['status']) && $responseData['status'] === 'COMPLETED') {
                 executeQuery($clear_cart);
             }
 
+            // Update voucher usage if one was used
+            if (isset($_SESSION['selected_voucher_id']) && !empty($_SESSION['selected_voucher_id'])) {
+                $voucher_id = intval($_SESSION['selected_voucher_id']);
+                $update_voucher = "UPDATE vouchers SET times_used = times_used + 1 WHERE voucher_id = $voucher_id";
+                executeQuery($update_voucher);
+            }
+
             // Clear checkout session
             unset($_SESSION['checkout_total']);
             unset($_SESSION['checkout_items']);
             unset($_SESSION['promo_code']);
+            unset($_SESSION['selected_voucher_id']);
 
             // Check for purchase milestone (buy 3 books, get 20% off)
             checkPurchaseMilestone($conn, $user_id);

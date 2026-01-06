@@ -19,9 +19,9 @@ if (!$user_data || !$user_data['is_account_verified']) {
   exit;
 }
 
-// Handle promo code submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'apply_promo') {
-  $_SESSION['promo_code'] = $_POST['promo_code'] ?? '';
+// Handle voucher selection
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'apply_voucher') {
+  $_SESSION['selected_voucher_id'] = $_POST['voucher_id'] ?? '';
   // Redirect back to checkout with same parameters
   $redirect_url = 'checkout.php?';
   if (isset($_GET['id']) && isset($_GET['buy_now'])) {
@@ -75,11 +75,51 @@ if ($result && mysqli_num_rows($result) > 0) {
   }
 }
 
+// Fetch available vouchers for the user
+$vouchers_query = "SELECT voucher_id, code, discount_type, discount_amount, min_order_amount, external_system 
+                   FROM vouchers 
+                   WHERE user_id = $user_id 
+                   AND external_system = 'ebook_store'
+                   AND expires_at > NOW() 
+                   AND times_used < max_uses
+                   ORDER BY discount_amount DESC";
+$vouchers_result = executeQuery($vouchers_query);
+$available_vouchers = [];
+if ($vouchers_result && mysqli_num_rows($vouchers_result) > 0) {
+  while ($voucher = mysqli_fetch_assoc($vouchers_result)) {
+    $available_vouchers[] = $voucher;
+  }
+}
+
 $discount_percent = 0;
 $discount_amount = 0;
-if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30') {
-  $discount_percent = 30;
-  $discount_amount = $subtotal * ($discount_percent / 100);
+$selected_voucher = null;
+
+// Apply selected voucher if any
+if (isset($_SESSION['selected_voucher_id']) && !empty($_SESSION['selected_voucher_id'])) {
+  $voucher_id = intval($_SESSION['selected_voucher_id']);
+  $voucher_query = "SELECT * FROM vouchers WHERE voucher_id = $voucher_id AND user_id = $user_id AND external_system = 'ebook_store'";
+  $voucher_result = executeQuery($voucher_query);
+
+  if ($voucher_result && mysqli_num_rows($voucher_result) > 0) {
+    $selected_voucher = mysqli_fetch_assoc($voucher_result);
+
+    // Check if voucher is valid
+    if (
+      strtotime($selected_voucher['expires_at']) > time() &&
+      $selected_voucher['times_used'] < $selected_voucher['max_uses'] &&
+      $subtotal >= $selected_voucher['min_order_amount']
+    ) {
+
+      if ($selected_voucher['discount_type'] === 'percentage') {
+        $discount_percent = $selected_voucher['discount_amount'];
+        $discount_amount = $subtotal * ($discount_percent / 100);
+      } else {
+        $discount_amount = $selected_voucher['discount_amount'];
+        $discount_percent = 0;
+      }
+    }
+  }
 }
 
 $taxable_amount = $subtotal - $discount_amount;
@@ -189,30 +229,51 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
       <div class="col px-md-5">
         <div class="card shadow-sm rounded-4 overflow-hidden">
           <div class="card-header fs-4 fw-bold mb-4 py-3 px-3 px-lg-5 px-md-5 text-green">
-            <i class="bi bi-tag me-2"></i>Promo Code
+            <i class="bi bi-ticket-perforated me-2"></i>Apply Voucher
           </div>
           <div class="card-body px-4 px-md-5">
             <form method="POST" action="">
-              <input type="hidden" name="action" value="apply_promo">
+              <input type="hidden" name="action" value="apply_voucher">
               <div class="row g-3 align-items-end">
                 <div class="col-md-8">
-                  <label class="form-label fw-semibold">Have a promo code?</label>
-                  <input class="form-control py-2" type="text" name="promo_code" placeholder="Enter promo code" value="<?php echo htmlspecialchars($_SESSION['promo_code'] ?? ''); ?>" style="border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                  <label class="form-label fw-semibold">Have a voucher?</label>
+                  <select class="form-select py-2" name="voucher_id" style="border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.3);">
+                    <option value="">Select a voucher...</option>
+                    <?php foreach ($available_vouchers as $voucher): ?>
+                      <?php
+                      $is_selected = isset($_SESSION['selected_voucher_id']) && $_SESSION['selected_voucher_id'] == $voucher['voucher_id'];
+                      $discount_text = $voucher['discount_type'] === 'percentage'
+                        ? $voucher['discount_amount'] . '% off'
+                        : '₱' . number_format($voucher['discount_amount'], 2) . ' off';
+                      $min_order_text = $voucher['min_order_amount'] > 0
+                        ? ' (Min ₱' . number_format($voucher['min_order_amount'], 2) . ')'
+                        : '';
+                      ?>
+                      <option value="<?= $voucher['voucher_id'] ?>" <?= $is_selected ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($voucher['code']) ?> - <?= $discount_text ?><?= $min_order_text ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                  <?php if (empty($available_vouchers)): ?>
+                    <small class="text-muted mt-2 d-block">No vouchers available. <a href="my-vouchers.php" class="text-green">View all vouchers</a></small>
+                  <?php endif; ?>
                 </div>
                 <div class="col-md-4">
-                  <button type="submit" class="btn btn-green w-100 py-2" style="border-radius: 12px; font-weight: 600;">
+                  <button type="submit" class="btn btn-green w-100 py-2" style="border-radius: 12px; font-weight: 600;" <?= empty($available_vouchers) ? 'disabled' : '' ?>>
                     <i class="bi bi-check-circle me-1"></i>Apply
                   </button>
                 </div>
               </div>
-              <?php if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30'): ?>
-                <div class="alert alert-success mt-3 mb-0" role="alert">
-                  <i class="bi bi-check-circle-fill me-2"></i>Promo code <strong><?php echo htmlspecialchars($_SESSION['promo_code']); ?></strong> applied successfully! You're saving <?php echo $discount_percent; ?>%.
-                </div>
-              <?php elseif (isset($_SESSION['promo_code']) && !empty($_SESSION['promo_code'])): ?>
-                <div class="alert alert-warning mt-3 mb-0" role="alert">
-                  <i class="bi bi-exclamation-triangle me-2"></i>Invalid promo code. Please try again.
-                </div>
+              <?php if ($selected_voucher): ?>
+                <?php if ($discount_amount > 0): ?>
+                  <div class="alert alert-success mt-3 mb-0" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>Voucher <strong><?= htmlspecialchars($selected_voucher['code']) ?></strong> applied successfully! You're saving ₱<?= number_format($discount_amount, 2) ?>.
+                  </div>
+                <?php else: ?>
+                  <div class="alert alert-warning mt-3 mb-0" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Voucher cannot be applied. Minimum order amount not met or voucher expired.
+                  </div>
+                <?php endif; ?>
               <?php endif; ?>
             </form>
           </div>
