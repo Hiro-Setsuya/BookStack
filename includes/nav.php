@@ -45,7 +45,7 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                 </a>
             <?php else: ?>
                 <a href="login.php" class="btn btn-green d-lg-none d-inline-block fw-normal">
-                    <i class="bi bi-person-circle"></i>
+                    <i class="bi bi-box-arrow-in-right"></i>
                     <span class="d-none d-sm-inline ms-2">Sign In</span>
                 </a>
             <?php endif; ?>
@@ -107,7 +107,9 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                     <i class="bi bi-person-circle me-2"></i><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Profile'); ?>
                 </a>
             <?php else: ?>
-                <a href="login.php" class="btn btn-green text-nowrap fw-normal"><i class="bi bi-person-circle me-2"></i>Sign In</a>
+                <a href="login.php" class="btn btn-green text-nowrap fw-normal">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </a>
             <?php endif; ?>
         </div>
     </div>
