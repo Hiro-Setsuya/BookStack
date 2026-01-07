@@ -11,8 +11,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$statusMessage = '';
-$statusType = '';
+
+// Get status messages from session (after redirect)
+$statusMessage = $_SESSION['status_message'] ?? '';
+$statusType = $_SESSION['status_type'] ?? '';
+
+// Clear status messages from session
+unset($_SESSION['status_message']);
+unset($_SESSION['status_type']);
 
 // Get user data
 $query = "SELECT user_id, user_name, email, phone_number, is_account_verified FROM users WHERE user_id = $user_id";
@@ -114,12 +120,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
                      VALUES ($user_id, '$method', '$contact_info_escaped', '$subject_escaped', '$content_escaped', 'pending', 'CONFIRM-$verification_code', NOW())";
 
     if (executeQuery($insert_query)) {
-        $statusMessage = "Verification request sent successfully! Please check your $method and follow the instructions. Our admin team will review your request.";
-        $statusType = 'success';
+        $_SESSION['status_message'] = "Verification request sent successfully! Please check your $method and follow the instructions. Our admin team will review your request.";
+        $_SESSION['status_type'] = 'success';
     } else {
-        $statusMessage = "Error sending verification request. Please try again.";
-        $statusType = 'danger';
+        $_SESSION['status_message'] = "Error sending verification request. Please try again.";
+        $_SESSION['status_type'] = 'danger';
     }
+
+    // Redirect to prevent form resubmission on refresh
+    header('Location: request-verification.php');
+    exit;
 }
 ?>
 

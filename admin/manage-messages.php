@@ -29,9 +29,12 @@ function getMessages($status = null)
 
     $query = "SELECT m.*, u.user_name, u.email FROM messages m LEFT JOIN users u ON m.user_id = u.user_id";
 
+    // Exclude verification requests (they appear in manage-verification.php)
+    $query .= " WHERE m.subject NOT LIKE '%Account Verification Request%'";
+
     if ($status) {
         $status_escaped = mysqli_real_escape_string($conn, $status);
-        $query .= " WHERE m.status = '$status_escaped'";
+        $query .= " AND m.status = '$status_escaped'";
     }
 
     $query .= " ORDER BY m.created_at DESC";
@@ -84,11 +87,10 @@ function updateMessageStatus($message_id, $status)
     return executeQuery($query);
 }
 
-// Handle email response (POST-Redirect-GET pattern)
+// Handle email/SMS response (POST-Redirect-GET pattern)
 if (isset($_POST['send_response'])) {
     $message_id = (int)$_POST['message_id'];
-    $response_subject = mysqli_real_escape_string($conn, $_POST['response_subject']);
-    $response_body = $_POST['response_body']; // Don't escape HTML content
+    $response_body = $_POST['response_body'];
 
     // Get message details
     $query = "SELECT m.*, u.email FROM messages m LEFT JOIN users u ON m.user_id = u.user_id WHERE m.message_id = $message_id";
@@ -96,14 +98,32 @@ if (isset($_POST['send_response'])) {
 
     if ($result && mysqli_num_rows($result) === 1) {
         $message = mysqli_fetch_assoc($result);
-        $to_email = $message['contact_info'] ?? $message['email'];
+        $contact_method = $message['contact_method'];
+        $contact_info = $message['contact_info'] ?? $message['email'];
 
-        if (sendEmail($to_email, $response_subject, $response_body)) {
+        $sent_successfully = false;
+
+        // Send via email
+        if ($contact_method === 'email') {
+            $response_subject = mysqli_real_escape_string($conn, $_POST['response_subject']);
+            if (sendEmail($contact_info, $response_subject, $response_body)) {
+                $sent_successfully = true;
+            }
+        }
+        // Send via SMS
+        elseif ($contact_method === 'phone') {
+            require_once '../notifications/send-sms.php';
+            if (sendSMS($contact_info, $response_body)) {
+                $sent_successfully = true;
+            }
+        }
+
+        if ($sent_successfully) {
             // Update status to resolved after sending response
             updateMessageStatus($message_id, 'resolved');
-            $_SESSION['success_message'] = "Email response sent successfully!";
+            $_SESSION['success_message'] = ucfirst($contact_method) . " response sent successfully!";
         } else {
-            $_SESSION['error_message'] = "Failed to send email response.";
+            $_SESSION['error_message'] = "Failed to send " . $contact_method . " response.";
         }
     }
 
@@ -431,13 +451,16 @@ unset($_SESSION['error_message']);
         </div>
     <?php endforeach; ?>
 
-    <!-- Email Response Modals -->
+    <!-- Response Modals -->
     <?php foreach ($all_messages as $message): ?>
         <div class="modal fade" id="responseModal<?php echo $message['message_id']; ?>" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Respond to Message</h5>
+                        <h5 class="modal-title">
+                            <i class="bi bi-<?php echo $message['contact_method'] === 'email' ? 'envelope' : 'phone'; ?> me-2"></i>
+                            Respond via <?php echo ucfirst($message['contact_method']); ?>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <form method="POST">
@@ -447,22 +470,36 @@ unset($_SESSION['error_message']);
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">To:</label>
-                                <p class="mb-0"><?php echo htmlspecialchars($message['contact_info'] ?? $message['email']); ?></p>
+                                <p class="mb-0">
+                                    <i class="bi bi-<?php echo $message['contact_method'] === 'email' ? 'envelope' : 'phone'; ?> me-1"></i>
+                                    <?php echo htmlspecialchars($message['contact_info'] ?? $message['email']); ?>
+                                </p>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Subject</label>
-                                <input type="text" class="form-control" name="response_subject" value="Re: <?php echo htmlspecialchars($message['subject'] ?? 'No Subject'); ?>" required>
-                            </div>
+                            <?php if ($message['contact_method'] === 'email'): ?>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Subject</label>
+                                    <input type="text" class="form-control" name="response_subject" value="Re: <?php echo htmlspecialchars($message['subject'] ?? 'No Subject'); ?>" required>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Message</label>
-                                <textarea class="form-control" name="response_body" rows="8" placeholder="Type your response here..." required></textarea>
+                                <textarea class="form-control" name="response_body" rows="8" placeholder="<?php echo $message['contact_method'] === 'email' ? 'Type your response here...' : 'Type your SMS message here (keep it concise)...'; ?>" required></textarea>
+                                <?php if ($message['contact_method'] === 'phone'): ?>
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        SMS will be sent to this phone number. Keep your message concise.
+                                    </small>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Send Response</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-1"></i>
+                                Send <?php echo ucfirst($message['contact_method']); ?>
+                            </button>
                         </div>
                     </form>
                 </div>

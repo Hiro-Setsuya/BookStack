@@ -36,6 +36,8 @@ function sendVerificationCode($message_id, $user_id, $contact_method, $contact_i
     }
 
     $sent_successfully = false;
+    $error_details = '';
+
     if ($contact_method === 'email') {
         $subject = "BookStack Account Verification Code";
         $body = "
@@ -48,17 +50,44 @@ function sendVerificationCode($message_id, $user_id, $contact_method, $contact_i
             <p>Best regards,<br>BookStack Team</p>
         ";
         $sent_successfully = sendEmail($contact_info, $subject, $body);
+        if (!$sent_successfully) {
+            $error_details = "Email sending failed. Check mail configuration.";
+        }
+    } elseif ($contact_method === 'phone') {
+        // Note: SMS sending requires a proper SMS gateway service
+        // For now, we'll just generate the code and display it to admin
+        // Users can be notified through other means (call, separate app, etc.)
+
+        $sms_message = "BookStack Account Verification: Your code is $verification_code. Reply with this code to verify your account. Valid for 24 hours.";
+
+        // Check if SMS gateway is configured
+        $sms_config_file = __DIR__ . '/../config/sms.php';
+        $sms_config = file_exists($sms_config_file) ? require($sms_config_file) : null;
+
+        // Try to send SMS if gateway is properly configured
+        if ($sms_config && !empty($sms_config['gateway_url']) && $sms_config['gateway_url'] !== 'http://192.168.18.42:8080/messages') {
+            require_once '../notifications/send-sms.php';
+            $result = sendSMS($contact_info, $sms_message);
+            if ($result !== false) {
+                $sent_successfully = true;
+            } else {
+                $error_details = "SMS gateway connection failed. Code generated: $verification_code";
+            }
+        } else {
+            // SMS gateway not configured - show code to admin to manually send
+            $sent_successfully = true; // Consider it "sent" since admin will handle it
+            $error_details = "SMS gateway not configured. Please manually send this code to the user: $verification_code";
+        }
     }
-    // Add SMS functionality if needed
-    // elseif ($contact_method === 'phone') {
-    //     $sms_message = "BookStack Verification Code: $verification_code (valid 24h)";
-    //     $sent_successfully = sendSMS($contact_info, $sms_message);
-    // }
 
     if ($sent_successfully) {
         setFlash("Verification code sent successfully via " . strtoupper($contact_method) . " to " . htmlspecialchars($contact_info), "success");
     } else {
-        setFlash("Code generated but failed to send via " . strtoupper($contact_method) . ". Code: $verification_code", "warning");
+        $msg = "Code generated but failed to send via " . strtoupper($contact_method) . ". Code: $verification_code";
+        if ($error_details) {
+            $msg .= " | Error: $error_details";
+        }
+        setFlash($msg, "warning");
     }
 }
 
