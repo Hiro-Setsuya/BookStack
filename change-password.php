@@ -79,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
-            --primary-color: #55b6e7;
-            --bg-light: #f8fafb;
+            --primary-color: #2ecc71;
+            --bg-light: #f8fbf9ff;
         }
 
         body {
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .card-header-img {
             height: 140px;
-            background: linear-gradient(135deg, #f0f8fc 0%, #e8f4f8 100%);
+            background: linear-gradient(135deg, #f0fcf6ff 0%, #e8f8ebff 100%);
             position: relative;
             overflow: hidden;
         }
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .password-strength {
             height: 6px;
-            background: #e9ecef;
+            background: #e9efebff;
             border-radius: 3px;
             overflow: hidden;
             margin-top: 12px;
@@ -197,8 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .btn-primary:hover {
-            background-color: #4da5d1;
-            border-color: #4da5d1;
+            background-color: #219451ff;
+            border-color: #26a85cff;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(85, 182, 231, 0.3);
         }
