@@ -14,50 +14,61 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     exit("Please enter a question.");
   }
 
-  // LIGHTWEIGHT context (DO NOT load full data.txt for every request)
-  // This prevents first-token delays and freezing
-  $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are made via PayPal. Users can manage accounts, access purchases instantly, and contact customer support.";
+  // Load FULL knowledge base from data.txt
+  $dataFile = __DIR__ . '/chatbot/data.txt';
+  if (file_exists($dataFile)) {
+    $data = file_get_contents($dataFile);
+  } else {
+    $data = "BookStack is an ebook e-commerce platform where users can browse, purchase, and download digital books. Payments are made via PayPal. Users can manage accounts, access purchases instantly, and contact customer support.";
+  }
 
-  // System prompt for Stack AI (optimized for speed)
-  $prompt = "You are Stack AI, BookStack customer support.
+  // System prompt for Stack AI with comprehensive knowledge
+  $prompt = "You are Stack AI, BookStack customer support assistant.
 
-Rules:
-- Reply in concise and informative manner.
-- Be friendly and direct.
-- If unclear, ask ONE short question.
-- No greetings unless the user greets first.
-- Add emojis only when appropriate.
-- Add suggestion related questions at the end.
-- Format your response in plain text only.
+CRITICAL RULES - KEEP RESPONSES SHORT:
+1. Answer ONLY the specific question asked - don't add extra topics
+2. Maximum 3-4 short paragraphs or 5-6 bullet points
+3. Use **bold** for key terms like **BookStack**, **PayPal**, **Account Verification**
+4. Format with line breaks between sections
+5. End with 2-3 brief related questions only
 
-Context:
+FORMATTING:
+• Use bullet points (•) for lists
+• Use numbered steps (1. 2. 3.) only for processes
+• Add line break between each point
+• Keep sentences short and clear
+
+TONE: Friendly, helpful, direct - NO repetition or unnecessary details
+
+Knowledge Base:
 $data
 
-User:
+User Question:
 $message
 
-Answer:";
+Brief Answer:";
 
 
   // Ultra-fast greeting handling (NO AI CALL)
   $lower = strtolower($message);
   if (in_array($lower, ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening'])) {
-    echo "Hello! 👋 How can I help you today?";
+    echo "Hello! 👋 Welcome to **BookStack** support.\n\nI can help with:\n• Account & verification\n• Purchasing ebooks\n• Downloads & payments\n• Vouchers & support\n\nWhat do you need help with?";
     exit;
   }
 
 
-  // Ollama payload (STREAMING ENABLED)
+  // Ollama payload (CONCISE RESPONSE MODE)
   $payload = [
     "model" => "llama3.2:1b",
     "prompt" => $prompt,
     "stream" => true,
     "options" => [
-      "num_predict" => 35,     // HARD CAP (this is key)
-      "temperature" => 0.2,    // less thinking
-      "top_p" => 0.85,
-      "num_ctx" => 768,        // smaller context = faster
-      "repeat_penalty" => 1.1
+      "num_predict" => 200,        // Reduced for concise answers (was 400)
+      "temperature" => 0.3,
+      "top_p" => 0.9,
+      "num_ctx" => 4096,
+      "repeat_penalty" => 1.2,     // Higher to avoid repetition
+      "stop" => ["---", "\n\n\n"]  // Stop at separators or too many breaks
     ]
 
   ];

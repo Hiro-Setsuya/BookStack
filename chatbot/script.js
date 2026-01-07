@@ -9,7 +9,7 @@ function openStackAIModal() {
   if (!sessionStorage.getItem("stackAIWelcome")) {
     setTimeout(() => {
       addStackAIMessage(
-        "Welcome to Stack AI! 👋 I'm here to help you with any questions about BookStack's ebooks, purchases, recommendations, and more. What can I help you with today?"
+        "Welcome to **Stack AI**! 👋\n\nI can help with:\n• Account setup & verification\n• Purchasing & downloads\n• Vouchers & payments\n• Technical support\n\nWhat do you need help with?"
       );
       sessionStorage.setItem("stackAIWelcome", "true");
     }, 300);
@@ -46,7 +46,29 @@ function addStackAIMessage(text) {
 
   let bubble = document.createElement("div");
   bubble.className = "msg-bubble";
-  bubble.textContent = text;
+
+  // Enhanced formatting for better display
+  let formattedText = text
+    // First, normalize excessive spaces
+    .replace(/[ \t]+/g, " ")
+    // Convert **bold** to <strong>
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    // Ensure proper line breaks exist
+    .replace(/\. ([A-Z•\d])/g, ".\n$1") // Add break after sentences starting with capital/bullet/number
+    // Convert bullet points with proper spacing
+    .replace(/\n?• /g, "\n\n• ")
+    // Convert numbered lists with proper spacing
+    .replace(/\n?(\d+)\. /g, "\n\n$1. ")
+    // Convert all line breaks to <br>
+    .replace(/\n/g, "<br>")
+    // Clean up multiple consecutive <br> tags (max 2)
+    .replace(/(<br>\s*){3,}/g, "<br><br>")
+    // Add spacing before sections that start with emojis
+    .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
+    // Clean leading/trailing breaks
+    .replace(/^(<br>)+|(<br>)+$/g, "");
+
+  bubble.innerHTML = formattedText;
 
   messageDiv.appendChild(bubble);
   box.appendChild(messageDiv);
@@ -159,14 +181,25 @@ document.addEventListener("keydown", function (event) {
 // Finds a header/navbar element and sets --stack-ai-top to its height (px).
 function setChatTopOffset() {
   // selectors to try (ordered): common navbar/header selectors
-  const selectors = ['.navbar', 'header', '.site-header', '.topbar', '#topbar', '.main-header'];
+  const selectors = [
+    ".navbar",
+    "header",
+    ".site-header",
+    ".topbar",
+    "#topbar",
+    ".main-header",
+  ];
   let topElem = null;
   for (const sel of selectors) {
     const el = document.querySelector(sel);
     if (!el) continue;
     const style = window.getComputedStyle(el);
     // prefer fixed/sticky or elements at top of page
-    if (style.position === 'fixed' || style.position === 'sticky' || el.getBoundingClientRect().top === 0) {
+    if (
+      style.position === "fixed" ||
+      style.position === "sticky" ||
+      el.getBoundingClientRect().top === 0
+    ) {
       topElem = el;
       break;
     }
@@ -182,14 +215,17 @@ function setChatTopOffset() {
   // Set a small minimum if needed (0 ok)
   if (!topHeight) topHeight = 0;
 
-  document.documentElement.style.setProperty('--stack-ai-top', topHeight + 'px');
+  document.documentElement.style.setProperty(
+    "--stack-ai-top",
+    topHeight + "px"
+  );
 }
 
 // Run at load and on resize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   setChatTopOffset();
   // Also recalc after a short delay in case dynamic header rendering (e.g., after JS makes it fixed)
   setTimeout(setChatTopOffset, 300);
 });
 
-window.addEventListener('resize', setChatTopOffset);
+window.addEventListener("resize", setChatTopOffset);

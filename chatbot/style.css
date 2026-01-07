@@ -1,274 +1,306 @@
- /* Minimal custom CSS - Light Green Theme */
- :root {
-     --primary-green: #2ecc71;
-     --dark-green: #059669;
-     --light-green: #d1fae5;
-     --very-light-green: #ecfdf5;
-     --stack-ai-top: 0px;
- }
+/* Minimal custom CSS - Light Green Theme */
+:root {
+  --primary-green: #2ecc71;
+  --dark-green: #059669;
+  --light-green: #d1fae5;
+  --very-light-green: #ecfdf5;
+  --stack-ai-top: 0px;
+}
 
- /* When chat modal is open, push the button behind the overlay/modal and disable clicks */
- .stack-ai-modal.active+.stack-ai-button {
-     z-index: 2080;
-     /* lower than overlay (2090) so it's hidden */
-     pointer-events: none;
-     /* prevent accidental clicks while modal is open */
-     opacity: 0;
-     /* optional: fade it out visually */
-     transition: opacity 0.15s ease;
- }
+/* When chat modal is open, push the button behind the overlay/modal and disable clicks */
+.stack-ai-modal.active + .stack-ai-button {
+  z-index: 2080;
+  /* lower than overlay (2090) so it's hidden */
+  pointer-events: none;
+  /* prevent accidental clicks while modal is open */
+  opacity: 0;
+  /* optional: fade it out visually */
+  transition: opacity 0.15s ease;
+}
 
- /* restore visibility when modal is closed (smoother) */
- .stack-ai-button {
-     transition: opacity 0.15s ease;
- }
+/* restore visibility when modal is closed (smoother) */
+.stack-ai-button {
+  transition: opacity 0.15s ease;
+}
 
- .stack-ai-button {
-     position: fixed;
-     bottom: 30px;
-     right: 30px;
-     z-index: 2120;
-     width: 50px;
-     height: 50px;
-     border-radius: 50%;
-     background-color: #FFFFFF !important;
-     border: 2px solid var(--primary-green);
-     animation: pulse 2s infinite;
-     display: flex;
-     align-items: center;
-     justify-content: center;
- }
+.stack-ai-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 2120;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ffffff !important;
+  border: 2px solid var(--primary-green);
+  animation: pulse 2s infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
- .stack-ai-button:hover {
-     transform: translateY(-4px);
-     box-shadow: 0 15px 25px -5px rgba(16, 185, 129, 0.3) !important;
- }
+.stack-ai-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 25px -5px rgba(16, 185, 129, 0.3) !important;
+}
 
- @keyframes pulse {
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
 
-     0%,
-     100% {
-         opacity: 1;
-     }
+  50% {
+    opacity: 0.8;
+  }
+}
 
-     50% {
-         opacity: 0.8;
-     }
- }
+.stack-ai-modal {
+  position: fixed;
+  right: 0;
+  /* Use top offset so modal sits below the navbar/header */
+  top: var(--stack-ai-top);
+  width: 100%;
+  max-width: 420px;
+  /* Make modal height account for the top offset */
+  height: calc(100vh - var(--stack-ai-top));
+  background-color: white;
+  z-index: 2100;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
 
- .stack-ai-modal {
-     position: fixed;
-     right: 0;
-     /* Use top offset so modal sits below the navbar/header */
-     top: var(--stack-ai-top);
-     width: 100%;
-     max-width: 420px;
-     /* Make modal height account for the top offset */
-     height: calc(100vh - var(--stack-ai-top));
-     background-color: white;
-     z-index: 2100;
-     transform: translateX(100%);
-     transition: transform 0.3s ease;
-     box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
-     display: flex;
-     flex-direction: column;
- }
+.stack-ai-modal.active {
+  transform: translateX(0);
+}
 
- .stack-ai-modal.active {
-     transform: translateX(0);
- }
+.stack-ai-overlay {
+  position: fixed;
+  /* Start overlay below the navbar/header too */
+  top: var(--stack-ai-top);
+  left: 0;
+  width: 100%;
+  /* Overlay should cover the remaining viewport */
+  height: calc(100vh - var(--stack-ai-top));
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2090;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
 
- .stack-ai-overlay {
-     position: fixed;
-     /* Start overlay below the navbar/header too */
-     top: var(--stack-ai-top);
-     left: 0;
-     width: 100%;
-     /* Overlay should cover the remaining viewport */
-     height: calc(100vh - var(--stack-ai-top));
-     background-color: rgba(0, 0, 0, 0.3);
-     z-index: 2090;
-     opacity: 0;
-     visibility: hidden;
-     transition: opacity 0.3s ease, visibility 0.3s ease;
- }
+.stack-ai-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 
- .stack-ai-overlay.active {
-     opacity: 1;
-     visibility: visible;
- }
+.stack-ai-header {
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  );
+  color: white;
+  padding: 20px;
+  border-bottom: 3px solid var(--dark-green);
+  flex-shrink: 0;
+}
 
- .stack-ai-header {
-     background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-     color: white;
-     padding: 20px;
-     border-bottom: 3px solid var(--dark-green);
-     flex-shrink: 0;
- }
+.stack-ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--very-light-green);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
- .stack-ai-messages {
-     flex: 1;
-     overflow-y: auto;
-     background-color: var(--very-light-green);
-     padding: 20px;
-     display: flex;
-     flex-direction: column;
-     gap: 12px;
- }
+.stack-ai-messages::-webkit-scrollbar {
+  width: 6px;
+}
 
- .stack-ai-messages::-webkit-scrollbar {
-     width: 6px;
- }
+.stack-ai-messages::-webkit-scrollbar-track {
+  background: var(--light-green);
+}
 
- .stack-ai-messages::-webkit-scrollbar-track {
-     background: var(--light-green);
- }
+.stack-ai-messages::-webkit-scrollbar-thumb {
+  background: #a7f3d0;
+  border-radius: 3px;
+}
 
- .stack-ai-messages::-webkit-scrollbar-thumb {
-     background: #a7f3d0;
-     border-radius: 3px;
- }
+.stack-ai-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
+}
 
- .stack-ai-messages::-webkit-scrollbar-thumb:hover {
-     background: var(--primary-green);
- }
+.message {
+  animation: slideIn 0.3s ease;
+}
 
- .message {
-     animation: slideIn 0.3s ease;
- }
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 
- @keyframes slideIn {
-     from {
-         opacity: 0;
-         transform: translateY(10px);
-     }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-     to {
-         opacity: 1;
-         transform: translateY(0);
-     }
- }
+.message.user {
+  display: flex;
+  justify-content: flex-end;
+}
 
- .message.user {
-     display: flex;
-     justify-content: flex-end;
- }
+.message.user .msg-bubble {
+  background-color: var(--primary-green);
+  color: white;
+}
 
- .message.user .msg-bubble {
-     background-color: var(--primary-green);
-     color: white;
- }
-
- .message.bot .msg-bubble {
-     background-color: white;
-     color: #1f2937;
-     border: 2px solid #a7f3d0;
+.message.bot .msg-bubble {
+  background-color: white;
+  color: #1f2937;
+  border: 2px solid #a7f3d0;
+     overflow-wrap: break-word;
+     word-break: break-word;
  }
 
  .msg-bubble {
      max-width: 85%;
-     padding: 10px 14px;
+     padding: 14px 18px;
      border-radius: 16px;
      word-wrap: break-word;
      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+     line-height: 1.7;
+     font-size: 14px;
  }
 
- .typing-indicator {
-     display: flex;
-     gap: 4px;
-     padding: 10px 14px;
+ /* Better formatting for bot messages */
+ .message.bot .msg-bubble strong {
+     color: var(--dark-green);
+     font-weight: 600;
+     display: inline-block;
  }
 
- .typing-dot {
-     width: 8px;
-     height: 8px;
-     border-radius: 50%;
-     background-color: var(--primary-green);
-     animation: bounce 1.4s infinite;
+ /* Spacing between paragraphs */
+ .message.bot .msg-bubble br + br {
+     display: block;
+     content: " ";
+     margin-bottom: 10px;
  }
 
- .typing-dot:nth-child(1) {
-     animation-delay: 0s;
+ /* Emoji spacing */
+ .message.bot .msg-bubble br:first-child {
+     display: none;
+ .message.bot .msg-bubble ol {
+     margin: 8px 0;
+     padding-left: 20px;
  }
 
- .typing-dot:nth-child(2) {
-     animation-delay: 0.2s;
- }
+ .message.bot .msg-bubble li {
+     margin: 4px 0;
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary-green);
+  animation: bounce 1.4s infinite;
+}
 
- .typing-dot:nth-child(3) {
-     animation-delay: 0.4s;
- }
+.typing-dot:nth-child(1) {
+  animation-delay: 0s;
+}
 
- @keyframes bounce {
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
 
-     0%,
-     100% {
-         opacity: 0.3;
-         transform: translateY(0);
-     }
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
-     50% {
-         opacity: 1;
-         transform: translateY(-10px);
-     }
- }
+@keyframes bounce {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
 
- .stack-ai-footer {
-     padding: 12px 16px;
-     background-color: white;
-     border-top: 2px solid #a7f3d0;
-     flex-shrink: 0;
- }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+}
 
- .stack-ai-input {
-     border: 2px solid #a7f3d0;
-     border-radius: 24px;
- }
+.stack-ai-footer {
+  padding: 12px 16px;
+  background-color: white;
+  border-top: 2px solid #a7f3d0;
+  flex-shrink: 0;
+}
 
- .stack-ai-input:focus {
-     border-color: var(--primary-green);
-     box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
- }
+.stack-ai-input {
+  border: 2px solid #a7f3d0;
+  border-radius: 24px;
+}
 
- .stack-ai-send-btn {
-     background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-     border: none;
-     border-radius: 24px;
-     color: white;
- }
+.stack-ai-input:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
 
- .stack-ai-send-btn:hover {
-     background: linear-gradient(135deg, var(--dark-green) 0%, var(--primary-green) 100%);
-     transform: translateY(-2px);
-     color: white;
- }
+.stack-ai-send-btn {
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  );
+  border: none;
+  border-radius: 24px;
+  color: white;
+}
 
- @media (max-width: 768px) {
-     .stack-ai-button {
-         width: 60px;
-         padding: 0.75rem ! important;
-     }
+.stack-ai-send-btn:hover {
+  background: linear-gradient(
+    135deg,
+    var(--dark-green) 0%,
+    var(--primary-green) 100%
+  );
+  transform: translateY(-2px);
+  color: white;
+}
 
-     .stack-ai-button .btn-text {
-         display: none;
-     }
+@media (max-width: 768px) {
+  .stack-ai-button {
+    width: 60px;
+    padding: 0.75rem !important;
+  }
 
-     .msg-bubble {
-         max-width: 90%;
-     }
- }
+  .stack-ai-button .btn-text {
+    display: none;
+  }
 
- @media (max-width: 480px) {
-     .stack-ai-button {
-         bottom: 20px;
-         right: 20px;
-     }
+  .msg-bubble {
+    max-width: 90%;
+  }
+}
 
-     .stack-ai-modal {
-         max-width: 100%;
-     }
+@media (max-width: 480px) {
+  .stack-ai-button {
+    bottom: 20px;
+    right: 20px;
+  }
 
-     .stack-ai-input {
-         font-size: 16px;
-     }
- }
+  .stack-ai-modal {
+    max-width: 100%;
+  }
+
+  .stack-ai-input {
+    font-size: 16px;
+  }
+}
