@@ -323,7 +323,7 @@ if (!empty($search_query)) {
     <!-- Main Content -->
     <?php include 'includes/client-main.php'; ?>
 
-    <div class="row g-3 px-2 px-sm-4">
+    <div class="row g-3 px-2 px-sm-4 mb-4">
         <?php
         if ($result && mysqli_num_rows($result) > 0) {
             while ($ebook = mysqli_fetch_assoc($result)) {
@@ -427,6 +427,7 @@ if (!empty($search_query)) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <?php include 'chatbot/chatbot.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 
 </html>
