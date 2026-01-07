@@ -48,7 +48,7 @@ $user = mysqli_fetch_assoc($user_result);
 
     <div class="container account-container py-4">
         <div class="row">
-            <div class="col-lg-3 mb-4 py-4 d-none d-lg-block">
+            <div class="col-lg-3 mb-4 d-none d-lg-block">
     <div class="sidebar-section-label mb-3">Account</div>
     <nav class="nav flex-column mb-4">
         <a class="sidebar-link" href="profile.php"><i class="bi bi-person me-2"></i> Profile</a>
