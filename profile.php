@@ -125,6 +125,11 @@ $member_since = date('F Y', strtotime($user['created_at']));
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Ensure formActions visibility is controlled via the `.editing` class on the form */
+        #profileForm #formActions { display: none !important; }
+        #profileForm.editing #formActions { display: flex !important; }
+    </style>
 </head>
 
 <body>
@@ -281,7 +286,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
                             </div>
                         </div>
 
-                        <div id="formActions" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4 border-top gap-3" style="display: none !important;">
+                        <div id="formActions" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4 border-top gap-3" style="display: none;">
                             <div class="d-flex gap-2 w-100 w-md-auto order-1 order-md-2">
                                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary flex-grow-1">Cancel</button>
                                 <button type="submit" name="update_profile" class="btn btn-green px-md-4 flex-grow-1">Save Changes</button>
@@ -399,9 +404,9 @@ $member_since = date('F Y', strtotime($user['created_at']));
             emailInput.disabled = false;
             phoneInput.disabled = false;
 
+            // Use class toggle on the form to control visibility (more robust)
+            profileForm.classList.add('editing');
             editBtn.style.display = 'none';
-            formActions.style.display = 'flex';
-            formActions.style.removeProperty('display');
 
             // Focus on first field
             userNameInput.focus();
@@ -419,9 +424,9 @@ $member_since = date('F Y', strtotime($user['created_at']));
             emailInput.disabled = true;
             phoneInput.disabled = true;
 
-            // Toggle buttons
+            // Toggle buttons and remove editing state
             editBtn.style.display = 'block';
-            formActions.style.display = 'none';
+            profileForm.classList.remove('editing');
 
             // Clear any validation messages
             emailInput.setCustomValidity('');
