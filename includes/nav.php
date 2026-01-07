@@ -28,7 +28,7 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
 <nav id="navbar" class="navbar navbar-expand-lg shadow-sm fixed-top px-sm-4 px-1 py-2 bg-light">
     <div class="container-fluid">
         <a href="index.php" class="navbar-brand fw-bold text-green">
-            <img src="assets/logo.svg" height="25" alt="Logo" />
+            <img src="assets/img/logo/logo.svg" height="25" alt="Logo" />
             <span>BookStack</span>
         </a>
 
