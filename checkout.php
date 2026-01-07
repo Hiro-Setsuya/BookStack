@@ -236,7 +236,7 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
               <input type="hidden" name="action" value="apply_voucher">
               <div class="row g-3 align-items-end">
                 <div class="col-md-8">
-                  <label class="form-label fw-semibold">Have a voucher?</label>
+                  <label class="form-label fw-semibold ms-2">Have a voucher?</label>
                   <select class="form-select py-2" name="voucher_id" style="border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.3);">
                     <option value="">Select a voucher...</option>
                     <?php foreach ($available_vouchers as $voucher): ?>
@@ -262,7 +262,7 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
                 </div>
               </div>
               <?php if (empty($available_vouchers)): ?>
-                <div class="mt-2">
+                <div class="mt-2 text-center">
                   <small class="text-muted">No vouchers available. <a href="my-vouchers.php" class="text-green">View all vouchers</a></small>
                 </div>
               <?php endif; ?>
