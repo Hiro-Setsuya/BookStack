@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container py-5">
         <div class="position-absolute top-0 start-0 w-100 p-4 d-flex justify-content-between align-items-center px-lg-5 shadow-sm">
             <a href="index.php" class="navbar-brand">
-                <img src="assets/logo.svg" height="30" alt="Logo">
+                <img src="assets/img/logo/logo.svg" height="30" alt="Logo">
                 <span>BookStack</span>
             </a>
         </div>
