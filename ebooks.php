@@ -107,6 +107,17 @@ if (!empty($search_query)) {
     $query = "SELECT ebook_id, title, author, price, cover_image, file_path, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as total_ratings FROM ebooks ORDER BY created_at DESC";
     $result = executeQuery($query);
 }
+
+// Set page title and description based on search
+if (!empty($search_query)) {
+    $page_title = 'Search Results';
+    $page_description = 'Found <strong>' . $total_results . '</strong> result' . ($total_results !== 1 ? 's' : '') .
+        ' for "<strong>' . htmlspecialchars($search_query) . '</strong>"' .
+        ' <a href="ebooks.php" class="ms-3 text-decoration-none"><i class="bi bi-x-circle me-1"></i>Clear search</a>';
+} else {
+    $page_title = 'Tech E-Books';
+    $page_description = 'Browse our collection of programming and computer science books';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -297,133 +308,121 @@ if (!empty($search_query)) {
 <body>
     <!-- navbar -->
     <?php include 'includes/nav.php'; ?>
-    <!-- Content -->
-    <div class="container mt-5 pt-5">
-        <?php
-        $message = !empty($message) ? $message : '';
-        $message_type = !empty($message_type) ? $message_type : '';
-        $messageType = $message_type;
+
+    <?php
+    $message = !empty($message) ? $message : '';
+    $message_type = !empty($message_type) ? $message_type : '';
+    $messageType = $message_type;
+    if (!empty($message)) {
+        echo '<div class="container mt-5 pt-5">';
         include 'includes/notification.php';
+        echo '</div>';
+    }
+    ?>
+
+    <!-- Main Content -->
+    <?php include 'includes/client-main.php'; ?>
+
+    <div class="row g-3 px-2 px-sm-4">
+        <?php
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($ebook = mysqli_fetch_assoc($result)) {
+                $is_purchased = in_array($ebook['ebook_id'], $purchased_ebooks);
         ?>
-
-        <div class="row mb-4">
-            <div class="col">
-                <?php if (!empty($search_query)): ?>
-                    <h2 class="fw-bold">Search Results</h2>
-                    <p class="text-muted">
-                        Found <strong><?php echo $total_results; ?></strong> result<?php echo $total_results !== 1 ? 's' : ''; ?>
-                        for "<strong><?php echo htmlspecialchars($search_query); ?></strong>"
-                        <a href="ebooks.php" class="ms-3 text-decoration-none">
-                            <i class="bi bi-x-circle me-1"></i>Clear search
+                <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card ebook-card shadow-sm border-0 h-100">
+                        <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none bg-light d-flex align-items-center justify-content-center ebook-cover-container" style="overflow: hidden;">
+                            <img src="<?php echo htmlspecialchars($ebook['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>"
+                                class="ebook-cover w-100 h-100"
+                                alt="<?php echo htmlspecialchars($ebook['title']); ?>"
+                                style="object-fit: contain; object-position: center;">
                         </a>
-                    </p>
-                <?php else: ?>
-                    <h2 class="fw-bold">Tech E-Books</h2>
-                    <p class="text-muted">Browse our collection of programming and computer science books</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="row g-3 px-2 px-sm-4">
-            <?php
-            if ($result && mysqli_num_rows($result) > 0) {
-                while ($ebook = mysqli_fetch_assoc($result)) {
-                    $is_purchased = in_array($ebook['ebook_id'], $purchased_ebooks);
-            ?>
-                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card ebook-card shadow-sm border-0 h-100">
-                            <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none bg-light d-flex align-items-center justify-content-center ebook-cover-container" style="overflow: hidden;">
-                                <img src="<?php echo htmlspecialchars($ebook['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>"
-                                    class="ebook-cover w-100 h-100"
-                                    alt="<?php echo htmlspecialchars($ebook['title']); ?>"
-                                    style="object-fit: contain; object-position: center;">
+                        <div class="card-body d-flex flex-column ebook-card-body">
+                            <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none">
+                                <h6 class="card-title ebook-title fw-bold text-dark mb-0 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                    <?php echo htmlspecialchars($ebook['title']); ?>
+                                </h6>
                             </a>
-                            <div class="card-body d-flex flex-column ebook-card-body">
-                                <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="text-decoration-none">
-                                    <h6 class="card-title ebook-title fw-bold text-dark mb-0 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                        <?php echo htmlspecialchars($ebook['title']); ?>
-                                    </h6>
-                                </a>
-                                <div class="rating-stars mb-1">
-                                    <?php
-                                    $avg_rating = isset($ebook['avg_rating']) && $ebook['avg_rating'] !== null ? round(floatval($ebook['avg_rating']), 1) : 0;
-                                    $total_ratings = isset($ebook['total_ratings']) ? intval($ebook['total_ratings']) : 0;
-                                    $full_stars = floor($avg_rating);
-                                    $half_star = ($avg_rating - $full_stars) >= 0.5 ? 1 : 0;
-                                    $empty_stars = 5 - $full_stars - $half_star;
+                            <div class="rating-stars mb-1">
+                                <?php
+                                $avg_rating = isset($ebook['avg_rating']) && $ebook['avg_rating'] !== null ? round(floatval($ebook['avg_rating']), 1) : 0;
+                                $total_ratings = isset($ebook['total_ratings']) ? intval($ebook['total_ratings']) : 0;
+                                $full_stars = floor($avg_rating);
+                                $half_star = ($avg_rating - $full_stars) >= 0.5 ? 1 : 0;
+                                $empty_stars = 5 - $full_stars - $half_star;
 
-                                    for ($i = 0; $i < $full_stars; $i++) {
-                                        echo '<i class="bi bi-star-fill"></i>';
-                                    }
-                                    if ($half_star) {
-                                        echo '<i class="bi bi-star-half"></i>';
-                                    }
-                                    for ($i = 0; $i < $empty_stars; $i++) {
-                                        echo '<i class="bi bi-star"></i>';
-                                    }
+                                for ($i = 0; $i < $full_stars; $i++) {
+                                    echo '<i class="bi bi-star-fill"></i>';
+                                }
+                                if ($half_star) {
+                                    echo '<i class="bi bi-star-half"></i>';
+                                }
+                                for ($i = 0; $i < $empty_stars; $i++) {
+                                    echo '<i class="bi bi-star"></i>';
+                                }
 
-                                    if ($total_ratings > 0) {
-                                        echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(' . number_format($avg_rating, 1) . ')</span>';
-                                    } else {
-                                        echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(0)</span>';
-                                    }
-                                    ?>
-                                </div>
-                                <p class="card-text ebook-author mb-1 mb-sm-2 text-muted">
-                                    <i class="bi bi-person me-1"></i><span class="d-none d-sm-inline"><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?></span><span class="d-inline d-sm-none"><?php echo htmlspecialchars(strlen($ebook['author']) > 15 ? substr($ebook['author'], 0, 15) . '...' : $ebook['author']); ?></span>
-                                </p>
-                                <div class="mt-auto">
-                                    <?php if ($is_purchased): ?>
-                                        <div class="mb-2">
-                                            <span class="badge bg-success w-100 py-2">
-                                                <i class="bi bi-check-circle me-1"></i>Purchased
-                                            </span>
-                                        </div>
-                                        <div class="d-grid">
-                                            <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm ebook-btn">
-                                                <i class="bi bi-download me-1"></i><span class="d-none d-sm-inline">Download</span><span class="d-inline d-sm-none">Get</span>
-                                            </a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="mb-2 d-grid">
-                                            <button type="button" class="btn w-100 price-btn" style="background: #fff; border: 1px solid #dee2e6; height: 38px; font-size: 0.9rem; color: inherit;" aria-label="Buy <?php echo htmlspecialchars($ebook['title']); ?>" onclick="if(confirm('Proceed to checkout for <?php echo htmlspecialchars(addslashes($ebook['title'])); ?>?')){ window.location.href='checkout.php?id=<?php echo $ebook['ebook_id']; ?>&buy_now=1'; }">
-                                                <span class="ebook-price text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
+                                if ($total_ratings > 0) {
+                                    echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(' . number_format($avg_rating, 1) . ')</span>';
+                                } else {
+                                    echo '<span class="text-muted ms-1" style="font-size: 0.7rem;">(0)</span>';
+                                }
+                                ?>
+                            </div>
+                            <p class="card-text ebook-author mb-1 mb-sm-2 text-muted">
+                                <i class="bi bi-person me-1"></i><span class="d-none d-sm-inline"><?php echo htmlspecialchars($ebook['author'] ?? 'Unknown'); ?></span><span class="d-inline d-sm-none"><?php echo htmlspecialchars(strlen($ebook['author']) > 15 ? substr($ebook['author'], 0, 15) . '...' : $ebook['author']); ?></span>
+                            </p>
+                            <div class="mt-auto">
+                                <?php if ($is_purchased): ?>
+                                    <div class="mb-2">
+                                        <span class="badge bg-success w-100 py-2">
+                                            <i class="bi bi-check-circle me-1"></i>Purchased
+                                        </span>
+                                    </div>
+                                    <div class="d-grid">
+                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm ebook-btn">
+                                            <i class="bi bi-download me-1"></i><span class="d-none d-sm-inline">Download</span><span class="d-inline d-sm-none">Get</span>
+                                        </a>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="mb-2 d-grid">
+                                        <button type="button" class="btn w-100 price-btn" style="background: #fff; border: 1px solid #dee2e6; height: 38px; font-size: 0.9rem; color: inherit;" aria-label="Buy <?php echo htmlspecialchars($ebook['title']); ?>" onclick="if(confirm('Proceed to checkout for <?php echo htmlspecialchars(addslashes($ebook['title'])); ?>?')){ window.location.href='checkout.php?id=<?php echo $ebook['ebook_id']; ?>&buy_now=1'; }">
+                                            <span class="ebook-price text-green fw-bold">₱<?php echo number_format($ebook['price'], 2); ?></span>
+                                        </button>
+                                    </div>
+                                    <div class="d-grid">
+                                        <form method="POST" class="m-0">
+                                            <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
+                                            <button type="submit" name="add_to_cart" class="btn btn-green w-100" style="border: 1px solid rgba(0,0,0,0.1); height: 38px; font-size: 0.9rem;">
+                                                <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
                                             </button>
-                                        </div>
-                                        <div class="d-grid">
-                                            <form method="POST" class="m-0">
-                                                <input type="hidden" name="ebook_id" value="<?php echo $ebook['ebook_id']; ?>">
-                                                <button type="submit" name="add_to_cart" class="btn btn-green w-100" style="border: 1px solid rgba(0,0,0,0.1); height: 38px; font-size: 0.9rem;">
-                                                    <i class="bi bi-cart-plus me-1"></i><span class="d-none d-sm-inline">Add to Cart</span><span class="d-inline d-sm-none">Add</span>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
+                                        </form>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                <?php
-                }
-            } else {
-                ?>
-                <div class="col-12">
-                    <?php if (!empty($search_query)): ?>
-                        <div class="text-center py-5">
-                            <i class="bi bi-search" style="font-size: 4rem; color: #d1d5db;"></i>
-                            <h4 class="mt-3">No results found</h4>
-                            <p class="text-muted">Try different keywords or <a href="ebooks.php">browse all ebooks</a></p>
-                        </div>
-                    <?php else: ?>
-                        <div class="alert alert-info text-center">
-                            <i class="bi bi-info-circle me-2"></i>No e-books available at the moment.
-                        </div>
-                    <?php endif; ?>
                 </div>
             <?php
             }
+        } else {
             ?>
-        </div>
+            <div class="col-12">
+                <?php if (!empty($search_query)): ?>
+                    <div class="text-center py-5">
+                        <i class="bi bi-search" style="font-size: 4rem; color: #d1d5db;"></i>
+                        <h4 class="mt-3">No results found</h4>
+                        <p class="text-muted">Try different keywords or <a href="ebooks.php">browse all ebooks</a></p>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info text-center">
+                        <i class="bi bi-info-circle me-2"></i>No e-books available at the moment.
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
