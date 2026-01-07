@@ -48,11 +48,12 @@ $user = mysqli_fetch_assoc($user_result);
 
     <div class="container account-container">
         <div class="row">
-            <div class="col-lg-3 mb-4">
+            <div class="col-lg-3 mb-4 py-4">
                 <div class="sidebar-section-label mb-3">Account</div>
                 <nav class="nav flex-column mb-4">
-                    <a class="sidebar-link" href="profile.php"><i class="bi bi-person me-2"></i>Profile</a>
+                    <a class="sidebar-link" href="profile.php"><i class="bi bi-person me-2"></i> Profile</a>
                     <a class="sidebar-link active" href="my-ebooks.php"><i class="bi bi-book me-2"></i> My E-Books</a>
+                    <a class="sidebar-link" href="my-vouchers.php"><i class="bi bi-ticket-perforated me-2"></i> My Vouchers</a>
                 </nav>
 
                 <div class="sidebar-section-label mb-3">Preferences</div>
