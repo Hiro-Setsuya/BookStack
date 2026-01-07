@@ -251,18 +251,6 @@ $total = $subtotal - $discount_amount + $tax;
             <span class="fs-4 fw-bold text-green" id="totalAmount">₱0.00</span>
           </div>
 
-          <form method="POST" class="mb-4">
-            <label class="form-label fw-semibold mb-2" style="color: #2c3e50;">Promo Code</label>
-            <div class="d-flex gap-2">
-              <input type="hidden" name="action" value="apply_promo">
-              <input class="form-control py-2" type="text" name="promo_code" placeholder="Enter code" value="<?php echo htmlspecialchars($_SESSION['promo_code'] ?? ''); ?>" style="border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.3); flex: 1;">
-              <button type="submit" class="btn btn-green px-4 py-2" style="border-radius: 12px; font-weight: 600;">Apply</button>
-            </div>
-            <?php if (isset($_SESSION['promo_code']) && $_SESSION['promo_code'] === 'TECH30'): ?>
-              <div class="small mt-2 p-2" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; border-radius: 8px;"><i class="bi bi-check-circle-fill me-1"></i>Promo code applied successfully!</div>
-            <?php endif; ?>
-          </form>
-
           <button class="btn btn-green w-100 py-3" id="checkoutBtn" style="border-radius: 12px; font-weight: 600; font-size: 1rem;" disabled>
             <i class="bi bi-lock me-2"></i>Proceed to Checkout (<span id="checkoutCount">0</span>)
           </button>
