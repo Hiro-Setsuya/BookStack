@@ -254,9 +254,6 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
                       </option>
                     <?php endforeach; ?>
                   </select>
-                  <?php if (empty($available_vouchers)): ?>
-                    <small class="text-muted mt-2 d-block">No vouchers available. <a href="my-vouchers.php" class="text-green">View all vouchers</a></small>
-                  <?php endif; ?>
                 </div>
                 <div class="col-md-4">
                   <button type="submit" class="btn btn-green w-100 py-2" style="border-radius: 12px; font-weight: 600;" <?= empty($available_vouchers) ? 'disabled' : '' ?>>
@@ -264,6 +261,11 @@ $_SESSION['checkout_total'] = number_format($total, 2, '.', '');
                   </button>
                 </div>
               </div>
+              <?php if (empty($available_vouchers)): ?>
+                <div class="mt-2">
+                  <small class="text-muted">No vouchers available. <a href="my-vouchers.php" class="text-green">View all vouchers</a></small>
+                </div>
+              <?php endif; ?>
               <?php if ($selected_voucher): ?>
                 <?php if ($discount_amount > 0): ?>
                   <div class="alert alert-success mt-3 mb-0" role="alert">
