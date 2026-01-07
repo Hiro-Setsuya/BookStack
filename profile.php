@@ -14,30 +14,77 @@ $statusType = '';
 
 // Handle form submission for profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $user_name = mysqli_real_escape_string($conn, $_POST['user_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $phone_number = mysqli_real_escape_string($conn, $_POST['phone_number']);
+    $user_name = mysqli_real_escape_string($conn, trim($_POST['user_name']));
+    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+    $phone_number = trim($_POST['phone_number']);
 
-    // Check if email already exists for another user
-    $check_query = "SELECT user_id FROM users WHERE email = '$email' AND user_id != $user_id";
-    $check_result = executeQuery($check_query);
-
-    if (mysqli_num_rows($check_result) > 0) {
-        $statusMessage = 'Email address is already in use by another account.';
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $statusMessage = 'Please enter a valid email address.';
         $statusType = 'danger';
     } else {
-        $update_query = "UPDATE users SET user_name = '$user_name', email = '$email', phone_number = '$phone_number' WHERE user_id = $user_id";
-        $result = executeQuery($update_query);
+        // Process phone number - remove spaces, dashes, and + sign
+        $phone_number = preg_replace('/[\s\-\+]/', '', $phone_number);
 
-        if ($result) {
-            // ADD THIS LINE BELOW:
-            $_SESSION['user_name'] = $user_name;
+        // Convert phone number starting with 0 to 63 format (09XXXXXXXXX -> 639XXXXXXXXX)
+        if (!empty($phone_number) && preg_match('/^0\d{10}$/', $phone_number)) {
+            $phone_number = '63' . substr($phone_number, 1);
+        }
 
-            $statusMessage = 'Profile updated successfully!';
-            $statusType = 'success';
+        // Validate phone number format if provided
+        if (!empty($phone_number)) {
+            // Check if it starts with 63 and has 12 digits total (639XXXXXXXXX)
+            if (!preg_match('/^63\d{10}$/', $phone_number)) {
+                $statusMessage = 'Invalid phone number format. Please use Philippine format: 639XXXXXXXXX, +63 9XX XXX XXXX, or 09XXXXXXXXX';
+                $statusType = 'danger';
+            } else {
+                $phone_number_sql = "'$phone_number'";
+            }
         } else {
-            $statusMessage = 'Error updating profile: ' . mysqli_error($conn);
-            $statusType = 'danger';
+            $phone_number_sql = 'NULL';
+        }
+
+        // Only proceed if no validation errors
+        if (empty($statusMessage)) {
+            // Check if username already exists for another user
+            $check_username_query = "SELECT user_id FROM users WHERE user_name = '$user_name' AND user_id != $user_id";
+            $check_username_result = executeQuery($check_username_query);
+
+            // Check if email already exists for another user
+            $check_email_query = "SELECT user_id FROM users WHERE email = '$email' AND user_id != $user_id";
+            $check_email_result = executeQuery($check_email_query);
+
+            // Check if phone number already exists for another user (only if not empty)
+            if (!empty($phone_number)) {
+                $check_phone_query = "SELECT user_id FROM users WHERE phone_number = '$phone_number' AND user_id != $user_id";
+                $check_phone_result = executeQuery($check_phone_query);
+            } else {
+                $check_phone_result = false;
+            }
+
+            if (mysqli_num_rows($check_username_result) > 0) {
+                $statusMessage = 'Username is already taken by another account.';
+                $statusType = 'danger';
+            } elseif (mysqli_num_rows($check_email_result) > 0) {
+                $statusMessage = 'Email address is already in use by another account.';
+                $statusType = 'danger';
+            } elseif ($check_phone_result && mysqli_num_rows($check_phone_result) > 0) {
+                $statusMessage = 'Phone number is already in use by another account.';
+                $statusType = 'danger';
+            } else {
+                $update_query = "UPDATE users SET user_name = '$user_name', email = '$email', phone_number = $phone_number_sql WHERE user_id = $user_id";
+                $result = executeQuery($update_query);
+
+                if ($result) {
+                    $_SESSION['user_name'] = $user_name;
+
+                    $statusMessage = 'Profile updated successfully!';
+                    $statusType = 'success';
+                } else {
+                    $statusMessage = 'Error updating profile: ' . mysqli_error($conn);
+                    $statusType = 'danger';
+                }
+            }
         }
     }
 }
@@ -173,14 +220,14 @@ $member_since = date('F Y', strtotime($user['created_at']));
                                 <label class="form-label small fw-semibold">Email Address</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-                                    <input type="email" name="email" id="email" class="form-control form-control-custom" value="<?= htmlspecialchars($user['email']) ?>" required disabled>
+                                    <input type="email" name="email" id="email" class="form-control form-control-custom" value="<?= htmlspecialchars($user['email']) ?>" placeholder="example@email.com" required disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-semibold">Phone Number</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-muted"></i></span>
-                                    <input type="text" name="phone_number" id="phone_number" class="form-control form-control-custom" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>" disabled>
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control form-control-custom" value="<?= htmlspecialchars($user['phone_number'] ?? '') ?>" placeholder="+63 9XX XXX XXXX" maxlength="17" disabled>
                                 </div>
                             </div>
 
@@ -267,6 +314,85 @@ $member_since = date('F Y', strtotime($user['created_at']));
             phone_number: phoneInput.value
         };
 
+        // Format phone number for display (639XXXXXXXXX -> +63 9XX XXX XXXX)
+        function formatPhoneDisplay(phone) {
+            if (!phone || phone.trim() === '') return '';
+
+            // Remove all non-digits
+            let digits = phone.replace(/\D/g, '');
+
+            // If it starts with 63 and has 12 digits
+            if (digits.length === 12 && digits.startsWith('63')) {
+                return '+63 ' + digits.substring(2, 5) + ' ' + digits.substring(5, 8) + ' ' + digits.substring(8);
+            }
+
+            return phone;
+        }
+
+        // Format phone number on page load
+        if (phoneInput.value) {
+            phoneInput.value = formatPhoneDisplay(phoneInput.value);
+            originalValues.phone_number = phoneInput.value;
+        }
+
+        // Auto-format phone number as user types
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            let cursorPosition = e.target.selectionStart;
+
+            // Remove all non-digits except +
+            let cleaned = value.replace(/[^\d+]/g, '');
+
+            // If starts with +63 or 63
+            if (cleaned.startsWith('+63')) {
+                cleaned = cleaned.substring(3);
+            } else if (cleaned.startsWith('63')) {
+                cleaned = cleaned.substring(2);
+            } else if (cleaned.startsWith('0')) {
+                // Convert 09XXXXXXXXX to 9XXXXXXXXX
+                cleaned = cleaned.substring(1);
+            } else if (cleaned.startsWith('+')) {
+                cleaned = cleaned.substring(1);
+            }
+
+            // Remove any remaining non-digits
+            cleaned = cleaned.replace(/\D/g, '');
+
+            // Limit to 10 digits (after 63)
+            cleaned = cleaned.substring(0, 10);
+
+            // Format as +63 9XX XXX XXXX
+            let formatted = '';
+            if (cleaned.length > 0) {
+                formatted = '+63 ' + cleaned.substring(0, 3);
+                if (cleaned.length > 3) {
+                    formatted += ' ' + cleaned.substring(3, 6);
+                }
+                if (cleaned.length > 6) {
+                    formatted += ' ' + cleaned.substring(6, 10);
+                }
+            }
+
+            e.target.value = formatted;
+        });
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Validate phone number format
+        function isValidPhone(phone) {
+            if (!phone || phone.trim() === '') return true; // Empty is valid
+
+            // Remove all non-digits
+            let digits = phone.replace(/\D/g, '');
+
+            // Should be 12 digits starting with 63
+            return digits.length === 12 && digits.startsWith('63');
+        }
+
         // Enable edit mode
         editBtn.addEventListener('click', function() {
             userNameInput.disabled = false;
@@ -296,11 +422,36 @@ $member_since = date('F Y', strtotime($user['created_at']));
             // Toggle buttons
             editBtn.style.display = 'block';
             formActions.style.display = 'none';
+
+            // Clear any validation messages
+            emailInput.setCustomValidity('');
+            phoneInput.setCustomValidity('');
         });
 
-        // Enable fields before form submission to ensure values are sent
+        // Form validation before submission
         const profileForm = document.getElementById('profileForm');
         profileForm.addEventListener('submit', function(e) {
+            // Clear previous validation messages
+            emailInput.setCustomValidity('');
+            phoneInput.setCustomValidity('');
+
+            // Validate email
+            if (!isValidEmail(emailInput.value)) {
+                e.preventDefault();
+                emailInput.setCustomValidity('Please enter a valid email address.');
+                emailInput.reportValidity();
+                return false;
+            }
+
+            // Validate phone number
+            if (!isValidPhone(phoneInput.value)) {
+                e.preventDefault();
+                phoneInput.setCustomValidity('Please enter a valid Philippine phone number (639XXXXXXXXX).');
+                phoneInput.reportValidity();
+                return false;
+            }
+
+            // Enable fields before form submission to ensure values are sent
             userNameInput.disabled = false;
             emailInput.disabled = false;
             phoneInput.disabled = false;
