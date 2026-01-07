@@ -123,6 +123,24 @@ Answer:";
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="chatbot/style.css">
+  <style>
+    /* Ensuring the button is a perfect circle */
+    .stack-ai-button {
+      width: 60px !important;
+      height: 60px !important;
+      border-radius: 50% !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      bottom: 20px;
+      /* Adjust positioning if needed */
+      right: 20px;
+      position: fixed;
+      /* Ensures it floats like a mobile chat bubble */
+      z-index: 1000;
+    }
+  </style>
 </head>
 
 <body>
