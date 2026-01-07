@@ -12,7 +12,7 @@ if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
             <!-- Brand & Description -->
             <div class="col-lg-4 col-md-6">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <img src="assets/logo.svg" height="32" alt="BookStack" />
+                    <img src="assets/img/logo/logo.svg" height="32" alt="BookStack" />
                     <span class="fw-bold fs-4">BookStack</span>
                 </div>
                 <p class="text-white-50 mb-3 pe-lg-4">
