@@ -282,12 +282,12 @@ $member_since = date('F Y', strtotime($user['created_at']));
                         </div>
 
                         <div id="formActions" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-4 border-top gap-3" style="display: none !important;">
-                            <a href="#" class="text-danger small fw-semibold text-decoration-none order-2 order-md-1">Deactivate Account</a>
                             <div class="d-flex gap-2 w-100 w-md-auto order-1 order-md-2">
                                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary flex-grow-1">Cancel</button>
                                 <button type="submit" name="update_profile" class="btn btn-green px-md-4 flex-grow-1">Save Changes</button>
                             </div>
                         </div>
+                        <div class="btn btn-outline-danger mt-3">Deactivate Account</div>
                     </div>
                 </form>
             </div>
