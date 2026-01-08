@@ -90,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="ps-lg-5">
                     <h1 class="login-title mb-4">Your digital library, <br><span class="highlight">unlocked.</span></h1>
-                    <p class="text-secondary fs-5 mb-5" style="max-width: 450px;">Access thousands of e-books, research papers, and academic journals anywhere, anytime.</p>
+                    <p class="text-secondary fs-5 mb-5" style="max-width: 450px;">Access variety of e-books about Technologies, Programming Languange, and UI/UX Designs anywhere, anytime.</p>
 
                     <div class="position-relative">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop" class="login-img img-fluid" alt="Digital Library">
+                        <img src="https://www.monergism.com/sites/default/files/content_images/e-books.jpg" class="login-img img-fluid" alt="Digital Library">
                     </div>
                 </div>
             </div>
