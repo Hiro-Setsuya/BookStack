@@ -188,9 +188,9 @@ Brief Answer:";
   </div>
 
   <!-- Chat Button -->
-  <button class="btn btn-md btn-green stack-ai-button shadow"
+  <button class="btn btn-md stack-ai-button shadow"
     onclick="openStackAIModal()" id="stackAIButton">
-    <img src="assets/img/logo/chatbot.svg" height="25" alt="LogoC" />
+    <img src="assets/img/logo/chatbot.svg" height="25" alt="Stack AI" />
   </button>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
