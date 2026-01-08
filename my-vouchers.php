@@ -97,7 +97,7 @@ $user = mysqli_fetch_assoc($user_result);
             <?php include 'includes/client-sidebar.php'; ?>
 
             <div class="col-lg-9">
-                <div class="profile-header mb-4">
+                <div class="profile-header mb-4 text-center text-lg-start">
                     <h2 class="fw-bold">My Vouchers</h2>
                     <p class="text-muted">View and manage your discount vouchers.</p>
                 </div>
