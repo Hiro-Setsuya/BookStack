@@ -127,8 +127,13 @@ $member_since = date('F Y', strtotime($user['created_at']));
     <link rel="stylesheet" href="style.css">
     <style>
         /* Ensure formActions visibility is controlled via the `.editing` class on the form */
-        #profileForm #formActions { display: none !important; }
-        #profileForm.editing #formActions { display: flex !important; }
+        #profileForm #formActions {
+            display: none !important;
+        }
+
+        #profileForm.editing #formActions {
+            display: flex !important;
+        }
     </style>
 </head>
 
@@ -140,7 +145,7 @@ $member_since = date('F Y', strtotime($user['created_at']));
             <?php include 'includes/client-sidebar.php'; ?>
 
             <div class="col-lg-9">
-                <div class="profile-header mb-4">
+                <div class="profile-header mb-4 text-center text-lg-start">
                     <h2 class="fw-bold">Account Settings</h2>
                     <p class="text-muted">Manage your personal information and preferences.</p>
                 </div>
