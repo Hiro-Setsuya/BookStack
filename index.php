@@ -31,7 +31,7 @@ session_start();
         </div>
       </div>
       <div class="col-lg-5">
-        <img src="https://tse4.mm.bing.net/th/id/OIP.4vlJD00w2dCppW1ZYkrb8gHaFI?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+        <img src="https://theunitedindian.com/images/ebooks-hero.jpg"
           class="img-fluid rounded-3 mb-2 shadow">
         <div class="fs-5 fw-semibold">Popular Topics</div>
         <div class="text-muted">Web Dev • Python • Data Science • AI</div>
