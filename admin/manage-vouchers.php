@@ -127,10 +127,13 @@ $usersResult = executeQuery($usersQuery);
     <?php $currentPage = 'vouchers';
     include '../includes/admin-nav.php'; ?>
 
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h2"><i class="bi bi-ticket-perforated me-2"></i>Manage Vouchers</h1>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#issueVoucherModal">
-            <i class="bi bi-plus-circle me-2"></i>Issue New Voucher
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h5 class="fw-bold mb-1">Manage Vouchers</h5>
+            <p class="text-muted small mb-0">Issue discounts, manage promotional codes, and monitor voucher usage.</p>
+        </div>
+        <button type="button" class="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#issueVoucherModal" style="background-color: #00a3ff; border: none; border-radius: 10px;">
+            <i class="bi bi-plus-lg me-2"></i>Issue New Voucher
         </button>
     </div>
 
