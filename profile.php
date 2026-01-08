@@ -213,35 +213,6 @@ $member_since = date('F Y', strtotime($user['created_at']));
                                 </div>
                             </div>
 
-                            <!-- Account Menu Section (Mobile Only) -->
-                            <div class="col-12 mt-3 d-lg-none">
-                                <div class="p-3 rounded" style="background-color: #f8f9fa;">
-                                    <nav class="nav flex-column gap-1">
-                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark" href="profile.php" style="background-color: white;">
-                                            <i class="bi bi-person me-3 text-primary"></i>
-                                            <span>Profile</span>
-                                        </a>
-                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="my-ebooks.php">
-                                            <i class="bi bi-book me-3 text-muted"></i>
-                                            <span>My E-Books</span>
-                                        </a>
-                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="my-vouchers.php">
-                                            <i class="bi bi-ticket-perforated me-3 text-muted"></i>
-                                            <span>My Vouchers</span>
-                                        </a>
-                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark hover-bg-white" href="about.php">
-                                            <i class="bi bi-info-circle me-3 text-muted"></i>
-                                            <span>About</span>
-                                        </a>
-                                        <hr class="my-2">
-                                        <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger hover-bg-white" href="client-logout.php">
-                                            <i class="bi bi-box-arrow-left me-3"></i>
-                                            <span>Log Out</span>
-                                        </a>
-                                    </nav>
-                                </div>
-                            </div>
-
                             <div class="col-12">
                                 <label class="form-label small fw-semibold">Account Status</label>
                                 <div class="d-flex align-items-center flex-column flex-sm-row gap-3 p-3 rounded" style="background-color: <?= $user['is_account_verified'] ? '#d1f2eb' : '#fff3cd' ?>;">
