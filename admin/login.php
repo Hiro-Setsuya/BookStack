@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
+require_once '../includes/form-input.php';
 
 $error_message = '';
 
@@ -50,7 +51,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user']) && isset($_PO
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
+  <?php renderFloatingInputStyles(); ?>
+  <style>
+    .btn-toggle-pw {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      color: #6c757d;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .btn-toggle-pw:hover {
+      background: #f8f9fa;
+      color: #1fd26a;
+    }
+
+    .btn-toggle-pw:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .btn-toggle-pw .material-symbols-outlined {
+      font-size: 20px;
+      user-select: none;
+    }
+  </style>
 </head>
 
 <body class="bg-light">
@@ -87,23 +123,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user']) && isset($_PO
           ?>
 
           <form action="login.php" method="POST">
-            <div class="mb-3">
-              <label class="form-label small fw-bold">Email or Username</label>
-              <div class="input-group border rounded-3 bg-light">
-                <input type="text" class="form-control border-0 bg-transparent py-2" placeholder="admin@gmail.com" name="user" required value="<?php echo isset($_POST['user']) ? htmlspecialchars($_POST['user']) : ''; ?>">
-                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-person"></i></span>
-              </div>
+            <?php renderFloatingInput([
+              'type' => 'text',
+              'name' => 'user',
+              'id' => 'user',
+              'label' => 'Email or Username',
+              'placeholder' => 'admin@example.com',
+              'value' => $_POST['user'] ?? '',
+              'required' => true,
+              'autocomplete' => 'username'
+            ]); ?>
+
+            <div class="position-relative mb-4">
+              <?php renderFloatingInput([
+                'type' => 'password',
+                'name' => 'pass',
+                'id' => 'password',
+                'label' => 'Password',
+                'placeholder' => 'Enter your password',
+                'required' => true,
+                'autocomplete' => 'current-password',
+                'class' => 'mb-0',
+                'attributes' => ['style' => 'padding-right: 45px;']
+              ]); ?>
+              <button type="button" onclick="togglePassword()" class="btn-toggle-pw">
+                <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+              </button>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label small fw-bold">Password</label>
-              <div class="input-group border rounded-3 bg-light">
-                <input type="password" class="form-control border-0 bg-transparent py-2" placeholder="••••••••" name="pass" required>
-                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-eye-slash"></i></span>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-green w-100 py-2 fw-bold shadow-sm rounded-3">Log in</button>
+            <button type="submit" class="btn btn-green w-100 py-3 fw-bold shadow-sm rounded-3">Log In</button>
           </form>
         </div>
       </div>
@@ -111,6 +159,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user']) && isset($_PO
     </div>
   </div>
 
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.textContent = 'visibility_off';
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.textContent = 'visibility';
+      }
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 

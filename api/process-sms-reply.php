@@ -1,21 +1,5 @@
 <?php
 
-/**
- * SMS Reply Webhook Handler for SMS Forwarder App
- * 
- * This webhook processes incoming SMS from SMS Forwarder app and handles:
- * 1. Account verification responses
- * 2. Password reset verification codes
- * 3. General customer support messages
- * 
- * SMS Forwarder App Setup:
- * 1. Install SMS Forwarder app on Android phone
- * 2. Configure webhook URL: https://yourdomain.com/api/process-sms-reply.php
- * 3. Set method to POST
- * 4. Enable JSON format
- * 5. Test with a sample SMS
- */
-
 require_once '../config/db.php';
 
 // Enable error logging

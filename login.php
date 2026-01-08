@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/db.php';
 require_once 'includes/voucher-utils.php';
+require_once 'includes/form-input.php';
 
 $error = "";
 
@@ -73,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
+    <?php renderFloatingInputStyles(); ?>
 </head>
 
 <body>
@@ -88,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="ps-lg-5">
                     <h1 class="login-title mb-4">Your digital library, <br><span class="highlight">unlocked.</span></h1>
-                    <p class="text-secondary fs-5 mb-5" style="max-width: 450px;">Access thousands of e-books, research papers, and academic journals anywhere, anytime.</p>
+                    <p class="text-secondary fs-5 mb-5" style="max-width: 450px;">Access variety of e-books about Technologies, Programming Languange, and UI/UX Designs anywhere, anytime.</p>
 
                     <div class="position-relative">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop" class="login-img img-fluid" alt="Digital Library">
+                        <img src="https://www.monergism.com/sites/default/files/content_images/e-books.jpg" class="login-img img-fluid" alt="Digital Library">
                     </div>
                 </div>
             </div>
@@ -99,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-lg-5 offset-lg-1">
                 <div class="login-card">
                     <h2 class="fw-bold mb-2">Welcome Back</h2>
-                    <p class="text-muted small mb-4">Sign in to continue to your library</p>
+                    <p class="text-muted small mb-4">Log in to access your library</p>
 
                     <?php
                     $error_message = !empty($error) ? $error : '';
@@ -107,25 +109,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
 
                     <form method="POST" action="">
-                        <div class="mb-3">
-                            <label class="form-label">Email or Phone Number</label>
-                            <input type="text" name="identifier" class="form-control" placeholder="Enter email or phone" value="<?php echo isset($_POST['identifier']) ? htmlspecialchars($_POST['identifier']) : ''; ?>" required>
-                        </div>
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label mb-0">Password</label>
-                                <a href="forgot-password.php" class="footer-link">Forgot Password?</a>
-                            </div>
-                            <div class="position-relative">
-                                <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Enter your password" required style="padding-right: 45px;">
+                        <?php renderFloatingInput([
+                            'type' => 'text',
+                            'name' => 'identifier',
+                            'id' => 'identifier',
+                            'label' => 'Email or Phone Number',
+                            'placeholder' => 'Email or Phone Number',
+                            'value' => $_POST['identifier'] ?? '',
+                            'required' => true,
+                            'autocomplete' => 'username',
+                            'input_class' => !empty($error) ? 'is-invalid' : ''
+                        ]); ?>
 
-                                <button type="button" onclick="togglePassword()" class="btn-toggle-pw">
-                                    <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
-                                </button>
-                            </div>
+                        <div class="position-relative mb-2">
+                            <?php renderFloatingInput([
+                                'type' => 'password',
+                                'name' => 'password',
+                                'id' => 'passwordInput',
+                                'label' => 'Password',
+                                'placeholder' => 'Password',
+                                'required' => true,
+                                'autocomplete' => 'current-password',
+                                'class' => 'mb-0',
+                                'input_class' => !empty($error) ? 'is-invalid' : '',
+                                'attributes' => ['style' => 'padding-right: 45px;']
+                            ]); ?>
+
+                            <button type="button" onclick="togglePassword()" class="btn-toggle-pw">
+                                <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+                            </button>
                         </div>
 
-                        <button type="submit" class="btn btn-login w-100 mb-4 shadow">Sign In</button>
+                        <div class="d-flex justify-content-end mb-2">
+                            <a href="forgot-password.php" class="text-decoration-none" style="color: #6c757d; font-size: 0.875rem; transition: color 0.2s;">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-login w-100 mb-4 shadow">Log In</button>
                     </form>
 
                     <div class="text-center">

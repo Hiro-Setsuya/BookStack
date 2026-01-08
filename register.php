@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/db.php';
 require_once 'notifications/send-email.php';
+require_once 'includes/form-input.php';
 
 $error = "";
 $success = "";
@@ -18,8 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters long.";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long.";
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error = "Password must contain at least one uppercase letter.";
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = "Password must contain at least one number.";
     } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match.";
     } elseif (!$terms) {
@@ -96,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
+    <?php renderFloatingInputStyles(); ?>
 </head>
 
 
@@ -140,43 +146,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <!-- Form -->
                     <form method="POST" action="">
                         <!-- Username Field -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">Username</label>
-                            <div class="position-relative">
-                                <input type="text" name="username" class="form-control py-3 ps-5 rounded-3" placeholder="Enter your username" style="height: 56px;" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required />
-                                <span class="material-symbols-outlined input-icon">person</span>
-                            </div>
-                        </div>
+                        <?php renderFloatingInput([
+                            'type' => 'text',
+                            'name' => 'username',
+                            'id' => 'username',
+                            'label' => 'Username',
+                            'placeholder' => 'Choose a unique username',
+                            'value' => $_POST['username'] ?? '',
+                            'required' => true,
+                            'autocomplete' => 'username'
+                        ]); ?>
                         <!-- Email Field -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">Email</label>
-                            <div class="position-relative">
-                                <input type="email" name="email" class="form-control py-3 ps-5 rounded-3" placeholder="your.email@example.com" style="height: 56px;" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required />
-                                <span class="material-symbols-outlined input-icon">mail</span>
+                        <?php renderFloatingInput([
+                            'type' => 'email',
+                            'name' => 'email',
+                            'id' => 'email',
+                            'label' => 'Email Address',
+                            'placeholder' => 'yourname@example.com',
+                            'value' => $_POST['email'] ?? '',
+                            'required' => true,
+                            'autocomplete' => 'email',
+                            'class' => 'mb-1'
+                        ]); ?>
+                        <small id="emailFeedback" class="d-block mb-3 ms-1"></small>
+
+                        <div class="row g-3">
+                            <!-- Password Field -->
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <?php renderFloatingInput([
+                                        'type' => 'password',
+                                        'name' => 'password',
+                                        'id' => 'password',
+                                        'label' => 'Password',
+                                        'placeholder' => 'At least 8 characters',
+                                        'required' => true,
+                                        'autocomplete' => 'new-password',
+                                        'minlength' => 8,
+                                        'class' => 'mb-0',
+                                        'attributes' => ['style' => 'padding-right: 45px;']
+                                    ]); ?>
+                                    <button type="button" onclick="togglePassword('password', 'eyeIconPassword')" class="btn-toggle-pw">
+                                        <span class="material-symbols-outlined" id="eyeIconPassword">visibility</span>
+                                    </button>
+                                </div>
+                                <!-- Password Strength Bar -->
+                                <div class="mt-2" style="height: 6px; background: #e9ecef; border-radius: 3px; overflow: hidden;">
+                                    <div id="strengthBar" style="height: 100%; width: 0%; transition: all 0.3s ease; background: #e9ecef;"></div>
+                                </div>
+                                <small class="text-muted d-block mt-2 ms-1" style="font-size: 0.8rem;">Password Strength: <span id="strengthText" class="fw-semibold">Not set</span></small>
+
+                                <!-- Password Requirements -->
+                                <div class="mt-3 p-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 10px; border: 1px solid #dee2e6; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                    <p class="fw-semibold mb-2" style="font-size: 0.8rem; color: #495057; letter-spacing: 0.3px;"><span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">info</span>Requirements</p>
+                                    <ul class="list-unstyled mb-0" style="font-size: 0.85rem; line-height: 1.8;">
+                                        <li class="d-flex align-items-center" id="req-length">
+                                            <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 10px; color: #adb5bd; transition: all 0.2s;">radio_button_unchecked</span>
+                                            <span style="color: #6c757d; transition: all 0.2s;">At least 8 characters</span>
+                                        </li>
+                                        <li class="d-flex align-items-center" id="req-uppercase">
+                                            <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 10px; color: #adb5bd; transition: all 0.2s;">radio_button_unchecked</span>
+                                            <span style="color: #6c757d; transition: all 0.2s;">One uppercase letter (A-Z)</span>
+                                        </li>
+                                        <li class="d-flex align-items-center" id="req-number">
+                                            <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 10px; color: #adb5bd; transition: all 0.2s;">radio_button_unchecked</span>
+                                            <span style="color: #6c757d; transition: all 0.2s;">One number (0-9)</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div class="row g-3 mb-3">
-                            <!-- Password Field -->
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-bold small">Password</label>
-                                <div class="position-relative">
-                                    <input type="password" name="password" class="form-control py-3 ps-5 rounded-3" placeholder="••••••••" style="height: 56px;" minlength="6" required />
-                                    <span class="material-symbols-outlined input-icon">lock</span>
-                                </div>
+                        <!-- Confirm Password Field -->
+                        <div class="mb-2 mt-3">
+                            <div class="position-relative">
+                                <?php renderFloatingInput([
+                                    'type' => 'password',
+                                    'name' => 'confirm_password',
+                                    'id' => 'confirm_password',
+                                    'label' => 'Confirm Password',
+                                    'placeholder' => 'Re-enter your password',
+                                    'required' => true,
+                                    'autocomplete' => 'new-password',
+                                    'minlength' => 8,
+                                    'class' => 'mb-1',
+                                    'attributes' => ['style' => 'padding-right: 45px;']
+                                ]); ?>
+                                <button type="button" onclick="togglePassword('confirm_password', 'eyeIconConfirm')" class="btn-toggle-pw">
+                                    <span class="material-symbols-outlined" id="eyeIconConfirm">visibility</span>
+                                </button>
                             </div>
-                            <!-- Confirm Password Field -->
-                            <div class="col-12 col-md-6">
-                                <label class="form-label fw-bold small">Confirm Password</label>
-                                <div class="position-relative">
-                                    <input type="password" name="confirm_password" class="form-control py-3 ps-5 rounded-3" placeholder="••••••••" style="height: 56px;" minlength="6" required />
-                                    <span class="material-symbols-outlined input-icon">lock_reset</span>
-                                </div>
-                            </div>
+                            <small id="matchMessage" class="d-block mt-2 ms-1" style="font-size: 0.85rem; min-height: 20px;"></small>
                         </div>
                         <!-- Terms Checkbox -->
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" name="terms" id="terms" style="width: 20px; height: 20px;" required />
-                            <label class="form-check-label small text-muted ms-2" for="terms">
+                        <div class="mb-4 d-flex align-items-center" style="padding: 16px; background: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6;">
+                            <input class="form-check-input" type="checkbox" name="terms" id="terms" style="width: 20px; height: 20px; flex-shrink: 0; cursor: pointer; margin-top: 2px;" required />
+                            <label class="form-check-label small text-muted ms-3" for="terms" style="cursor: pointer; line-height: 1.5;">
                                 By creating an account, you agree to our <a href="#" class="fw-bold text-reg text-decoration-none">Terms of Service</a> and <a href="#" class="fw-bold text-reg text-decoration-none">Privacy Policy</a>.
                             </label>
                         </div>
@@ -198,6 +262,176 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <?php include 'includes/footer.php'; ?>
 
+    <script>
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.textContent = 'visibility';
+            }
+        }
+
+        // Email validation
+        const emailInput = document.getElementById('email');
+        const emailFeedback = document.getElementById('emailFeedback');
+        let emailTimeout;
+
+        emailInput.addEventListener('input', function() {
+            clearTimeout(emailTimeout);
+            const email = this.value.trim();
+
+            if (email.length === 0) {
+                emailFeedback.textContent = '';
+                emailFeedback.className = '';
+                emailInput.classList.remove('is-invalid', 'is-valid');
+                return;
+            }
+
+            // Basic email format check
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailFeedback.textContent = '✗ Invalid email format';
+                emailFeedback.className = 'text-danger small';
+                emailInput.classList.add('is-invalid');
+                emailInput.classList.remove('is-valid');
+                return;
+            }
+
+            // Check if email exists (debounced)
+            emailTimeout = setTimeout(function() {
+                fetch('api/check-email-exists.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'email=' + encodeURIComponent(email)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            emailFeedback.textContent = '✗ Email already registered';
+                            emailFeedback.className = 'text-danger small';
+                            emailInput.classList.add('is-invalid');
+                            emailInput.classList.remove('is-valid');
+                        } else if (data.valid) {
+                            emailFeedback.textContent = '✓ Email available';
+                            emailFeedback.className = 'text-success small';
+                            emailInput.classList.remove('is-invalid');
+                            emailInput.classList.add('is-valid');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking email:', error);
+                    });
+            }, 500);
+        });
+
+        // Password strength validation
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm_password');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+        const matchMessage = document.getElementById('matchMessage');
+
+        const reqLength = document.getElementById('req-length');
+        const reqUppercase = document.getElementById('req-uppercase');
+        const reqNumber = document.getElementById('req-number');
+
+        function checkRequirements(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password)
+            };
+
+            updateRequirement(reqLength, requirements.length);
+            updateRequirement(reqUppercase, requirements.uppercase);
+            updateRequirement(reqNumber, requirements.number);
+
+            return requirements;
+        }
+
+        function updateRequirement(element, isMet) {
+            const icon = element.querySelector('.material-symbols-outlined');
+            const span = element.querySelector('span:last-child');
+            if (isMet) {
+                icon.textContent = 'check_circle';
+                icon.style.color = '#1fd26a';
+                icon.style.transform = 'scale(1.1)';
+                span.style.color = '#1fd26a';
+                span.style.fontWeight = '500';
+            } else {
+                icon.textContent = 'radio_button_unchecked';
+                icon.style.color = '#adb5bd';
+                icon.style.transform = 'scale(1)';
+                span.style.color = '#6c757d';
+                span.style.fontWeight = '400';
+            }
+        }
+
+        function calculateStrength(password, requirements) {
+            if (password.length === 0) {
+                strengthBar.style.width = '0%';
+                strengthBar.style.backgroundColor = '#e9ecef';
+                strengthText.textContent = 'Not set';
+                strengthText.className = 'fw-semibold text-muted';
+                return;
+            }
+
+            let strength = 0;
+            if (requirements.length) strength += 33;
+            if (requirements.uppercase) strength += 33;
+            if (requirements.number) strength += 34;
+
+            strengthBar.style.width = strength + '%';
+
+            if (strength < 50) {
+                strengthBar.style.backgroundColor = '#dc3545';
+                strengthText.textContent = 'Weak';
+                strengthText.className = 'text-danger fw-semibold';
+            } else if (strength < 100) {
+                strengthBar.style.backgroundColor = '#ffc107';
+                strengthText.textContent = 'Medium';
+                strengthText.className = 'text-warning fw-semibold';
+            } else {
+                strengthBar.style.backgroundColor = '#1fd26a';
+                strengthText.textContent = 'Strong';
+                strengthText.className = 'text-success fw-semibold';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+
+            if (confirm.length === 0) {
+                matchMessage.textContent = '';
+                matchMessage.className = '';
+                return;
+            }
+
+            if (password === confirm) {
+                matchMessage.textContent = '✓ Passwords match';
+                matchMessage.className = 'text-success small';
+            } else {
+                matchMessage.textContent = '✗ Passwords do not match';
+                matchMessage.className = 'text-danger small';
+            }
+        }
+
+        passwordInput.addEventListener('input', function() {
+            const requirements = checkRequirements(this.value);
+            calculateStrength(this.value, requirements);
+            checkPasswordMatch();
+        });
+
+        confirmInput.addEventListener('input', checkPasswordMatch);
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
