@@ -78,4 +78,5 @@ VALUES
 ('Mobile App Development'),
 ('Database Systems'),
 ('Backend Development'),
-('Frontend Development')
+('Frontend Development'),
+('Cybersecurity');
