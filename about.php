@@ -41,9 +41,9 @@ $user = mysqli_fetch_assoc($user_result);
             <?php include 'includes/client-sidebar.php'; ?>
 
             <div class="col-lg-9">
-                <div class="profile-header mb-4">
-                    <h2>About BookStack</h2>
-                    <p>Learn more about our platform and mission.</p>
+                <div class="profile-header mb-4 text-center text-lg-start">
+                    <h2 class="fw-bold">About BookStack</h2>
+                    <p class="text-muted">Learn more about our platform and mission.</p>
                 </div>
 
                 <!-- About Section -->
