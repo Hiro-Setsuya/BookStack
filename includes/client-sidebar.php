@@ -20,7 +20,7 @@
         <div class="sidebar-link d-flex justify-content-between align-items-center">
             <span><i class="bi bi-moon me-2"></i> Dark Mode</span>
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox">
+                <input class="form-check-input dark-mode-toggle" type="checkbox">
             </div>
         </div>
     </nav>
@@ -62,6 +62,15 @@
                     <i class="bi bi-info-circle me-3 <?= ($current_page == 'about.php') ? 'text-primary' : 'text-muted' ?>"></i>
                     <span>About</span>
                 </a>
+
+                <div class="nav-link d-flex justify-content-between align-items-center px-3 py-2 rounded text-dark">
+                    <span class="d-flex align-items-center">
+                        <i class="bi bi-moon me-3 text-muted"></i> Dark Mode
+                    </span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input dark-mode-toggle" type="checkbox">
+                    </div>
+                </div>
 
                 <hr class="my-2">
 
