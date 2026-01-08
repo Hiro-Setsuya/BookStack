@@ -94,6 +94,7 @@ $user = mysqli_fetch_assoc($user_result);
 
     <div class="container account-container py-4">
         <div class="row">
+            <?php include 'includes/client-sidebar.php'; ?>
 
             <div class="col-lg-9">
                 <div class="profile-header mb-4">
