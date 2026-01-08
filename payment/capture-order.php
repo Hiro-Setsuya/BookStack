@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/paypal.php';
 require_once __DIR__ . '/../includes/voucher-utils.php';
+require_once __DIR__ . '/../notifications/send-email.php';
 
 $orderId = $_GET['orderID'] ?? null;
 if (!$orderId) {
@@ -61,20 +62,42 @@ if (isset($responseData['status']) && $responseData['status'] === 'COMPLETED') {
             // Insert order items
             if (!empty($item_ids)) {
                 $ids_list = implode(',', array_map('intval', $item_ids));
-                $ebooks_query = "SELECT ebook_id, price FROM ebooks WHERE ebook_id IN ($ids_list)";
+                $ebooks_query = "SELECT ebook_id, title, author, price FROM ebooks WHERE ebook_id IN ($ids_list)";
                 $ebooks_result = executeQuery($ebooks_query);
 
+                $purchased_items = [];
                 while ($ebook = mysqli_fetch_assoc($ebooks_result)) {
                     $ebook_id = $ebook['ebook_id'];
                     $price = $ebook['price'];
                     $insert_item = "INSERT INTO order_items (order_id, ebook_id, price, quantity) 
                                    VALUES ($order_id, $ebook_id, $price, 1)";
                     executeQuery($insert_item);
+
+                    // Store item for email notification
+                    $purchased_items[] = [
+                        'title' => $ebook['title'],
+                        'author' => $ebook['author'],
+                        'price' => $price
+                    ];
                 }
 
                 // Clear cart items for this user
                 $clear_cart = "DELETE FROM cart_items WHERE user_id = $user_id AND ebook_id IN ($ids_list)";
                 executeQuery($clear_cart);
+
+                // Send purchase confirmation email
+                $user_query = "SELECT user_name, email FROM users WHERE user_id = $user_id";
+                $user_result = executeQuery($user_query);
+                if ($user_result && mysqli_num_rows($user_result) > 0) {
+                    $user_data = mysqli_fetch_assoc($user_result);
+                    sendPurchaseConfirmationEmail(
+                        $user_data['email'],
+                        $user_data['user_name'],
+                        $orderId,
+                        $purchased_items,
+                        $total_amount
+                    );
+                }
             }
 
             // Update voucher usage if one was used
