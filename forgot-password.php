@@ -3,6 +3,7 @@ session_start();
 require_once 'config/db.php';
 require_once 'notifications/send-sms.php';
 require_once 'notifications/send-email.php';
+require_once 'includes/form-input.php';
 
 $statusMessage = '';
 $statusType = '';
@@ -309,6 +310,7 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
+    <?php renderFloatingInputStyles(); ?>
 </head>
 
 <body>
@@ -359,26 +361,23 @@ if (isset($_SESSION['otp']) && isset($_SESSION['otp_expiry']) && !isset($_POST['
 
                     <form method="POST" action="forgot-password.php">
                         <div class="mb-4">
-                            <label for="identifier" class="form-label d-flex align-items-center gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-3">
                                 <span class="material-symbols-outlined" style="font-size: 20px; color: var(--primary-color);">account_circle</span>
-                                <span>Find Your Account</span>
-                            </label>
-                            <div class="position-relative mb-3">
-                                <span class="input-icon-wrapper">
-                                    <span class="material-symbols-outlined">search</span>
-                                </span>
-                                <input
-                                    type="text"
-                                    class="form-control form-control-lg ps-5"
-                                    id="identifier"
-                                    name="identifier"
-                                    placeholder="Email, Phone, or Username"
-                                    required
-                                    autofocus>
+                                <span class="fw-semibold" style="color: #495057;">Find Your Account</span>
                             </div>
+                            <?php renderFloatingInput([
+                                'type' => 'text',
+                                'name' => 'identifier',
+                                'id' => 'identifier',
+                                'label' => 'Email, Phone, or Username',
+                                'placeholder' => 'Enter your email, phone, or username',
+                                'required' => true,
+                                'autocomplete' => 'username',
+                                'attributes' => ['autofocus' => 'autofocus']
+                            ]); ?>
                         </div>
 
-                        <button type="submit" name="identifyAccount" class="btn btn-primary w-100 mb-3">
+                        <button type="submit" name="identifyAccount" class="btn btn-primary w-100 mb-3" style="padding: 12px; font-weight: 600;">
                             <span class="material-symbols-outlined" style="font-size: 20px; vertical-align: middle; margin-right: 8px;">arrow_forward</span>
                             Continue
                         </button>
