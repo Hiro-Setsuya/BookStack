@@ -120,33 +120,3 @@ function renderFloatingInputStyles()
       }
     </style>';
 }
-
-/**
- * Example usage:
- * 
- * // In your HTML head section:
- * <?php renderFloatingInputStyles(); ?>
- * 
- * // In your form:
- * <?php
- * renderFloatingInput([
- *     'type' => 'email',
- *     'name' => 'email',
- *     'id' => 'email',
- *     'label' => 'Email',
- *     'placeholder' => 'Email',
- *     'required' => true,
- *     'autocomplete' => 'email'
- * ]);
- * 
- * renderFloatingInput([
- *     'type' => 'password',
- *     'name' => 'password',
- *     'id' => 'password',
- *     'label' => 'Password',
- *     'placeholder' => 'Password',
- *     'required' => true,
- *     'autocomplete' => 'current-password'
- * ]);
- * ?>
- */
