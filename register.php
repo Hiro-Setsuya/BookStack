@@ -100,7 +100,7 @@ include 'includes/head.php';
                 <!-- Hero Content -->
                 <div class="main-content px-5" style="max-width: 600px;">
                     <div class="d-flex align-items-center gap-3 mb-4">
-                        <img src="assets/logo.svg" height="60" width="60" alt="Logo">
+                        <img src="assets/img/logo/logo.svg" height="60" width="60" alt="Logo">
                         <h2 class="fs-2 fw-bold mb-0">BookStack</h2>
                     </div>
                     <h1 class="display-4 fw-bold mb-4">Expand your mind, <br />one page at a time.</h1>
