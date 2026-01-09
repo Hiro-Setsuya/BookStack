@@ -202,3 +202,22 @@
 [2026-01-08 02:20:50] Starting email check...
 [2026-01-08 02:20:52] Connected to Gmail successfully
 [2026-01-08 02:20:52] No unread emails found
+[2026-01-09 05:41:10] Starting email check...
+[2026-01-09 05:41:11] Connected to Gmail successfully
+[2026-01-09 05:41:12] Found 2 unread email(s)
+[2026-01-09 05:41:12] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-09 05:41:12] Body preview: 
+[2026-01-09 05:41:12] No verification code found - treating as regular user message
+[2026-01-09 05:41:12] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-09 05:41:18] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-09 05:41:19] Processing email from: zycrome09@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-09 05:41:19] Body preview: CONFIRM-40009B
+[2026-01-09 05:41:19] Found verification code: CONFIRM-40009B
+[2026-01-09 05:41:24] Immediate thank you email sent to: zycrome09@gmail.com
+[2026-01-09 05:41:24] Searching for pending verification from: zycrome09@gmail.com
+[2026-01-09 05:41:24] Found pending request - Message ID: 90, User: Zycrome
+[2026-01-09 05:41:24] Email reply recorded: User Zycrome responded with: CONFIRM-40009B
+[2026-01-09 05:41:25] Email processing complete. Processed: 2, Updated: 1, New Messages: 1
+[2026-01-09 05:41:25] Starting email check...
+[2026-01-09 05:41:27] Connected to Gmail successfully
+[2026-01-09 05:41:27] No unread emails found

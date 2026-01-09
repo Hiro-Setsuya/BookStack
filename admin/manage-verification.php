@@ -91,7 +91,7 @@ function sendVerificationCode($message_id, $user_id, $contact_method, $contact_i
     }
 }
 
-// Verify user response
+// Verify user response - Only mark code as verified, do NOT auto-approve user
 function verifyCodeMatch($message_id, $user_id, $conn)
 {
     $stmt = $conn->prepare("SELECT verification_code, user_response FROM messages WHERE message_id = ?");
@@ -102,12 +102,11 @@ function verifyCodeMatch($message_id, $user_id, $conn)
         $sent_code = strtoupper(trim($row['verification_code']));
         $user_reply = strtoupper(trim($row['user_response']));
         if ($sent_code === $user_reply && !empty($user_reply)) {
-            $stmt1 = $conn->prepare("UPDATE messages SET code_verified = 1, status = 'resolved' WHERE message_id = ?");
+            // Only mark the code as verified - DO NOT approve user account yet
+            $stmt1 = $conn->prepare("UPDATE messages SET code_verified = 1, status = 'read' WHERE message_id = ?");
             $stmt1->bind_param("i", $message_id);
-            $stmt2 = $conn->prepare("UPDATE users SET is_account_verified = 1 WHERE user_id = ?");
-            $stmt2->bind_param("i", $user_id);
-            if ($stmt1->execute() && $stmt2->execute()) {
-                setFlash("✓ Code matched! User account verified successfully.", "success");
+            if ($stmt1->execute()) {
+                setFlash("✓ Code matched and verified! Please use 'Approve' button to verify the user account.", "success");
             } else {
                 setFlash("Error updating verification status.", "danger");
             }
@@ -402,13 +401,13 @@ include '../includes/head.php';
                         <div class="col-md-4">
                             <?php if ($request['status'] === 'pending' && !$request['is_account_verified']): ?>
                                 <div class="d-grid gap-2">
-                                    <!-- Match & Verify Button -->
+                                    <!-- Verify Code Match Button (does NOT approve user) -->
                                     <?php if (!empty($request['verification_code']) && !empty($request['user_response']) && !$request['code_verified']): ?>
                                         <form method="POST" action="">
                                             <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
                                             <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
-                                            <button type="submit" name="verify_code_match" class="btn btn-success w-100" onclick="return confirm('Verify if user response matches?\n\nSent: <?= htmlspecialchars($request['verification_code']) ?>\nReply: <?= htmlspecialchars($request['user_response']) ?>')">
-                                                <i class="bi bi-shield-check me-2"></i>Match & Verify
+                                            <button type="submit" name="verify_code_match" class="btn btn-info w-100" onclick="return confirm('Verify if user response matches?\n\nSent: <?= htmlspecialchars($request['verification_code']) ?>\nReply: <?= htmlspecialchars($request['user_response']) ?>\n\nNote: This only verifies the code. You still need to click Approve to activate the account.')">
+                                                <i class="bi bi-shield-check me-2"></i>Verify Code Match
                                             </button>
                                         </form>
                                     <?php endif; ?>

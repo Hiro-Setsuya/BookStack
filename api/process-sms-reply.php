@@ -157,27 +157,23 @@ $result = executeQuery($query);
 if ($result && mysqli_num_rows($result) === 1) {
     $message = mysqli_fetch_assoc($result);
 
-    // Check if response matches verification code (auto-verify)
+    // Check if response matches verification code
     $sent_code = strtoupper(trim($message['verification_code']));
     $user_reply = strtoupper(trim($message_body));
     $code_matches = ($sent_code === $user_reply);
 
-    // Update with user response
+    // Update with user response - Mark as verified only if code matches
+    // BUT DO NOT auto-verify the user account - admin must approve
     $update_query = "
         UPDATE messages 
         SET user_response = '$message_body_escaped',
             responded_at = '$received_at',
             status = 'read'";
 
-    // If code matches, auto-verify
+    // If code matches, mark code as verified for admin review
     if ($code_matches) {
         $update_query .= ", code_verified = TRUE";
-
-        // Also verify the user account
-        $verify_user_query = "UPDATE users SET is_account_verified = TRUE WHERE user_id = {$message['user_id']}";
-        executeQuery($verify_user_query);
-
-        error_log("SMS Webhook: Code matched! Auto-verified user {$message['user_name']} (ID: {$message['user_id']})");
+        error_log("SMS Webhook: Code matched for user {$message['user_name']} (ID: {$message['user_id']}). Awaiting admin approval.");
     }
 
     $update_query .= " WHERE message_id = {$message['message_id']}";
@@ -188,7 +184,7 @@ if ($result && mysqli_num_rows($result) === 1) {
         // Send confirmation SMS
         require_once '../notifications/send-sms.php';
         if ($code_matches) {
-            sendSMS($from_number, "✅ Verification successful, {$message['user_name']}! Your account has been verified. You can now access all features.\n\n- BookStack");
+            sendSMS($from_number, "✅ Verification code confirmed, {$message['user_name']}! Your response has been submitted. Our admin will review your account shortly.\n\n- BookStack");
         } else {
             sendSMS($from_number, "Thank you, {$message['user_name']}! 📝 Your response has been received. Our admin will review it shortly.\n\n- BookStack");
         }
@@ -197,22 +193,15 @@ if ($result && mysqli_num_rows($result) === 1) {
         echo json_encode([
             'status' => 'success',
             'type' => 'account_verification',
-            'message' => $code_matches ? 'Code verified automatically' : 'Response recorded successfully',
+            'message' => $code_matches ? 'Code verified, awaiting admin approval' : 'Response recorded successfully',
             'message_id' => $message['message_id'],
             'user' => $message['user_name'],
-            'auto_verified' => $code_matches
+            'code_verified' => $code_matches
         ]);
         exit;
     }
 }
 
-// ==================================================
-// SCENARIO 3: General Customer Support Message
-// ==================================================
-// ==================================================
-// SCENARIO 3: General Customer Support Message
-// ==================================================
-// Try to find user by phone number
 $user_query = "
     SELECT user_id, user_name, email 
     FROM users 

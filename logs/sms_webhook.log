@@ -372,3 +372,37 @@
     }
 }
 
+{
+    "timestamp": "2026-01-09 05:31:13",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"C\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-09 05:31:14",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"Hello\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
