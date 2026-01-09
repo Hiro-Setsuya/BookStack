@@ -47,17 +47,17 @@ if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
                 <h6 class="fw-bold mb-3 text-uppercase">Contact Us</h6>
                 <ul class="list-unstyled">
                     <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-envelope-fill me-2 mt-1"></i>
+                        <i class="bi bi-envelope-fill me-2 mb-1"></i>
                         <a href="mailto:nullbyte235@gmail.com" class="footer-link text-white-50 text-decoration-none">
                             nullbyte235@gmail.com
                         </a>
                     </li>
                     <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-geo-alt-fill me-2 mt-1"></i>
+                        <i class="bi bi-geo-alt-fill me-2 mb-1"></i>
                         <span class="text-white-50">Philippines</span>
                     </li>
                     <li class="mb-3 d-flex align-items-start">
-                        <i class="bi bi-clock-fill me-2 mt-1"></i>
+                        <i class="bi bi-clock-fill me-2 mb-1"></i>
                         <span class="text-white-50">24/7 Digital Access</span>
                     </li>
                 </ul>
