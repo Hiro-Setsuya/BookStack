@@ -112,7 +112,7 @@ include 'includes/head.php';
                 <div class="w-100" style="max-width: 520px;">
                     <!-- Mobile Logo (Visible only on smaller screens) -->
                     <div class="d-flex d-lg-none align-items-center gap-2 mb-4 justify-content-center">
-                        <img src="assets/logo.svg" height="25" width="25" alt="Logo">
+                        <img src="assets/img/logo/logo.svg" height="25" width="25" alt="Logo">
                         <span class="fs-4 fw-bold">BookStack</span>
                     </div>
                     <!-- Header -->
