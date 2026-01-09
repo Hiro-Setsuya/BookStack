@@ -238,7 +238,7 @@ include 'includes/head.php';
 
     <!-- Main Content -->
     <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
-        <div class="container">
+        <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col">
                     <div class="card shadow-sm border-0 rounded-3">
