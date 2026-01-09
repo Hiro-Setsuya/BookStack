@@ -17,19 +17,10 @@
         <a class="sidebar-link <?= (basename($_SERVER['PHP_SELF']) == 'about.php') ? 'active' : '' ?>" href="about.php">
             <i class="bi bi-info-circle me-2"></i> About
         </a>
-        <div class="sidebar-link d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-moon me-2"></i> Dark Mode</span>
-            <div class="form-check form-switch">
-                <input class="form-check-input dark-mode-toggle" type="checkbox">
-            </div>
-        </div>
-    </nav>
-
-    <div class="mt-5">
         <a href="client-logout.php" class="sidebar-link text-danger fw-semibold">
             <i class="bi bi-box-arrow-left me-2"></i> Log Out
         </a>
-    </div>
+    </nav>
 </div>
 
 <div class="col-12 d-lg-none mb-4">
@@ -40,7 +31,7 @@
 
     <div class="collapse mt-2" id="mobileAccountMenu">
         <div class="card card-body border-0 bg-light p-2">
-            <nav class="nav flex-column gap-1">
+            <nav class="nav flex-column">
                 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
 
                 <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-dark" href="profile.php" style="<?= ($current_page == 'profile.php') ? 'background-color: white; border: 1px solid #dee2e6;' : '' ?>">
@@ -62,17 +53,6 @@
                     <i class="bi bi-info-circle me-3 <?= ($current_page == 'about.php') ? 'text-primary' : 'text-muted' ?>"></i>
                     <span>About</span>
                 </a>
-
-                <div class="nav-link d-flex justify-content-between align-items-center px-3 py-2 rounded text-dark">
-                    <span class="d-flex align-items-center">
-                        <i class="bi bi-moon me-3 text-muted"></i> Dark Mode
-                    </span>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input dark-mode-toggle" type="checkbox">
-                    </div>
-                </div>
-
-                <hr class="my-2">
 
                 <a class="nav-link d-flex align-items-center px-3 py-2 rounded text-danger fw-bold" href="client-logout.php">
                     <i class="bi bi-box-arrow-left me-3"></i>
