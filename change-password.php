@@ -61,8 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $title = 'Set New Password';
-$extraStyles = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<style>
+$extraStyles = '<style>
     :root {
         --primary-color: #2ecc71;
         --bg-light: #f8fbf9ff;
@@ -234,7 +233,6 @@ $extraStyles = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootst
 </style>';
 include 'includes/head.php';
 ?>
-
 <body>
     <?php include 'includes/nav.php'; ?>
 
@@ -242,7 +240,7 @@ include 'includes/head.php';
     <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-5">
+                <div class="col">
                     <div class="card shadow-sm border-0 rounded-3">
                         <!-- Header Image -->
                         <div class="card-header-img d-flex align-items-center justify-content-center">
