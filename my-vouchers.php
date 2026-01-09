@@ -26,68 +26,53 @@ $result = executeQuery($query);
 $user_query = "SELECT user_name, email, created_at FROM users WHERE user_id = $user_id";
 $user_result = executeQuery($user_query);
 $user = mysqli_fetch_assoc($user_result);
+
+$title = 'My Vouchers';
+$extraStyles = '<style>
+    .voucher-card {
+        position: relative;
+        overflow: hidden;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .voucher-card.expired {
+        opacity: 0.6;
+        border-left-color: #dc3545;
+    }
+
+    .voucher-card.fully-used {
+        opacity: 0.6;
+        border-left-color: #6c757d;
+    }
+
+    .voucher-code {
+        font-family: \'Courier New\', monospace;
+        font-weight: bold;
+        font-size: 1.25rem;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .voucher-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        transform: rotate(15deg);
+    }
+
+    .copy-code-btn {
+        transition: all 0.2s;
+    }
+
+    .copy-code-btn:active {
+        transform: scale(0.95);
+    }
+</style>';
+include 'includes/head.php';
 ?>
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Vouchers - BookStack</title>
-
-    <!-- Google Fonts: Manrope -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        .voucher-card {
-            position: relative;
-            overflow: hidden;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .voucher-card.expired {
-            opacity: 0.6;
-            border-left-color: #dc3545;
-        }
-
-        .voucher-card.fully-used {
-            opacity: 0.6;
-            border-left-color: #6c757d;
-        }
-
-        .voucher-code {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            font-size: 1.25rem;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .voucher-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            transform: rotate(15deg);
-        }
-
-        .copy-code-btn {
-            transition: all 0.2s;
-        }
-
-        .copy-code-btn:active {
-            transform: scale(0.95);
-        }
-    </style>
-</head>
 
 <body>
     <?php include 'includes/nav.php'; ?>

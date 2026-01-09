@@ -59,195 +59,181 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-?>
 
+$title = 'Set New Password';
+$extraStyles = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    :root {
+        --primary-color: #2ecc71;
+        --bg-light: #f8fbf9ff;
+    }
 
-<!DOCTYPE html>
-<html lang="en">
+    body {
+        background-color: var(--bg-light);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        line-height: 1.6;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Set New Password - BookStack</title>
+    .logo-svg {
+        width: 36px;
+        height: 36px;
+        color: var(--primary-color);
+    }
 
-    <!-- Google Fonts: Manrope -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+    .card-header-img {
+        height: 140px;
+        background: linear-gradient(135deg, #f0fcf6ff 0%, #e8f8ebff 100%);
+        position: relative;
+        overflow: hidden;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        :root {
-            --primary-color: #2ecc71;
-            --bg-light: #f8fbf9ff;
-        }
+    .lock-icon {
+        width: 70px;
+        height: 70px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
 
-        body {
-            background-color: var(--bg-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-size: 16px;
-            line-height: 1.6;
-        }
+    .card {
+        max-width: 560px;
+        margin: 0 auto;
+    }
 
-        .logo-svg {
-            width: 36px;
-            height: 36px;
-            color: var(--primary-color);
-        }
+    .form-label {
+        font-size: 0.95rem;
+        margin-bottom: 0.6rem;
+        color: #2c3e50;
+    }
 
-        .card-header-img {
-            height: 140px;
-            background: linear-gradient(135deg, #f0fcf6ff 0%, #e8f8ebff 100%);
-            position: relative;
-            overflow: hidden;
-        }
+    .form-control {
+        height: 52px;
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 2px solid #e1e8ed;
+        transition: all 0.2s ease;
+    }
 
-        .lock-icon {
-            width: 70px;
-            height: 70px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-        }
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(85, 182, 231, 0.1);
+    }
 
-        .card {
-            max-width: 560px;
-            margin: 0 auto;
-        }
+    .input-group .btn {
+        height: 52px;
+        width: 52px;
+        border-radius: 0 10px 10px 0;
+        border: 2px solid #e1e8ed;
+        border-left: none;
+    }
 
-        .form-label {
-            font-size: 0.95rem;
-            margin-bottom: 0.6rem;
-            color: #2c3e50;
+    .input-group .form-control {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .password-strength {
+        height: 6px;
+        background: #e9efebff;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+
+    .strength-bar {
+        height: 100%;
+        background: var(--primary-color);
+        width: 50%;
+        transition: width 0.3s ease;
+    }
+
+    .requirements-box {
+        background-color: #f8fafb;
+        border: 2px solid #e8f0f5;
+        border-radius: 12px;
+        padding: 1.25rem !important;
+    }
+
+    .requirements-box li {
+        font-size: 0.95rem;
+        padding: 0.4rem 0;
+        line-height: 1.6;
+    }
+
+    .requirements-box i {
+        font-size: 1.1rem;
+        margin-right: 0.5rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        height: 54px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #219451ff;
+        border-color: #26a85cff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(85, 182, 231, 0.3);
+    }
+
+    .back-link {
+        font-size: 0.95rem;
+        padding: 0.75rem;
+        display: inline-block;
+    }
+
+    .back-link:hover {
+        color: var(--primary-color) !important;
+    }
+
+    /* Spacing improvements */
+    .mb-form {
+        margin-bottom: 1.75rem;
+    }
+
+    h1 {
+        font-size: 1.85rem;
+        color: #1a1a1a;
+        letter-spacing: -0.02em;
+    }
+
+    .text-center p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Mobile optimization */
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 2rem 1.5rem !important;
         }
 
         .form-control {
-            height: 52px;
-            font-size: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 2px solid #e1e8ed;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(85, 182, 231, 0.1);
+            height: 48px;
+            font-size: 16px;
+            /* Prevents zoom on iOS */
         }
 
         .input-group .btn {
-            height: 52px;
-            width: 52px;
-            border-radius: 0 10px 10px 0;
-            border: 2px solid #e1e8ed;
-            border-left: none;
+            height: 48px;
+            width: 48px;
         }
-
-        .input-group .form-control {
-            border-radius: 10px 0 0 10px;
-        }
-
-        .password-strength {
-            height: 6px;
-            background: #e9efebff;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .strength-bar {
-            height: 100%;
-            background: var(--primary-color);
-            width: 50%;
-            transition: width 0.3s ease;
-        }
-
-        .requirements-box {
-            background-color: #f8fafb;
-            border: 2px solid #e8f0f5;
-            border-radius: 12px;
-            padding: 1.25rem !important;
-        }
-
-        .requirements-box li {
-            font-size: 0.95rem;
-            padding: 0.4rem 0;
-            line-height: 1.6;
-        }
-
-        .requirements-box i {
-            font-size: 1.1rem;
-            margin-right: 0.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            height: 54px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #219451ff;
-            border-color: #26a85cff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(85, 182, 231, 0.3);
-        }
-
-        .back-link {
-            font-size: 0.95rem;
-            padding: 0.75rem;
-            display: inline-block;
-        }
-
-        .back-link:hover {
-            color: var(--primary-color) !important;
-        }
-
-        /* Spacing improvements */
-        .mb-form {
-            margin-bottom: 1.75rem;
-        }
-
-        h1 {
-            font-size: 1.85rem;
-            color: #1a1a1a;
-            letter-spacing: -0.02em;
-        }
-
-        .text-center p {
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* Mobile optimization */
-        @media (max-width: 576px) {
-            .card-body {
-                padding: 2rem 1.5rem !important;
-            }
-
-            .form-control {
-                height: 48px;
-                font-size: 16px;
-                /* Prevents zoom on iOS */
-            }
-
-            .input-group .btn {
-                height: 48px;
-                width: 48px;
-            }
-        }
-    </style>
-</head>
+    }
+</style>';
+include 'includes/head.php';
+?>
 
 <body>
     <?php include 'includes/nav.php'; ?>

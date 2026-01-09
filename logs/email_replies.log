@@ -1,0 +1,204 @@
+[2026-01-05 04:11:35] Starting email check...
+[2026-01-05 04:11:37] Connected to Gmail successfully
+[2026-01-05 04:11:38] Found 3 unread email(s)
+[2026-01-05 04:11:39] Processing email from: zycrome09@gmail.com, Subject: 
+[2026-01-05 04:11:39] Body preview: ulala
+[2026-01-05 04:11:39] No verification code found - treating as regular user message
+[2026-01-05 04:11:39] New user message saved from: zycrome09@gmail.com (Unknown User)
+[2026-01-05 04:11:45] Auto-reply sent to: zycrome09@gmail.com
+[2026-01-05 04:11:46] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-05 04:11:46] Body preview: 
+[2026-01-05 04:11:46] No verification code found - treating as regular user message
+[2026-01-05 04:11:46] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-05 04:11:52] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-05 04:11:53] Processing email from: rowelgabrielvmangabat@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-05 04:11:53] Body preview: CONFIRM-926507
+[2026-01-05 04:11:53] Found verification code: CONFIRM-926507
+[2026-01-05 04:11:59] Immediate thank you email sent to: rowelgabrielvmangabat@gmail.com
+[2026-01-05 04:11:59] Searching for pending verification from: rowelgabrielvmangabat@gmail.com
+[2026-01-05 04:11:59] Found pending request - Message ID: 43, User: rowelgabriel
+[2026-01-05 04:11:59] Email reply recorded: User rowelgabriel responded with: CONFIRM-926507
+[2026-01-05 04:12:00] Email processing complete. Processed: 3, Updated: 1, New Messages: 2
+[2026-01-05 04:12:00] Starting email check...
+[2026-01-05 04:12:02] Connected to Gmail successfully
+[2026-01-05 04:12:02] No unread emails found
+[2026-01-05 04:12:03] Starting email check...
+[2026-01-05 04:12:04] Connected to Gmail successfully
+[2026-01-05 04:12:05] No unread emails found
+[2026-01-05 04:12:05] Starting email check...
+[2026-01-05 04:12:07] Connected to Gmail successfully
+[2026-01-05 04:12:07] No unread emails found
+[2026-01-05 04:12:07] Starting email check...
+[2026-01-05 04:12:09] Connected to Gmail successfully
+[2026-01-05 04:12:10] No unread emails found
+[2026-01-05 04:12:10] Starting email check...
+[2026-01-05 04:12:12] Connected to Gmail successfully
+[2026-01-05 04:12:13] No unread emails found
+[2026-01-05 04:12:13] Starting email check...
+[2026-01-05 04:12:15] Connected to Gmail successfully
+[2026-01-05 04:12:16] No unread emails found
+[2026-01-05 04:12:16] Starting email check...
+[2026-01-05 04:12:18] Connected to Gmail successfully
+[2026-01-05 04:12:19] No unread emails found
+[2026-01-05 04:12:19] Starting email check...
+[2026-01-05 04:12:21] Connected to Gmail successfully
+[2026-01-05 04:12:21] No unread emails found
+[2026-01-05 04:12:22] Starting email check...
+[2026-01-05 04:12:24] Connected to Gmail successfully
+[2026-01-05 04:12:24] No unread emails found
+[2026-01-05 04:12:24] Starting email check...
+[2026-01-05 04:12:26] Connected to Gmail successfully
+[2026-01-05 04:12:26] No unread emails found
+[2026-01-05 04:12:27] Starting email check...
+[2026-01-05 04:12:28] Connected to Gmail successfully
+[2026-01-05 04:12:29] No unread emails found
+[2026-01-05 04:12:29] Starting email check...
+[2026-01-05 04:12:31] Connected to Gmail successfully
+[2026-01-05 04:12:31] No unread emails found
+[2026-01-05 04:12:32] Starting email check...
+[2026-01-05 04:12:34] Connected to Gmail successfully
+[2026-01-05 04:12:34] No unread emails found
+[2026-01-05 04:13:30] Starting email check...
+[2026-01-05 04:13:32] Connected to Gmail successfully
+[2026-01-05 04:13:33] Found 1 unread email(s)
+[2026-01-05 04:13:34] Processing email from: chinokeonie.santos@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-05 04:13:34] Body preview: CONFIRM-9BB453
+[2026-01-05 04:13:34] Found verification code: CONFIRM-9BB453
+[2026-01-05 04:13:40] Immediate thank you email sent to: chinokeonie.santos@gmail.com
+[2026-01-05 04:13:40] Searching for pending verification from: chinokeonie.santos@gmail.com
+[2026-01-05 04:13:40] Found pending request - Message ID: 47, User: Nochi
+[2026-01-05 04:13:40] Email reply recorded: User Nochi responded with: CONFIRM-9BB453
+[2026-01-05 04:13:41] Email processing complete. Processed: 1, Updated: 1, New Messages: 0
+[2026-01-05 04:13:44] Starting email check...
+[2026-01-05 04:13:46] Connected to Gmail successfully
+[2026-01-05 04:13:46] No unread emails found
+[2026-01-05 04:13:54] Starting email check...
+[2026-01-05 04:13:56] Connected to Gmail successfully
+[2026-01-05 04:13:57] No unread emails found
+[2026-01-05 04:13:57] Starting email check...
+[2026-01-05 04:13:59] Connected to Gmail successfully
+[2026-01-05 04:13:59] No unread emails found
+[2026-01-05 04:14:00] Starting email check...
+[2026-01-05 04:14:02] Connected to Gmail successfully
+[2026-01-05 04:14:02] No unread emails found
+[2026-01-05 04:14:08] Starting email check...
+[2026-01-05 04:14:10] Connected to Gmail successfully
+[2026-01-05 04:14:10] No unread emails found
+[2026-01-05 04:14:16] Starting email check...
+[2026-01-05 04:14:18] Connected to Gmail successfully
+[2026-01-05 04:14:18] No unread emails found
+[2026-01-05 04:14:19] Starting email check...
+[2026-01-05 04:14:26] Connected to Gmail successfully
+[2026-01-05 04:14:26] No unread emails found
+[2026-01-05 04:14:26] Starting email check...
+[2026-01-05 04:14:29] Connected to Gmail successfully
+[2026-01-05 04:14:29] No unread emails found
+[2026-01-05 04:14:29] Starting email check...
+[2026-01-05 04:14:31] Connected to Gmail successfully
+[2026-01-05 04:14:32] No unread emails found
+[2026-01-05 04:14:35] Starting email check...
+[2026-01-05 04:14:47] Connected to Gmail successfully
+[2026-01-05 04:14:50] No unread emails found
+[2026-01-05 04:15:37] Starting email check...
+[2026-01-05 04:15:39] Connected to Gmail successfully
+[2026-01-05 04:15:40] Found 1 unread email(s)
+[2026-01-05 04:15:41] Processing email from: hartlacuarin22@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-05 04:15:41] Body preview: CONFIRM-F1B7F4
+[2026-01-05 04:15:41] Found verification code: CONFIRM-F1B7F4
+[2026-01-05 04:15:46] Immediate thank you email sent to: hartlacuarin22@gmail.com
+[2026-01-05 04:15:46] Searching for pending verification from: hartlacuarin22@gmail.com
+[2026-01-05 04:15:46] Found pending request - Message ID: 48, User: harty
+[2026-01-05 04:15:46] Email reply recorded: User harty responded with: CONFIRM-F1B7F4
+[2026-01-05 04:15:47] Email processing complete. Processed: 1, Updated: 1, New Messages: 0
+[2026-01-05 04:15:47] Starting email check...
+[2026-01-05 04:15:49] Connected to Gmail successfully
+[2026-01-05 04:15:50] Found 1 unread email(s)
+[2026-01-05 04:15:51] Processing email from: martinezjhonrayver@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-05 04:15:51] Body preview: CONFIRM-D1DDBF
+[2026-01-05 04:15:51] Found verification code: CONFIRM-D1DDBF
+[2026-01-05 04:15:57] Immediate thank you email sent to: martinezjhonrayver@gmail.com
+[2026-01-05 04:15:57] Searching for pending verification from: martinezjhonrayver@gmail.com
+[2026-01-05 04:15:57] Found pending request - Message ID: 49, User: EduBooks
+[2026-01-05 04:15:57] Email reply recorded: User EduBooks responded with: CONFIRM-D1DDBF
+[2026-01-05 04:15:58] Email processing complete. Processed: 1, Updated: 1, New Messages: 0
+[2026-01-05 04:15:58] Starting email check...
+[2026-01-05 04:16:00] Connected to Gmail successfully
+[2026-01-05 04:16:00] No unread emails found
+[2026-01-05 04:16:07] Starting email check...
+[2026-01-05 04:16:08] Connected to Gmail successfully
+[2026-01-05 04:16:09] No unread emails found
+[2026-01-07 04:40:36] Starting email check...
+[2026-01-07 04:40:37] Connected to Gmail successfully
+[2026-01-07 04:40:38] Found 3 unread email(s)
+[2026-01-07 04:40:38] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-07 04:40:38] Body preview: 
+[2026-01-07 04:40:38] No verification code found - treating as regular user message
+[2026-01-07 04:40:38] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-07 04:40:44] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-07 04:40:45] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-07 04:40:45] Body preview: 
+[2026-01-07 04:40:45] No verification code found - treating as regular user message
+[2026-01-07 04:40:45] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-07 04:40:50] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-07 04:40:51] Processing email from: mangabatgabriel@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-07 04:40:51] Body preview: CONFIRM-9A84D7
+[2026-01-07 04:40:51] Found verification code: CONFIRM-9A84D7
+[2026-01-07 04:40:57] Immediate thank you email sent to: mangabatgabriel@gmail.com
+[2026-01-07 04:40:57] Searching for pending verification from: mangabatgabriel@gmail.com
+[2026-01-07 04:40:57] No matching pending verification found for: mangabatgabriel@gmail.com
+[2026-01-07 04:40:57] Email processing complete. Processed: 3, Updated: 0, New Messages: 2
+[2026-01-07 05:02:52] Starting email check...
+[2026-01-07 05:02:54] Connected to Gmail successfully
+[2026-01-07 05:02:54] No unread emails found
+[2026-01-07 05:03:03] Starting email check...
+[2026-01-07 05:03:05] Connected to Gmail successfully
+[2026-01-07 05:03:06] Found 1 unread email(s)
+[2026-01-07 05:03:06] Processing email from: hirosetsuya@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-07 05:03:06] Body preview: CONFIRM-30F97E
+[2026-01-07 05:03:06] Found verification code: CONFIRM-30F97E
+[2026-01-07 05:03:12] Immediate thank you email sent to: hirosetsuya@gmail.com
+[2026-01-07 05:03:12] Searching for pending verification from: hirosetsuya@gmail.com
+[2026-01-07 05:03:12] Found pending request - Message ID: 73, User: Jet2
+[2026-01-07 05:03:12] Email reply recorded: User Jet2 responded with: CONFIRM-30F97E
+[2026-01-07 05:03:13] Email processing complete. Processed: 1, Updated: 1, New Messages: 0
+[2026-01-08 01:30:25] Starting email check...
+[2026-01-08 01:30:27] Connected to Gmail successfully
+[2026-01-08 01:30:28] Found 1 unread email(s)
+[2026-01-08 01:30:29] Processing email from: setsuyahiro@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-08 01:30:29] Body preview: CONFIRM-A22049
+[2026-01-08 01:30:29] Found verification code: CONFIRM-A22049
+[2026-01-08 01:30:34] Immediate thank you email sent to: setsuyahiro@gmail.com
+[2026-01-08 01:30:34] Searching for pending verification from: setsuyahiro@gmail.com
+[2026-01-08 01:30:35] Found pending request - Message ID: 77, User: hiroji
+[2026-01-08 01:30:35] Email reply recorded: User hiroji responded with: CONFIRM-A22049
+[2026-01-08 01:30:35] Email processing complete. Processed: 1, Updated: 1, New Messages: 0
+[2026-01-08 01:30:35] Starting email check...
+[2026-01-08 01:30:38] Connected to Gmail successfully
+[2026-01-08 01:30:39] No unread emails found
+[2026-01-08 02:20:26] Starting email check...
+[2026-01-08 02:20:28] Connected to Gmail successfully
+[2026-01-08 02:20:28] Found 1 unread email(s)
+[2026-01-08 02:20:29] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-08 02:20:29] Body preview: 
+[2026-01-08 02:20:29] No verification code found - treating as regular user message
+[2026-01-08 02:20:29] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-08 02:20:34] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-08 02:20:35] Email processing complete. Processed: 1, Updated: 0, New Messages: 1
+[2026-01-08 02:20:35] Starting email check...
+[2026-01-08 02:20:38] Connected to Gmail successfully
+[2026-01-08 02:20:38] Found 1 unread email(s)
+[2026-01-08 02:20:39] Processing email from: hirosetsuya@gmail.com, Subject: Hi
+[2026-01-08 02:20:39] Body preview: Thank you
+[2026-01-08 02:20:39] No verification code found - treating as regular user message
+[2026-01-08 02:20:39] New user message saved from: hirosetsuya@gmail.com (Jet2)
+[2026-01-08 02:20:43] Auto-reply sent to: hirosetsuya@gmail.com
+[2026-01-08 02:20:44] Email processing complete. Processed: 1, Updated: 0, New Messages: 1
+[2026-01-08 02:20:44] Starting email check...
+[2026-01-08 02:20:46] Connected to Gmail successfully
+[2026-01-08 02:20:47] No unread emails found
+[2026-01-08 02:20:47] Starting email check...
+[2026-01-08 02:20:50] Connected to Gmail successfully
+[2026-01-08 02:20:50] No unread emails found
+[2026-01-08 02:20:50] Starting email check...
+[2026-01-08 02:20:52] Connected to Gmail successfully
+[2026-01-08 02:20:52] No unread emails found

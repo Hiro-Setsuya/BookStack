@@ -118,192 +118,178 @@ if (!empty($search_query)) {
     $page_title = 'Tech E-Books';
     $page_description = 'Browse our collection of programming and computer science books';
 }
-?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>E-Books - BookStack</title>
+$title = 'E-Books';
+$extraStyles = '<style>
+    /* Responsive ebook cover sizes */
+    .ebook-cover-container {
+        min-height: 180px;
+        height: 180px;
+    }
 
-    <!-- Google Fonts: Manrope -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+    /* Responsive typography */
+    .ebook-title {
+        font-size: 0.8rem;
+        line-height: 1.2;
+        min-height: 2.4rem;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Responsive ebook cover sizes */
-        .ebook-cover-container {
-            min-height: 180px;
-            height: 180px;
+    .ebook-author {
+        font-size: 0.7rem;
+    }
+
+    .ebook-price {
+        font-size: 0.95rem;
+    }
+
+    .ebook-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .ebook-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .ebook-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .price-btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .price-btn:active {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .price-btn:hover {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+    }
+
+    .price-link {
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+        display: inline-block;
+        padding: 0.08rem 0.25rem;
+        border-radius: 0.25rem;
+    }
+
+    .ebook-card-body {
+        padding: 0.5rem;
+    }
+
+    .rating-stars {
+        color: #ffc107;
+        font-size: 0.7rem;
+    }
+
+    @media (min-width: 576px) {
+        .rating-stars {
+            font-size: 0.8rem;
         }
 
-        /* Responsive typography */
+        .ebook-cover-container {
+            min-height: 240px;
+            height: 240px;
+        }
+
         .ebook-title {
-            font-size: 0.8rem;
-            line-height: 1.2;
-            min-height: 2.4rem;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            min-height: 2.6rem;
         }
 
         .ebook-author {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
         }
 
         .ebook-price {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
         }
 
         .ebook-btn {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .ebook-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .ebook-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .price-btn {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.5rem;
-        }
-
-        .price-btn:active {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .price-btn:hover {
-            background-color: #f8f9fa;
-            border-color: #ced4da;
-        }
-
-        .price-link {
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
-            display: inline-block;
-            padding: 0.08rem 0.25rem;
-            border-radius: 0.25rem;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
         }
 
         .ebook-card-body {
-            padding: 0.5rem;
+            padding: 0.75rem;
         }
+    }
 
+    @media (min-width: 768px) {
         .rating-stars {
-            color: #ffc107;
-            font-size: 0.7rem;
+            font-size: 0.875rem;
         }
 
-        @media (min-width: 576px) {
-            .rating-stars {
-                font-size: 0.8rem;
-            }
-
-            .ebook-cover-container {
-                min-height: 240px;
-                height: 240px;
-            }
-
-            .ebook-title {
-                font-size: 0.95rem;
-                line-height: 1.3;
-                min-height: 2.6rem;
-            }
-
-            .ebook-author {
-                font-size: 0.8rem;
-            }
-
-            .ebook-price {
-                font-size: 1.05rem;
-            }
-
-            .ebook-btn {
-                font-size: 0.85rem;
-                padding: 0.4rem 0.6rem;
-            }
-
-            .ebook-card-body {
-                padding: 0.75rem;
-            }
+        .ebook-cover-container {
+            min-height: 280px;
+            height: 280px;
         }
 
-        @media (min-width: 768px) {
-            .rating-stars {
-                font-size: 0.875rem;
-            }
-
-            .ebook-cover-container {
-                min-height: 280px;
-                height: 280px;
-            }
-
-            .ebook-title {
-                font-size: 1rem;
-                line-height: 1.3;
-                min-height: 2.6rem;
-            }
-
-            .ebook-author {
-                font-size: 0.875rem;
-            }
-
-            .ebook-price {
-                font-size: 1.15rem;
-            }
-
-            .ebook-btn {
-                font-size: 0.9rem;
-                padding: 0.45rem 0.7rem;
-            }
-
-            .ebook-card-body {
-                padding: 1rem;
-            }
+        .ebook-title {
+            font-size: 1rem;
+            line-height: 1.3;
+            min-height: 2.6rem;
         }
 
-        @media (min-width: 992px) {
-            .ebook-cover-container {
-                min-height: 320px;
-                height: 320px;
-            }
-
-            .ebook-title {
-                font-size: 1.1rem;
-                line-height: 1.4;
-                min-height: 3rem;
-            }
-
-            .ebook-author {
-                font-size: 0.9375rem;
-            }
-
-            .ebook-price {
-                font-size: 1.25rem;
-            }
-
-            .ebook-btn {
-                font-size: 0.9375rem;
-                padding: 0.5rem 0.75rem;
-            }
-
-            .ebook-card-body {
-                padding: 1.25rem;
-            }
+        .ebook-author {
+            font-size: 0.875rem;
         }
-    </style>
-</head>
+
+        .ebook-price {
+            font-size: 1.15rem;
+        }
+
+        .ebook-btn {
+            font-size: 0.9rem;
+            padding: 0.45rem 0.7rem;
+        }
+
+        .ebook-card-body {
+            padding: 1rem;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .ebook-cover-container {
+            min-height: 320px;
+            height: 320px;
+        }
+
+        .ebook-title {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            min-height: 3rem;
+        }
+
+        .ebook-author {
+            font-size: 0.9375rem;
+        }
+
+        .ebook-price {
+            font-size: 1.25rem;
+        }
+
+        .ebook-btn {
+            font-size: 0.9375rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .ebook-card-body {
+            padding: 1.25rem;
+        }
+    }
+</style>';
+include 'includes/head.php';
+?>
 
 <body>
     <!-- navbar -->

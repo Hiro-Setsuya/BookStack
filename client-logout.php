@@ -16,42 +16,25 @@ if (isset($_POST['confirm_logout']) && $_POST['confirm_logout'] === 'yes') {
     header('Location: login.php');
     exit();
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
+$title = 'Logging Out';
+$extraStyles = '<style>
+    .logout-container {
+        /* Changed min-height to account for the space taken by nav and footer */
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Added 80px top padding to clear the navbar */
+        padding: 80px 0 2rem 0;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logging Out - BookStack</title>
-
-    <!-- Google Fonts: Manrope -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .logout-container {
-            /* Changed min-height to account for the space taken by nav and footer */
-            min-height: calc(100vh - 200px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Added 80px top padding to clear the navbar */
-            padding: 80px 0 2rem 0;
-        }
-
-        .logout-card {
-            max-width: 500px;
-            width: 100%;
+    .logout-card {
+        max-width: 500px;
+        width: 100%;
             border-radius: 1rem;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            /* Ensure the card doesn't touch the very top on small screens */
             margin-top: 20px;
         }
 
@@ -65,8 +48,9 @@ if (isset($_POST['confirm_logout']) && $_POST['confirm_logout'] === 'yes') {
             border-radius: 50%;
             margin-bottom: 1.5rem;
         }
-    </style>
-</head>
+    </style>';
+include 'includes/head.php';
+?>
 
 <body>
     <?php include 'includes/nav.php'; ?>

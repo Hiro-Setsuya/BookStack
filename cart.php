@@ -67,89 +67,75 @@ $taxable_amount = $subtotal - $discount_amount;
 $tax_rate = 0.12;
 $tax = $taxable_amount * $tax_rate;
 $total = $subtotal - $discount_amount + $tax;
+
+$title = 'Shopping Cart';
+$extraStyles = '<style>
+  /* Custom themed checkbox styling */
+  .custom-checkbox {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid rgba(46, 204, 113, 0.5);
+    border-radius: 6px;
+    background-color: white;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .custom-checkbox:checked {
+    background-color: #2ecc71 !important;
+    border-color: #2ecc71 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ffffff\' stroke-width=\'3\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'20 6 9 17 4 12\'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 16px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .custom-checkbox:checked::after {
+    content: \'\';
+  }
+
+  .cart-item-card {
+    border: 1px solid rgba(46, 204, 113, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  .cart-item-card:hover {
+    border-color: rgba(46, 204, 113, 0.3);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .summary-card {
+    border-radius: 16px;
+    border: 1px solid rgba(46, 204, 113, 0.15);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .book-cover {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .book-cover:hover {
+    transform: scale(1.05);
+  }
+
+  .select-all-container {
+    background: rgba(46, 204, 113, 0.05);
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid rgba(46, 204, 113, 0.15);
+  }
+</style>';
+include 'includes/head.php';
 ?>
-<!doctype html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shopping Cart - BookStack</title>
-
-  <!-- Google Fonts: Manrope -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Custom themed checkbox styling */
-    .custom-checkbox {
-      width: 22px;
-      height: 22px;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      border: 2px solid rgba(46, 204, 113, 0.5);
-      border-radius: 6px;
-      background-color: white;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .custom-checkbox:checked {
-      background-color: #2ecc71 !important;
-      border-color: #2ecc71 !important;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-      background-size: 16px;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .custom-checkbox:checked::after {
-      content: '';
-    }
-
-    .cart-item-card {
-      border: 1px solid rgba(46, 204, 113, 0.1);
-      border-radius: 16px;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.98);
-    }
-
-    .cart-item-card:hover {
-      border-color: rgba(46, 204, 113, 0.3);
-      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .summary-card {
-      border-radius: 16px;
-      border: 1px solid rgba(46, 204, 113, 0.15);
-      background: rgba(255, 255, 255, 0.98);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .book-cover {
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
-
-    .book-cover:hover {
-      transform: scale(1.05);
-    }
-
-    .select-all-container {
-      background: rgba(46, 204, 113, 0.05);
-      border-radius: 12px;
-      padding: 14px 18px;
-      border: 1px solid rgba(46, 204, 113, 0.15);
-    }
-  </style>
-</head>
 
 <body>
   <?php include 'includes/nav.php'; ?>

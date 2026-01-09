@@ -1,0 +1,374 @@
+{
+    "timestamp": "2026-01-07 03:47:25",
+    "method": "GET",
+    "remote_addr": "::1",
+    "post": [],
+    "get": [],
+    "raw_input": "",
+    "headers": {
+        "Host": "localhost:8080",
+        "Connection": "keep-alive",
+        "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "DNT": "1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+        "Accept": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-User": "?1",
+        "Sec-Fetch-Dest": "document",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en-GB;q=0.9,en;q=0.8",
+        "Cookie": "PHPSESSID=mjrcahbjg5erirpfn0fb1lmgig"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 03:52:01",
+    "method": "GET",
+    "remote_addr": "::1",
+    "post": [],
+    "get": [],
+    "raw_input": "",
+    "headers": {
+        "Host": "localhost:8080",
+        "Connection": "keep-alive",
+        "Cache-Control": "max-age=0",
+        "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "DNT": "1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+        "Accept": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-User": "?1",
+        "Sec-Fetch-Dest": "document",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en-GB;q=0.9,en;q=0.8",
+        "Cookie": "PHPSESSID=mjrcahbjg5erirpfn0fb1lmgig"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:01:41",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:01:53",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:02:03",
+    "method": "GET",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "",
+    "headers": {
+        "Host": "192.168.18.37:8080",
+        "Connection": "keep-alive",
+        "DNT": "1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla\/5.0 (Linux; Android 10; K) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Mobile Safari\/537.36",
+        "Accept": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept-Language": "en-US,en-GB;q=0.9,en;q=0.8"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:03:17",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:03:17",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:03:18",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:03:18",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\",\n  \"timestamp\": \"%timestamp%\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:03:40",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"123456789\",\n  \"text\":\"test message\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:05:41",
+    "method": "GET",
+    "remote_addr": "::1",
+    "post": [],
+    "get": [],
+    "raw_input": "",
+    "headers": {
+        "Host": "localhost:8080",
+        "Connection": "keep-alive",
+        "Cache-Control": "max-age=0",
+        "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "DNT": "1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+        "Accept": "text\/html,application\/xhtml+xml,application\/xml;q=0.9,image\/avif,image\/webp,image\/apng,*\/*;q=0.8,application\/signed-exchange;v=b3;q=0.7",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-User": "?1",
+        "Sec-Fetch-Dest": "document",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en-GB;q=0.9,en;q=0.8",
+        "Cookie": "PHPSESSID=mjrcahbjg5erirpfn0fb1lmgig"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:08:28",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"Hello\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:24:28",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-D3EDDA\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:31:28",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-7585BF\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:42:54",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-7839C6\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 04:55:49",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-B64540\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 05:17:07",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-E1911D\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-07 05:17:37",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"Hello kuos\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-09 05:23:13",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"C\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+
+{
+    "timestamp": "2026-01-09 05:23:15",
+    "method": "POST",
+    "remote_addr": "192.168.18.42",
+    "post": [],
+    "get": [],
+    "raw_input": "{\n  \"from\":\"+639939535233\",\n  \"text\":\"CONFIRM-CE10F3\"\n}",
+    "headers": {
+        "Content-Type": "application\/json; charset=utf-8",
+        "User-agent": "SMS Forwarder App",
+        "Transfer-Encoding": "chunked",
+        "Host": "192.168.18.37:8080",
+        "Connection": "Keep-Alive",
+        "Accept-Encoding": "gzip"
+    }
+}
+

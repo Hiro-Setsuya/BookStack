@@ -31,8 +31,6 @@ CREATE TABLE ebooks (
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL
 );
 
-ALTER TABLE ebooks MODIFY cover_image TEXT;
-
 CREATE TABLE cart_items (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -42,7 +40,6 @@ CREATE TABLE cart_items (
     FOREIGN KEY (ebook_id) REFERENCES ebooks(ebook_id) ON DELETE CASCADE,
     UNIQUE(user_id, ebook_id)
 );
-
 
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -97,20 +94,7 @@ CREATE TABLE messages (
 -- Add index for better performance
 CREATE INDEX idx_verification_code ON messages(verification_code);
 
-
-
-CREATE TABLE notifications (
-    notification_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    type ENUM('OTP','order','promo','system') NOT NULL,
-    method ENUM('sms','email') NOT NULL,
-    message TEXT NOT NULL,
-    status ENUM('sent','failed','pending') DEFAULT 'pending',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
-// Collaboration TABLE
+-- Collaboration TABLE
 CREATE TABLE vouchers (
     voucher_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
