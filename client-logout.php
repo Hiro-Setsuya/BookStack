@@ -79,7 +79,7 @@ include 'includes/head.php';
                         </a>
                         <form method="POST" class="d-flex flex-fill">
                             <input type="hidden" name="confirm_logout" value="yes">
-                            <button type="submit" class="btn w-100 py-2" style="background-color: #2ecc71; color: white;">
+                            <button type="submit" class="btn w-100 py-2" style="background-color: #2ecc71; color: white;" onclick="clearStackAIChat()">
                                 <i class="bi bi-box-arrow-right me-2"></i>Logout
                             </button>
                         </form>
