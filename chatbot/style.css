@@ -166,53 +166,81 @@
   background-color: white;
   color: #1f2937;
   border: 2px solid #a7f3d0;
-     overflow-wrap: break-word;
-     word-break: break-word;
- }
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 
- .msg-bubble {
-     max-width: 85%;
-     padding: 14px 18px;
-     border-radius: 16px;
-     word-wrap: break-word;
-     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-     line-height: 1.7;
-     font-size: 14px;
- }
+.msg-bubble {
+  max-width: 85%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  line-height: 1.7;
+  font-size: 14px;
+}
 
- /* Better formatting for bot messages */
- .message.bot .msg-bubble strong {
-     color: var(--dark-green);
-     font-weight: 600;
-     display: inline-block;
- }
+/* Better formatting for bot messages */
+.message.bot .msg-bubble strong {
+  color: var(--dark-green);
+  font-weight: 600;
+  display: inline-block;
+}
 
- /* Spacing between paragraphs */
- .message.bot .msg-bubble br + br {
-     display: block;
-     content: " ";
-     margin-bottom: 10px;
- }
+/* Spacing between paragraphs */
+.message.bot .msg-bubble br + br {
+  display: block;
+  content: " ";
+  margin-bottom: 10px;
+}
 
- /* Emoji spacing */
- .message.bot .msg-bubble br:first-child {
-     display: none;
- }
- .message.bot .msg-bubble ol {
-     margin: 8px 0;
-     padding-left: 20px;
- }
+/* Emoji spacing */
+.message.bot .msg-bubble br:first-child {
+  display: none;
+}
+.message.bot .msg-bubble ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
 
- .message.bot .msg-bubble li {
-     margin: 4px 0;
-    }
-    
+.message.bot .msg-bubble li {
+  margin: 4px 0;
+}
+
+/* Typing indicator container */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 20px;
+}
+
+/* Ensure typing bubble is visible */
+#typing .msg-bubble {
+  background-color: #ffffff !important;
+  border: 2px solid #a7f3d0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 60px;
+  /* Temporary debug style - super visible */
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5) !important;
+}
+
+#typing {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
 .typing-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background-color: var(--primary-green);
   animation: bounce 1.4s infinite;
+  display: block;
 }
 
 .typing-dot:nth-child(1) {

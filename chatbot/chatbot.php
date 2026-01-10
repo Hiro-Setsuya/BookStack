@@ -118,84 +118,45 @@ Brief Answer:";
 }
 ?>
 
-<!doctype html>
-<html lang="en">
+<!-- Stack AI Chatbot CSS -->
+<link rel="stylesheet" href="chatbot/style.css">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stack AI - ChatBot</title>
+<!-- Chat Modal Overlay -->
+<div class="stack-ai-overlay" id="chatOverlay" onclick="closeStackAIModal()"></div>
 
-  <!-- Google Fonts: Manrope -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+<!-- Right Side Chat Modal -->
+<div class="stack-ai-modal" id="chatModal">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="chatbot/style.css">
-  <style>
-    /* Ensuring the button is a perfect circle */
-    .stack-ai-button {
-      width: 60px !important;
-      height: 60px !important;
-      border-radius: 50% !important;
-      padding: 0 !important;
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      bottom: 20px;
-      /* Adjust positioning if needed */
-      right: 20px;
-      position: fixed;
-      /* Ensures it floats like a mobile chat bubble */
-      z-index: 1000;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- Chat Modal Overlay -->
-  <div class="stack-ai-overlay" id="chatOverlay" onclick="closeStackAIModal()"></div>
-
-  <!-- Right Side Chat Modal -->
-  <div class="stack-ai-modal" id="chatModal">
-
-    <!-- Header -->
-    <div class="stack-ai-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0 fw-bold">Stack AI</h5>
-      <button class="btn btn-sm btn-link text-white" onclick="closeStackAIModal()">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
-
-    <!-- Messages -->
-    <div class="stack-ai-messages" id="chatbox"></div>
-
-    <!-- Footer -->
-    <div class="stack-ai-footer">
-      <div class="d-flex gap-2 mb-2">
-        <input type="text" id="userMessage" class="form-control stack-ai-input"
-          placeholder="Ask about our books, discounts, delivery..."
-          onkeypress="handleKeyPress(event)">
-        <button class="btn stack-ai-send-btn" onclick="sendStackAIMessage()">
-          <i class="bi bi-send"></i>
-        </button>
-      </div>
-      <p class="text-muted text-center mb-0" style="font-size: 11px;">Powered by Stack AI</p>
-    </div>
+  <!-- Header -->
+  <div class="stack-ai-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-bold">Stack AI</h5>
+    <button class="btn btn-sm btn-link text-white" onclick="closeStackAIModal()">
+      <i class="bi bi-x-lg"></i>
+    </button>
   </div>
 
-  <!-- Chat Button -->
-  <button class="btn btn-md stack-ai-button shadow"
-    onclick="openStackAIModal()" id="stackAIButton">
-    <img src="assets/img/logo/chatbot.svg" height="25" alt="Stack AI" />
-  </button>
+  <!-- Messages -->
+  <div class="stack-ai-messages" id="chatbox"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="chatbot/script.js"></script>
+  <!-- Footer -->
+  <div class="stack-ai-footer">
+    <div class="d-flex gap-2 mb-2">
+      <input type="text" id="userMessage" class="form-control stack-ai-input"
+        placeholder="Ask about our books, discounts, delivery..."
+        onkeypress="handleKeyPress(event)">
+      <button class="btn stack-ai-send-btn" onclick="sendStackAIMessage()">
+        <i class="bi bi-send"></i>
+      </button>
+    </div>
+    <p class="text-muted text-center mb-0" style="font-size: 11px;">Powered by Stack AI</p>
+  </div>
+</div>
 
-</body>
+<!-- Chat Button -->
+<button class="btn btn-md stack-ai-button shadow"
+  onclick="openStackAIModal()" id="stackAIButton">
+  <img src="assets/img/logo/chatbot.svg" height="25" alt="Stack AI" />
+</button>
 
-</html>
+<!-- Stack AI Chatbot Script -->
+<script src="chatbot/script.js"></script>
