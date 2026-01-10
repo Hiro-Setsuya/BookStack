@@ -183,13 +183,13 @@ All transactions are protected by PayPal's industry-standard security. Your paym
 **Need Help? We're Here!**
 
 **Email Support:**
-📧 **Email**: [Contact admin through website message form]
+📧 **Email**: nullbyte235@gmail.com
 • Available 24/7 for inquiries
 • Response time: Within 24-48 hours
 • Include your order number for faster assistance
 
 **SMS Support:**
-📱 **Phone**: +63 XXX XXX XXXX (for verified users)
+📱 **Phone**: +63 994 055 1720 (09940551720)
 • SMS verification and support available
 • Fast response during business hours
 • Include your registered phone number
@@ -446,7 +446,6 @@ Join thousands of developers and tech enthusiasts learning and growing with Book
 
 **Contact Us:**
 📧 Website Contact Form: Available 24/7
-📱 SMS Support: For verified users
 🌐 Website: http://localhost:8080/BookStack
 
 ---
