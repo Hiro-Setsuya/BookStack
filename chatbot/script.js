@@ -5,14 +5,23 @@ function openStackAIModal() {
   document.body.style.overflow = "hidden";
   document.getElementById("userMessage").focus();
 
-  // Show welcome message if first time
-  if (!sessionStorage.getItem("stackAIWelcome")) {
-    setTimeout(() => {
-      addStackAIMessage(
-        "Welcome to **Stack AI**! 👋\n\nI can help with:\n• Account setup & verification\n• Purchasing & downloads\n• Vouchers & payments\n• Technical support\n\nWhat do you need help with?"
-      );
-      sessionStorage.setItem("stackAIWelcome", "true");
-    }, 300);
+  // Load conversation history from sessionStorage (only if chatbox is empty)
+  let box = document.getElementById("chatbox");
+  if (box.children.length === 0) {
+    loadChatHistory();
+
+    // Show welcome message if first time and no history
+    let history = JSON.parse(
+      sessionStorage.getItem("stackAIChatHistory") || "[]"
+    );
+    if (history.length === 0 && !sessionStorage.getItem("stackAIWelcome")) {
+      setTimeout(() => {
+        addStackAIMessage(
+          "Welcome to **Stack AI**! 👋\n\nI can help with:\n• Account setup & verification\n• Purchasing & downloads\n• Vouchers & payments\n• Technical support\n\nWhat do you need help with?"
+        );
+        sessionStorage.setItem("stackAIWelcome", "true");
+      }, 300);
+    }
   }
 }
 
@@ -36,6 +45,9 @@ function addUserMessage(text) {
   messageDiv.appendChild(bubble);
   box.appendChild(messageDiv);
   box.scrollTop = box.scrollHeight;
+
+  // Save to conversation history
+  saveChatMessage({ type: "user", text: text });
 }
 
 // Add bot message to chat
@@ -75,6 +87,9 @@ function addStackAIMessage(text) {
   messageDiv.appendChild(bubble);
   box.appendChild(messageDiv);
   box.scrollTop = box.scrollHeight;
+
+  // Save to conversation history
+  saveChatMessage({ type: "bot", text: text });
 }
 
 // Show typing indicator
@@ -179,7 +194,10 @@ function startFetch(msg) {
       function readChunk() {
         reader.read().then(({ done, value }) => {
           if (done) {
-            // Stream complete
+            // Stream complete - save the final message to history
+            if (receivedText.trim()) {
+              saveChatMessage({ type: "bot", text: receivedText });
+            }
             return;
           }
 
@@ -288,6 +306,72 @@ function setChatTopOffset() {
     topHeight + "px"
   );
 }
+
+// Chat history persistence functions
+function saveChatMessage(message) {
+  let history = JSON.parse(
+    sessionStorage.getItem("stackAIChatHistory") || "[]"
+  );
+  history.push(message);
+  sessionStorage.setItem("stackAIChatHistory", JSON.stringify(history));
+}
+
+function loadChatHistory() {
+  let history = JSON.parse(
+    sessionStorage.getItem("stackAIChatHistory") || "[]"
+  );
+  let box = document.getElementById("chatbox");
+
+  // Clear existing messages
+  box.innerHTML = "";
+
+  // Reload all messages from history
+  history.forEach((msg) => {
+    if (msg.type === "user") {
+      let messageDiv = document.createElement("div");
+      messageDiv.className = "message user";
+      let bubble = document.createElement("div");
+      bubble.className = "msg-bubble";
+      bubble.textContent = msg.text;
+      messageDiv.appendChild(bubble);
+      box.appendChild(messageDiv);
+    } else if (msg.type === "bot") {
+      let messageDiv = document.createElement("div");
+      messageDiv.className = "message bot";
+      let bubble = document.createElement("div");
+      bubble.className = "msg-bubble";
+
+      // Apply same formatting as addStackAIMessage
+      let formattedText = msg.text
+        .replace(/[ \t]+/g, " ")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/(\d+)\.\s*\n/g, "$1. ")
+        .replace(/\. ([A-Z•\d])/g, ".\n$1")
+        .replace(/\n• /g, "\n\n• ")
+        .replace(/\n(\d+)\. /g, "\n\n$1. ")
+        .replace(/\n/g, "<br>")
+        .replace(/(<br>\s*){3,}/g, "<br><br>")
+        .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
+        .replace(/^(<br>)+|(<br>)+$/g, "");
+
+      bubble.innerHTML = formattedText;
+      messageDiv.appendChild(bubble);
+      box.appendChild(messageDiv);
+    }
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function clearChatHistory() {
+  sessionStorage.removeItem("stackAIChatHistory");
+  sessionStorage.removeItem("stackAIWelcome");
+  document.getElementById("chatbox").innerHTML = "";
+  console.log("Chat history cleared");
+}
+
+// Make clearChatHistory globally accessible for logout
+window.clearStackAIChat = clearChatHistory;
 
 // Run at load and on resize
 document.addEventListener("DOMContentLoaded", () => {
