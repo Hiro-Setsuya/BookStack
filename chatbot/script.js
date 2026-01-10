@@ -53,12 +53,14 @@ function addStackAIMessage(text) {
     .replace(/[ \t]+/g, " ")
     // Convert **bold** to <strong>
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    // Ensure proper line breaks exist
-    .replace(/\. ([A-Z•\d])/g, ".\n$1") // Add break after sentences starting with capital/bullet/number
+    // Fix numbered lists that have line breaks between number and text
+    .replace(/(\d+)\.\s*\n/g, "$1. ")
+    // Ensure proper line breaks exist after sentences
+    .replace(/\. ([A-Z•\d])/g, ".\n$1")
     // Convert bullet points with proper spacing
-    .replace(/\n?• /g, "\n\n• ")
-    // Convert numbered lists with proper spacing
-    .replace(/\n?(\d+)\. /g, "\n\n$1. ")
+    .replace(/\n• /g, "\n\n• ")
+    // Convert numbered lists with proper spacing (single break before, keep text together)
+    .replace(/\n(\d+)\. /g, "\n\n$1. ")
     // Convert all line breaks to <br>
     .replace(/\n/g, "<br>")
     // Clean up multiple consecutive <br> tags (max 2)
@@ -196,9 +198,11 @@ function startFetch(msg) {
           let formattedText = receivedText
             .replace(/[ \t]+/g, " ")
             .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            // Fix numbered lists that have line breaks between number and text
+            .replace(/(\d+)\.\s*\n/g, "$1. ")
             .replace(/\. ([A-Z•\d])/g, ".\n$1")
-            .replace(/\n?• /g, "\n\n• ")
-            .replace(/\n?(\d+)\. /g, "\n\n$1. ")
+            .replace(/\n• /g, "\n\n• ")
+            .replace(/\n(\d+)\. /g, "\n\n$1. ")
             .replace(/\n/g, "<br>")
             .replace(/(<br>\s*){3,}/g, "<br><br>")
             .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
