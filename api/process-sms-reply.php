@@ -145,9 +145,9 @@ $query = "
     )
     AND m.subject LIKE '%Account Verification Request%'
     AND m.contact_method = 'phone'
-    AND m.status IN ('pending', 'read')
+    AND m.status = 'pending'
     AND m.verification_code IS NOT NULL
-    AND m.code_verified = FALSE
+    AND m.user_response IS NULL
     ORDER BY m.created_at DESC
     LIMIT 1
 ";
@@ -157,46 +157,30 @@ $result = executeQuery($query);
 if ($result && mysqli_num_rows($result) === 1) {
     $message = mysqli_fetch_assoc($result);
 
-    // Check if response matches verification code
-    $sent_code = strtoupper(trim($message['verification_code']));
-    $user_reply = strtoupper(trim($message_body));
-    $code_matches = ($sent_code === $user_reply);
-
-    // Update with user response - Mark as verified only if code matches
-    // BUT DO NOT auto-verify the user account - admin must approve
+    // Only record the user response - DO NOT auto-verify
+    // Admin must manually verify the code match using "Verify Code Match" button
+    // This matches the email verification behavior
     $update_query = "
         UPDATE messages 
         SET user_response = '$message_body_escaped',
-            responded_at = '$received_at',
-            status = 'read'";
-
-    // If code matches, mark code as verified for admin review
-    if ($code_matches) {
-        $update_query .= ", code_verified = TRUE";
-        error_log("SMS Webhook: Code matched for user {$message['user_name']} (ID: {$message['user_id']}). Awaiting admin approval.");
-    }
-
-    $update_query .= " WHERE message_id = {$message['message_id']}";
+            responded_at = '$received_at'
+        WHERE message_id = {$message['message_id']}
+    ";
 
     if (executeQuery($update_query)) {
-        error_log("SMS Webhook: Account verification response recorded for {$message['user_name']}");
+        error_log("SMS Webhook: Account verification response recorded for {$message['user_name']} (ID: {$message['user_id']}). Awaiting admin review.");
 
         // Send confirmation SMS
         require_once '../notifications/send-sms.php';
-        if ($code_matches) {
-            sendSMS($from_number, "✅ Verification code confirmed, {$message['user_name']}! Your response has been submitted. Our admin will review your account shortly.\n\n- BookStack");
-        } else {
-            sendSMS($from_number, "Thank you, {$message['user_name']}! 📝 Your response has been received. Our admin will review it shortly.\n\n- BookStack");
-        }
+        sendSMS($from_number, "Thank you, {$message['user_name']}! 📝 Your response has been received. Our admin will review it shortly.\n\n- BookStack");
 
         http_response_code(200);
         echo json_encode([
             'status' => 'success',
             'type' => 'account_verification',
-            'message' => $code_matches ? 'Code verified, awaiting admin approval' : 'Response recorded successfully',
+            'message' => 'Response recorded successfully, awaiting admin review',
             'message_id' => $message['message_id'],
-            'user' => $message['user_name'],
-            'code_verified' => $code_matches
+            'user' => $message['user_name']
         ]);
         exit;
     }
