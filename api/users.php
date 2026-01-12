@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $user_id = intval($_GET['id']);
 
         $stmt = $conn->prepare(
-            "SELECT user_id, user_name, email, phone_number, role, is_account_verified, created_at, updated_at 
+            "SELECT user_id, user_name, email, phone_number, role, is_account_verified, password_hash, created_at, updated_at 
              FROM users WHERE user_id = ?"
         );
         $stmt->bind_param("i", $user_id);
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // Get all users with filtering
-    $query = "SELECT user_id, user_name, email, phone_number, role, is_account_verified, created_at, updated_at FROM users";
+    $query = "SELECT user_id, user_name, email, phone_number, role, is_account_verified, password_hash, created_at, updated_at FROM users";
 
     $conditions = [];
     $params = [];
@@ -89,24 +89,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     jsonResponse($users, 200);
 }
 
-// Get single user by ID 
-if (isset($_GET['id'])) {
-    $user_id = intval($_GET['id']);
+// Handle PUT requests (update user)
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $data = json_decode(file_get_contents("php://input"), true);
 
-    $stmt = $conn->prepare(
-        "SELECT user_id, user_name, email, phone_number, role, is_phone_verified, created_at, updated_at 
-         FROM users WHERE user_id = ?"
-    );
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-        jsonResponse(["success" => false, "message" => "User not found"], 404);
+    if (!isset($data['user_id'])) {
+        jsonResponse([
+            "success" => false,
+            "message" => "User ID is required"
+        ], 400);
     }
 
-    $user = $result->fetch_assoc();
-    jsonResponse($user, 200);
+    $user_id = intval($data['user_id']);
+
+    // Build update query dynamically
+    $updates = [];
+    $params = [];
+    $types = "";
+
+    if (isset($data['username'])) {
+        $updates[] = "user_name = ?";
+        $params[] = trim($data['username']);
+        $types .= "s";
+    }
+
+    if (isset($data['email'])) {
+        $email = trim($data['email']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            jsonResponse([
+                "success" => false,
+                "message" => "Invalid email format"
+            ], 400);
+        }
+        $updates[] = "email = ?";
+        $params[] = $email;
+        $types .= "s";
+    }
+
+    if (isset($data['password'])) {
+        $password = $data['password'];
+        if (strlen($password) < 6) {
+            jsonResponse([
+                "success" => false,
+                "message" => "Password must be at least 6 characters long"
+            ], 400);
+        }
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $updates[] = "password_hash = ?";
+        $params[] = $password_hash;
+        $types .= "s";
+    }
+
+    if (isset($data['phone_number'])) {
+        $updates[] = "phone_number = ?";
+        $params[] = trim($data['phone_number']);
+        $types .= "s";
+    }
+
+    if (isset($data['role'])) {
+        $updates[] = "role = ?";
+        $params[] = $data['role'];
+        $types .= "s";
+    }
+
+    if (empty($updates)) {
+        jsonResponse([
+            "success" => false,
+            "message" => "No fields to update"
+        ], 400);
+    }
+
+    $params[] = $user_id;
+    $types .= "i";
+
+    $query = "UPDATE users SET " . implode(", ", $updates) . " WHERE user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param($types, ...$params);
+
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows > 0) {
+            $stmt->close();
+            jsonResponse([
+                "success" => true,
+                "message" => "User updated successfully"
+            ], 200);
+        } else {
+            $stmt->close();
+            jsonResponse([
+                "success" => false,
+                "message" => "No changes made or user not found"
+            ], 404);
+        }
+    } else {
+        $error_msg = $stmt->error;
+        $stmt->close();
+        jsonResponse([
+            "success" => false,
+            "message" => "Update failed: " . $error_msg
+        ], 500);
+    }
 }
 
 // Handle POST requests (create user)
