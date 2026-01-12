@@ -87,7 +87,7 @@ CREATE TABLE messages (
     code_sent_at DATETIME DEFAULT NULL,
     user_response TEXT DEFAULT NULL,
     responded_at DATETIME DEFAULT NULL,
-    code_verified BOOLEAN DEFAULT FALSE;
+    code_verified BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
