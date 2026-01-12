@@ -302,13 +302,13 @@ include '../includes/head.php';
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Cover Image</label>
-                        <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL or path">
-                        <small class="text-muted" style="font-size: 0.7rem;">URL or relative path</small>
+                        <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL">
+                        <small class="text-muted" style="font-size: 0.7rem;">URL</small>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label small fw-bold">Google Drive File ID</label>
+                        <label class="form-label small fw-bold">File ID</label>
                         <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
-                        <small class="text-muted" style="font-size: 0.7rem;">From Google Drive share link</small>
+                        <small class="text-muted" style="font-size: 0.7rem;">From Github release download link</small>
                     </div>
                     <div class="d-grid">
                         <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
