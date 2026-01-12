@@ -232,7 +232,6 @@ include 'includes/head.php';
                                 <button type="submit" name="update_profile" class="btn btn-green px-md-4 flex-grow-1">Save Changes</button>
                             </div>
                         </div>
-                        <div class="btn btn-outline-danger mt-3">Deactivate Account</div>
                     </div>
                 </form>
             </div>
