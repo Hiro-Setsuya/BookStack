@@ -210,7 +210,7 @@ if (isset($_GET['refresh'])) {
     exit;
 }
 
-// Fetch verification requests - Only messages that were created as verification requests
+// Fetch verification requests - Show all requests where user is not yet verified
 $query = "
 SELECT m.message_id, m.user_id, m.contact_method, m.contact_info, m.subject, m.content, m.status,
        m.created_at, m.verification_code, m.code_sent_at, m.user_response, m.responded_at, m.code_verified,
@@ -218,7 +218,9 @@ SELECT m.message_id, m.user_id, m.contact_method, m.contact_info, m.subject, m.c
 FROM messages m
 INNER JOIN users u ON m.user_id = u.user_id
 WHERE m.subject LIKE '%Account Verification Request%'
-ORDER BY CASE WHEN m.status = 'pending' THEN 0 ELSE 1 END, m.created_at DESC
+  AND u.is_account_verified = 0
+  AND m.status IN ('pending', 'read')
+ORDER BY m.created_at DESC
 ";
 
 $result = executeQuery($query);
@@ -397,49 +399,59 @@ include '../includes/head.php';
                             <?php endif; ?>
                         </div>
 
-                        <!-- Action Buttons -->
+                        <!-- Verification Status -->
                         <div class="col-md-4">
-                            <?php if ($request['status'] === 'pending' && !$request['is_account_verified']): ?>
+                            <?php if (!$request['is_account_verified']): ?>
                                 <div class="d-grid gap-2">
-                                    <!-- Verify Code Match Button (does NOT approve user) -->
-                                    <?php if (!empty($request['verification_code']) && !empty($request['user_response']) && !$request['code_verified']): ?>
-                                        <form method="POST" action="">
-                                            <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
-                                            <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
-                                            <button type="submit" name="verify_code_match" class="btn btn-info w-100" onclick="return confirm('Verify if user response matches?\n\nSent: <?= htmlspecialchars($request['verification_code']) ?>\nReply: <?= htmlspecialchars($request['user_response']) ?>\n\nNote: This only verifies the code. You still need to click Approve to activate the account.')">
-                                                <i class="bi bi-shield-check me-2"></i>Verify Code Match
-                                            </button>
-                                        </form>
-                                    <?php endif; ?>
-
-                                    <!-- Send/Resend Code Button -->
+                                    <!-- Code Status -->
                                     <?php if (empty($request['verification_code'])): ?>
+                                        <div class="alert alert-warning mb-2">
+                                            <i class="bi bi-exclamation-circle me-2"></i>
+                                            <strong>No Code Sent</strong>
+                                        </div>
                                         <form method="POST" action="">
                                             <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
                                             <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
                                             <input type="hidden" name="contact_method" value="<?= $request['contact_method'] ?>">
                                             <input type="hidden" name="contact_info" value="<?= $request['contact_info'] ?>">
                                             <input type="hidden" name="user_name" value="<?= $request['user_name'] ?>">
-                                            <button type="submit" name="send_verification_code" class="btn btn-warning w-100" onclick="return confirm('Send verification code to <?= htmlspecialchars($request['contact_info']) ?>?')">
+                                            <button type="submit" name="send_verification_code" class="btn btn-warning w-100">
                                                 <i class="bi bi-send-fill me-2"></i>Send Code
                                             </button>
                                         </form>
-                                    <?php elseif (!empty($request['user_response'])): ?>
-                                        <div class="alert alert-success mb-2 small">
-                                            <i class="bi bi-check-circle-fill me-1"></i> User responded
+                                    <?php elseif (empty($request['user_response'])): ?>
+                                        <div class="alert alert-info mb-2">
+                                            <i class="bi bi-clock-history me-2"></i>
+                                            <strong>Waiting for User Response</strong>
+                                            <small class="d-block mt-1">Code sent at <?= date('M d, h:i A', strtotime($request['code_sent_at'])) ?></small>
                                         </div>
                                     <?php else: ?>
-                                        <div class="alert alert-info mb-2 small">
-                                            <i class="bi bi-info-circle-fill me-1"></i> Waiting for response
-                                        </div>
+                                        <?php
+                                        $sent_code = strtoupper(trim($request['verification_code']));
+                                        $user_reply = strtoupper(trim($request['user_response']));
+                                        $codes_match = ($sent_code === $user_reply);
+                                        ?>
+                                        <?php if ($codes_match): ?>
+                                            <div class="alert alert-success mb-2">
+                                                <i class="bi bi-check-circle-fill me-2"></i>
+                                                <strong>User Responded - Code Matches!</strong>
+                                                <small class="d-block mt-1">Ready to approve</small>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="alert alert-danger mb-2">
+                                                <i class="bi bi-x-circle-fill me-2"></i>
+                                                <strong>User Responded - Code Mismatch</strong>
+                                                <small class="d-block mt-1">Sent: <?= htmlspecialchars($request['verification_code']) ?><br>Reply: <?= htmlspecialchars($request['user_response']) ?></small>
+                                            </div>
+                                        <?php endif; ?>
                                     <?php endif; ?>
 
                                     <!-- Approve Button -->
                                     <form method="POST" action="">
                                         <input type="hidden" name="message_id" value="<?= $request['message_id'] ?>">
                                         <input type="hidden" name="user_id" value="<?= $request['user_id'] ?>">
-                                        <button type="submit" name="approve_verification" class="btn btn-primary w-100" onclick="return confirm('Manually approve <?= htmlspecialchars($request['user_name']) ?>?')">
-                                            <i class="bi bi-check-circle me-2"></i>Approve
+                                        <button type="submit" name="approve_verification" class="btn btn-success w-100" onclick="return confirm('Approve <?= htmlspecialchars($request['user_name']) ?>?')">
+                                            <i class="bi bi-check-circle me-2"></i>Approve User
                                         </button>
                                     </form>
 
@@ -451,15 +463,10 @@ include '../includes/head.php';
                                         </button>
                                     </form>
                                 </div>
-                            <?php elseif ($request['is_account_verified']): ?>
+                            <?php else: ?>
                                 <div class="alert alert-success text-center">
                                     <i class="bi bi-shield-check fs-2 d-block mb-2"></i>
                                     <strong>Verified</strong>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-secondary text-center">
-                                    <i class="bi bi-info-circle fs-2 d-block mb-2"></i>
-                                    <strong>Processed</strong>
                                 </div>
                             <?php endif; ?>
                         </div>
