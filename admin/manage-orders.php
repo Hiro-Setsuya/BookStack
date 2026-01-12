@@ -9,15 +9,28 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Include database connection
 require_once '../config/db.php';
+require_once '../includes/admin-pagination.php';
 
 // Sync Admin Name from session variable established in login.php
 $adminName = $_SESSION['admin_name'] ?? 'Admin';
+
+// Pagination setup
+$pagination = getPaginationParams($_GET['page'] ?? 1, 10);
+$page = $pagination['page'];
+$offset = $pagination['offset'];
+$items_per_page = $pagination['items_per_page'];
 
 // Calculate total sales
 $total_sales_query = "SELECT COALESCE(SUM(total_amount), 0) as total_sales FROM orders WHERE status = 'completed'";
 $total_sales_result = executeQuery($total_sales_query);
 $total_sales_data = mysqli_fetch_assoc($total_sales_result);
 $total_sales = $total_sales_data['total_sales'];
+
+// Count total orders for pagination
+$count_query = "SELECT COUNT(*) as total FROM orders";
+$count_result = executeQuery($count_query);
+$total_orders_count = mysqli_fetch_assoc($count_result)['total'];
+$total_pages = calculateTotalPages($total_orders_count, $items_per_page);
 
 // Fetch all orders with user information and order items
 $orders_query = "
@@ -39,6 +52,7 @@ $orders_query = "
     LEFT JOIN ebooks e ON oi.ebook_id = e.ebook_id
     GROUP BY o.order_id
     ORDER BY o.created_at DESC
+    LIMIT $items_per_page OFFSET $offset
 ";
 $orders_result = executeQuery($orders_query);
 
@@ -115,6 +129,9 @@ include '../includes/head.php';
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        <?php renderAdminPagination($page, $total_pages, $total_orders_count); ?>
     </div>
     </main>
     </div>

@@ -12,6 +12,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 
 // Database Connection
 require_once '../config/db.php';
+require_once '../includes/admin-pagination.php';
 
 // Handle CRUD Operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -86,9 +87,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Pagination setup
+$pagination = getPaginationParams($_GET['page'] ?? 1, 10);
+$page = $pagination['page'];
+$offset = $pagination['offset'];
+$items_per_page = $pagination['items_per_page'];
+
 // Fetch users with search and filter
 $searchTerm = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
 $filterRole = isset($_GET['role']) ? mysqli_real_escape_string($conn, trim($_GET['role'])) : '';
+
+// Count total users for pagination
+$countQuery = "SELECT COUNT(*) as total FROM users WHERE 1=1";
+if (!empty($searchTerm)) {
+    $countQuery .= " AND (user_name LIKE '%$searchTerm%' OR email LIKE '%$searchTerm%')";
+}
+if (!empty($filterRole)) {
+    $countQuery .= " AND role = '$filterRole'";
+}
+$countResult = executeQuery($countQuery);
+$total_users_count = mysqli_fetch_assoc($countResult)['total'];
+$total_pages = calculateTotalPages($total_users_count, $items_per_page);
 
 $usersQuery = "SELECT * FROM users WHERE 1=1";
 
@@ -100,7 +119,7 @@ if (!empty($filterRole)) {
     $usersQuery .= " AND role = '$filterRole'";
 }
 
-$usersQuery .= " ORDER BY created_at DESC";
+$usersQuery .= " ORDER BY created_at DESC LIMIT $items_per_page OFFSET $offset";
 $usersResult = executeQuery($usersQuery);
 $users = [];
 while ($row = mysqli_fetch_assoc($usersResult)) {
@@ -241,9 +260,18 @@ include '../includes/head.php';
             </table>
         </div>
 
-        <div class="mt-4 d-flex justify-content-between align-items-center">
-            <span class="text-muted small">Showing <?php echo count($users); ?> of <?php echo $totalUsers; ?> entries</span>
-        </div>
+        <!-- Pagination -->
+        <?php
+        renderAdminPagination(
+            $page,
+            $total_pages,
+            $total_users_count,
+            [
+                'search' => $searchTerm,
+                'role' => $filterRole
+            ]
+        );
+        ?>
     </div>
     </main>
     </div>

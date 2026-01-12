@@ -13,6 +13,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 // Database Connection
 require_once '../config/db.php';
 require_once '../includes/voucher-utils.php';
+require_once '../includes/admin-pagination.php';
 
 // Handle CRUD Operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -94,11 +95,25 @@ $success = $_SESSION['success'] ?? '';
 $error = $_SESSION['error'] ?? '';
 unset($_SESSION['success'], $_SESSION['error']);
 
-// Fetch all vouchers with user information
+// Pagination setup
+$pagination = getPaginationParams($_GET['page'] ?? 1, 10);
+$page = $pagination['page'];
+$offset = $pagination['offset'];
+$items_per_page = $pagination['items_per_page'];
+
+// Count total non-expired vouchers for pagination
+$countQuery = "SELECT COUNT(*) as total FROM vouchers v WHERE v.expires_at > NOW()";
+$countResult = executeQuery($countQuery);
+$total_vouchers_count = mysqli_fetch_assoc($countResult)['total'];
+$total_pages = calculateTotalPages($total_vouchers_count, $items_per_page);
+
+// Fetch all non-expired vouchers with user information
 $vouchersQuery = "SELECT v.*, u.user_name, u.email 
                   FROM vouchers v 
                   LEFT JOIN users u ON v.user_id = u.user_id 
-                  ORDER BY v.issued_at DESC";
+                  WHERE v.expires_at > NOW()
+                  ORDER BY v.issued_at DESC
+                  LIMIT $items_per_page OFFSET $offset";
 $vouchersResult = executeQuery($vouchersQuery);
 
 // Fetch all users for dropdown (include all users except admins)
@@ -215,6 +230,9 @@ include '../includes/head.php';
                 </table>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <?php renderAdminPagination($page, $total_pages, $total_vouchers_count); ?>
     </div>
 
     <!-- Issue Voucher Modal -->

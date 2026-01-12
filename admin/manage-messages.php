@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 
 // Include database connection
 require_once '../config/db.php';
+require_once '../includes/admin-pagination.php';
 
 // Include mail configuration
 require_once '../config/mail.php';
@@ -23,7 +24,7 @@ if (!in_array($filter_status, ['pending', 'read', 'resolved'])) {
 }
 
 // Helper function to get messages using your executeQuery function
-function getMessages($status = null)
+function getMessages($status = null, $limit = null, $offset = null)
 {
     global $conn; // Use your mysqli connection
 
@@ -39,6 +40,10 @@ function getMessages($status = null)
 
     $query .= " ORDER BY m.created_at DESC";
 
+    if ($limit !== null && $offset !== null) {
+        $query .= " LIMIT $limit OFFSET $offset";
+    }
+
     $result = executeQuery($query);
     $messages = [];
 
@@ -49,6 +54,26 @@ function getMessages($status = null)
     }
 
     return $messages;
+}
+
+// Helper function to count messages
+function countMessages($status = null)
+{
+    global $conn;
+
+    $query = "SELECT COUNT(*) as total FROM messages m WHERE m.subject NOT LIKE '%Account Verification Request%'";
+
+    if ($status) {
+        $status_escaped = mysqli_real_escape_string($conn, $status);
+        $query .= " AND m.status = '$status_escaped'";
+    }
+
+    $result = executeQuery($query);
+    if ($result) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['total'];
+    }
+    return 0;
 }
 
 // Group messages by user_id and get latest 3 per user
@@ -191,8 +216,18 @@ if (isset($_GET['refresh'])) {
     exit;
 }
 
-// Get messages based on filter
-$all_messages = getMessages($filter_status);
+// Pagination setup
+$pagination = getPaginationParams($_GET['page'] ?? 1, 10);
+$page = $pagination['page'];
+$offset = $pagination['offset'];
+$items_per_page = $pagination['items_per_page'];
+
+// Get total count for pagination
+$total_messages_count = countMessages($filter_status);
+$total_pages = calculateTotalPages($total_messages_count, $items_per_page);
+
+// Get messages based on filter with pagination
+$all_messages = getMessages($filter_status, $items_per_page, $offset);
 $pending_messages = getMessages('pending');
 $read_messages = getMessages('read');
 $resolved_messages = getMessages('resolved');
@@ -361,6 +396,20 @@ include '../includes/head.php';
                 </div>
             <?php endif; ?>
         </div>
+
+        <!-- Pagination -->
+        <?php
+        if ($total_pages > 1) {
+            echo '<div class="card-footer">';
+            renderAdminPagination(
+                $page,
+                $total_pages,
+                $total_messages_count,
+                ['status' => $filter_status]
+            );
+            echo '</div>';
+        }
+        ?>
     </div>
     </main>
     </div>

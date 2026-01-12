@@ -12,6 +12,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 
 // Include database connection
 require_once '../config/db.php';
+require_once '../includes/admin-pagination.php';
 
 // Initialize message variables
 $message = '';
@@ -99,9 +100,27 @@ if ($categoriesResult) {
     }
 }
 
+// Pagination setup
+$pagination = getPaginationParams($_GET['page'] ?? 1, 10);
+$page = $pagination['page'];
+$offset = $pagination['offset'];
+$items_per_page = $pagination['items_per_page'];
+
 // Get search and filter parameters
 $searchTerm = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
 $filterCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
+
+// Count total ebooks for pagination
+$countQuery = "SELECT COUNT(*) as total FROM ebooks e WHERE 1=1";
+if (!empty($searchTerm)) {
+    $countQuery .= " AND (e.title LIKE '%$searchTerm%' OR e.author LIKE '%$searchTerm%')";
+}
+if ($filterCategory > 0) {
+    $countQuery .= " AND e.category_id = $filterCategory";
+}
+$countResult = executeQuery($countQuery);
+$total_ebooks_count = mysqli_fetch_assoc($countResult)['total'];
+$total_pages = calculateTotalPages($total_ebooks_count, $items_per_page);
 
 // Fetch all ebooks with category names and apply filters
 $ebooksQuery = "SELECT e.ebook_id, e.title, e.author, e.description, e.price, e.file_path, e.cover_image, 
@@ -120,7 +139,7 @@ if ($filterCategory > 0) {
     $ebooksQuery .= " AND e.category_id = $filterCategory";
 }
 
-$ebooksQuery .= " ORDER BY e.created_at DESC";
+$ebooksQuery .= " ORDER BY e.created_at DESC LIMIT $items_per_page OFFSET $offset";
 $ebooksResult = executeQuery($ebooksQuery);
 $ebooks = [];
 if ($ebooksResult) {
@@ -259,63 +278,73 @@ include '../includes/head.php';
                     </table>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <p class="text-muted small mb-0">Showing <?php echo $totalEbooks > 0 ? '1-' . $totalEbooks : '0'; ?> of <?php echo $totalEbooks; ?> books</p>
-                </div>
+                <!-- Pagination -->
+                <?php
+                renderAdminPagination(
+                    $page,
+                    $total_pages,
+                    $total_ebooks_count,
+                    [
+                        'search' => $searchTerm,
+                        'category' => ($filterCategory > 0 ? $filterCategory : '')
+                    ]
+                );
+                ?>
             </div>
         </div>
+    </div>
 
-        <div class="col-12 col-xl-4">
-            <div class="card data-card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="fw-bold mb-0">Add New E-Book</h6>
-                    <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
-                </div>
-
-                <form id="sidebarForm" method="POST" action="">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Title</label>
-                        <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
-                        <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
-                        <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-7">
-                            <label class="form-label small fw-bold">Category</label>
-                            <select class="form-select form-select-sm" name="category_id">
-                                <option value="">Select category</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-5">
-                            <label class="form-label small fw-bold">Price (₱)</label>
-                            <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Cover Image</label>
-                        <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL">
-                        <small class="text-muted" style="font-size: 0.7rem;">URL</small>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold">File ID</label>
-                        <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
-                        <small class="text-muted" style="font-size: 0.7rem;">From Github release download link</small>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
-                    </div>
-                </form>
+    <div class="col-12 col-xl-4">
+        <div class="card data-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0">Add New E-Book</h6>
+                <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
             </div>
+
+            <form id="sidebarForm" method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Title</label>
+                    <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
+                    <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                    <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-7">
+                        <label class="form-label small fw-bold">Category</label>
+                        <select class="form-select form-select-sm" name="category_id">
+                            <option value="">Select category</option>
+                            <?php foreach ($categories as $cat): ?>
+                                <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label small fw-bold">Price (₱)</label>
+                        <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Cover Image</label>
+                    <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL">
+                    <small class="text-muted" style="font-size: 0.7rem;">URL</small>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">File ID</label>
+                    <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
+                    <small class="text-muted" style="font-size: 0.7rem;">From Github release download link</small>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
+                </div>
+            </form>
         </div>
+    </div>
     </div>
     </main>
     </div>
