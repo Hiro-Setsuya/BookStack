@@ -65,11 +65,23 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Handle search functionality
+// Handle search and category filtering
 $search_query = isset($_GET['q']) ? trim($_GET['q']) : '';
+$category_id = isset($_GET['category_id']) ? intval($_GET['category_id']) : 0;
 $total_results = 0;
+$category_name = '';
 
-// Fetch ebooks from database with optional search
+// Get category name if filtering by category
+if ($category_id > 0) {
+    $cat_query = "SELECT name FROM categories WHERE category_id = $category_id";
+    $cat_result = executeQuery($cat_query);
+    if ($cat_result && mysqli_num_rows($cat_result) > 0) {
+        $cat_row = mysqli_fetch_assoc($cat_result);
+        $category_name = $cat_row['name'];
+    }
+}
+
+// Fetch ebooks from database with optional search and category filter
 if (!empty($search_query)) {
     $search_term = '%' . mysqli_real_escape_string($conn, $search_query) . '%';
     $query = "
@@ -86,10 +98,11 @@ if (!empty($search_query)) {
         FROM ebooks e
         LEFT JOIN categories c ON e.category_id = c.category_id
         WHERE 
-            e.title LIKE '$search_term' OR
+            (e.title LIKE '$search_term' OR
             e.author LIKE '$search_term' OR
             e.description LIKE '$search_term' OR
-            c.name LIKE '$search_term'
+            c.name LIKE '$search_term')
+            " . ($category_id > 0 ? "AND e.category_id = $category_id" : "") . "
         ORDER BY 
             CASE 
                 WHEN e.title LIKE '$search_term' THEN 1
@@ -103,17 +116,44 @@ if (!empty($search_query)) {
     if ($result) {
         $total_results = mysqli_num_rows($result);
     }
+} elseif ($category_id > 0) {
+    // Filter by category only
+    $query = "
+        SELECT 
+            e.ebook_id, 
+            e.title, 
+            e.author, 
+            e.price, 
+            e.cover_image, 
+            e.file_path,
+            c.name as category_name,
+            (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = e.ebook_id) as avg_rating, 
+            (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = e.ebook_id) as total_ratings 
+        FROM ebooks e
+        LEFT JOIN categories c ON e.category_id = c.category_id
+        WHERE e.category_id = $category_id 
+        ORDER BY e.created_at DESC
+    ";
+    $result = executeQuery($query);
+    if ($result) {
+        $total_results = mysqli_num_rows($result);
+    }
 } else {
-    $query = "SELECT ebook_id, title, author, price, cover_image, file_path, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = ebooks.ebook_id) as total_ratings FROM ebooks ORDER BY created_at DESC";
+    $query = "SELECT e.ebook_id, e.title, e.author, e.price, e.cover_image, e.file_path, c.name as category_name, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = e.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = e.ebook_id) as total_ratings FROM ebooks e LEFT JOIN categories c ON e.category_id = c.category_id ORDER BY e.created_at DESC";
     $result = executeQuery($query);
 }
 
-// Set page title and description based on search
+// Set page title and description based on search or category
 if (!empty($search_query)) {
     $page_title = 'Search Results';
     $page_description = 'Found <strong>' . $total_results . '</strong> result' . ($total_results !== 1 ? 's' : '') .
         ' for "<strong>' . htmlspecialchars($search_query) . '</strong>"' .
         ' <a href="ebooks.php" class="ms-3 text-decoration-none"><i class="bi bi-x-circle me-1"></i>Clear search</a>';
+} elseif ($category_id > 0 && !empty($category_name)) {
+    $page_title = htmlspecialchars($category_name) . ' E-Books';
+    $page_description = 'Browse <strong>' . $total_results . '</strong> book' . ($total_results !== 1 ? 's' : '') .
+        ' in the <strong>' . htmlspecialchars($category_name) . '</strong> category' .
+        ' <a href="ebooks.php" class="ms-3 text-decoration-none"><i class="bi bi-x-circle me-1"></i>View all</a>';
 } else {
     $page_title = 'Tech E-Books';
     $page_description = 'Browse our collection of programming and computer science books';
