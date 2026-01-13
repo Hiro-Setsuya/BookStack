@@ -143,3 +143,67 @@ function syncAllEscaPinasVouchers($conn, $user_id, $user_email)
         'errors' => $errors
     ];
 }
+
+/**
+ * Create a voucher for a user
+ * @param mysqli $conn Database connection
+ * @param int $user_id User ID to assign the voucher to
+ * @param string $external_system System type (ebook_store or travel_agency)
+ * @param string $discount_type Discount type (percentage or fixed)
+ * @param float $discount_amount Discount amount
+ * @param int $expires_days Number of days until expiration
+ * @param float $min_order_amount Minimum order amount required
+ * @param int $max_uses Maximum number of uses
+ * @return array Result with success status and voucher code
+ */
+function createVoucher($conn, $user_id, $external_system, $discount_type, $discount_amount, $expires_days, $min_order_amount = 0.00, $max_uses = 1)
+{
+    // Generate unique voucher code
+    $code = generateVoucherCode();
+
+    // Calculate expiration date
+    $expires_at = date('Y-m-d H:i:s', strtotime("+{$expires_days} days"));
+
+    // Insert voucher into database
+    $stmt = $conn->prepare("
+        INSERT INTO vouchers 
+        (user_id, external_system, code, discount_type, discount_amount, min_order_amount, max_uses, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->bind_param(
+        "isssddis",
+        $user_id,
+        $external_system,
+        $code,
+        $discount_type,
+        $discount_amount,
+        $min_order_amount,
+        $max_uses,
+        $expires_at
+    );
+
+    $success = $stmt->execute();
+    $stmt->close();
+
+    return [
+        'success' => $success,
+        'code' => $success ? $code : null
+    ];
+}
+
+/**
+ * Generate a unique voucher code
+ * @return string Random uppercase alphanumeric code
+ */
+function generateVoucherCode()
+{
+    $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $code = '';
+
+    for ($i = 0; $i < 8; $i++) {
+        $code .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    return $code;
+}

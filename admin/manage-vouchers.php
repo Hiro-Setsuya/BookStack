@@ -12,8 +12,8 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 
 // Database Connection
 require_once '../config/db.php';
-require_once '../includes/voucher-utils.php';
 require_once '../includes/admin-pagination.php';
+require_once '../includes/utils.php';
 
 // Handle CRUD Operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

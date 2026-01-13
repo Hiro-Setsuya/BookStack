@@ -6,7 +6,6 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 require_once "../config/db.php";
 require_once "response.php";
-require_once "auth-middleware.php"; // Admin authentication required
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
