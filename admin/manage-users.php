@@ -178,15 +178,13 @@ include '../includes/head.php';
                         <input type="text" name="search" class="form-control border-start-0" placeholder="Search users..." value="<?php echo htmlspecialchars($searchTerm); ?>">
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <select name="role" class="form-select">
-                        <option value="">All Roles</option>
-                        <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>>User</option>
-                        <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>>Admin</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <div class="d-flex gap-2">
+                <div class="col-md-6">
+                    <div class="d-flex gap-2 align-items-center">
+                        <select name="role" class="form-select">
+                            <option value="">All Roles</option>
+                            <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>>User</option>
+                            <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                        </select>
                         <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
                         <?php if (!empty($searchTerm) || !empty($filterRole)): ?>
                             <a href="manage-users.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
