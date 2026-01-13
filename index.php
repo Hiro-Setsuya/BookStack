@@ -1,22 +1,12 @@
 <?php
 session_start();
 ?>
-<?php $title = "Home "?>
+<?php $title = "Home " ?>
 <?php include 'includes/head.php'; ?>
+
 <body>
   <!-- navbar -->
   <?php include 'includes/nav.php'; ?>
-
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col text-center mx-2">
-        <div class="mx-auto d-lg-none d-flex mt-4">
-          <input class="form-control me-2" type="text" placeholder="Search tech books...">
-          <button class="btn btn-green"><i class="bi bi-search"></i></button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="container mt-lg-5 py-4 px-4">
     <div class="row">
