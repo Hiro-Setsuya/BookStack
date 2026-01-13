@@ -39,12 +39,12 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
             </button>
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="profile.php" class="btn btn-green d-lg-none d-inline-block">
+                <a href="profile.php" class="btn btn-green d-lg-none d-inline-flex align-items-center justify-content-center">
                     <i class="bi bi-person-circle"></i>
                     <span class="d-none d-sm-inline ms-2"><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
                 </a>
             <?php else: ?>
-                <a href="login.php" class="btn btn-green d-lg-none d-inline-block fw-normal">
+                <a href="login.php" class="btn btn-green d-lg-none d-inline-flex align-items-center justify-content-center fw-normal">
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span class="d-none d-sm-inline ms-2">Sign In</span>
                 </a>
