@@ -347,12 +347,15 @@ include 'includes/head.php';
                                 </ol>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="d-flex gap-3 justify-content-center mt-4">
-                                <a href="profile.php" class="btn btn-outline-secondary px-4">Cancel</a>
-                                <button type="submit" name="request_verification" class="btn btn-green">
-                                    <i class="bi bi-send-fill me-2"></i>Request Verification
-                                </button>
+                            <div class="row g-3 mt-4 px-0 px-sm-3 px-md-5">
+                                <div class="col-12 col-sm-4">
+                                    <a href="profile.php" class="btn btn-outline-secondary w-100">Cancel</a>
+                                </div>
+                                <div class="col-12 col-sm-8">
+                                    <button type="submit" name="request_verification" class="btn btn-green w-100">
+                                        <i class="bi bi-send-fill me-2"></i>Request Verification
+                                    </button>
+                                </div>
                             </div>
                         </form>
 
