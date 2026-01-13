@@ -92,10 +92,10 @@ include 'includes/head.php';
                                                             ?>
                                                         </p>
                                                         <div class="d-flex gap-2 flex-wrap">
-                                                            <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-sm btn-green">
+                                                            <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-sm btn-green d-flex align-items-center justify-content-center">
                                                                 <i class="bi bi-download me-1"></i> Download PDF
                                                             </a>
-                                                            <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-sm btn-outline-secondary">
+                                                            <a href="ebook-details.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center">
                                                                 <i class="bi bi-eye me-1"></i> View Details
                                                             </a>
                                                         </div>
