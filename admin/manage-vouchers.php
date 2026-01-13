@@ -153,7 +153,7 @@ include '../includes/head.php';
     <?php endif; ?>
 
     <!-- Vouchers Table -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm p-4">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover">
