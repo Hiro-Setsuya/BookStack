@@ -239,7 +239,7 @@ include '../includes/head.php';
                                 </td>
                                 <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-primary" onclick='editUser(<?php echo json_encode($user); ?>)' title="Edit">
+                                    <button class="btn btn-sm btn-outline-primary mb-1 mb-xl-0" onclick='editUser(<?php echo json_encode($user); ?>)' title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(<?php echo $user['user_id']; ?>, '<?php echo htmlspecialchars($user['user_name'], ENT_QUOTES); ?>')" title="Delete">

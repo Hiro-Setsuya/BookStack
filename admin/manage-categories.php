@@ -186,7 +186,7 @@ include '../includes/head.php';
                                 </td>
                                 <td><span class="badge bg-light text-dark rounded-pill px-3"><?php echo $category['ebook_count']; ?></span></td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="editCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Edit">
+                                    <button class="btn btn-sm btn-outline-primary me-0 me-sm-2 mb-1 mb-sm-0" onclick="editCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(<?php echo $category['category_id']; ?>, '<?php echo htmlspecialchars(addslashes($category['name'])); ?>')" title="Delete">
