@@ -292,59 +292,60 @@ include '../includes/head.php';
                 ?>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-xl-4">
-        <div class="card data-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Add New E-Book</h6>
-                <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
+        <div class="col-12 col-xl-4">
+            <div class="card data-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Add New E-Book</h6>
+                    <a href="#" class="text-decoration-none small text-success" onclick="clearSidebarForm(); return false;">Clear all</a>
+                </div>
+
+                <form id="sidebarForm" method="POST" action="">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Title</label>
+                        <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
+                        <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-7">
+                            <label class="form-label small fw-bold">Category</label>
+                            <select class="form-select form-select-sm" name="category_id">
+                                <option value="">Select category</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label small fw-bold">Price (₱)</label>
+                            <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Cover Image</label>
+                        <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL">
+                        <small class="text-muted" style="font-size: 0.7rem;">URL</small>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">File ID</label>
+                        <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
+                        <small class="text-muted" style="font-size: 0.7rem;">From Github release download link</small>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
+                    </div>
+                </form>
             </div>
-
-            <form id="sidebarForm" method="POST" action="">
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Title</label>
-                    <input type="text" class="form-control form-control-sm" name="title" placeholder="Enter book title" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
-                    <input type="text" class="form-control form-control-sm" name="author" placeholder="Enter author name">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Description <span class="text-muted fw-normal">(Optional)</span></label>
-                    <textarea class="form-control form-control-sm" name="description" rows="2" placeholder="Brief description"></textarea>
-                </div>
-                <div class="row g-2 mb-3">
-                    <div class="col-7">
-                        <label class="form-label small fw-bold">Category</label>
-                        <select class="form-select form-select-sm" name="category_id">
-                            <option value="">Select category</option>
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-5">
-                        <label class="form-label small fw-bold">Price (₱)</label>
-                        <input type="number" class="form-control form-control-sm" name="price" placeholder="0.00" step="0.01" min="0" required>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Cover Image</label>
-                    <input type="text" class="form-control form-control-sm" name="cover_image" placeholder="Image URL">
-                    <small class="text-muted" style="font-size: 0.7rem;">URL</small>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label small fw-bold">File ID</label>
-                    <input type="text" class="form-control form-control-sm" name="file_path" placeholder="Enter file ID" required>
-                    <small class="text-muted" style="font-size: 0.7rem;">From Github release download link</small>
-                </div>
-                <div class="d-grid">
-                    <button type="submit" name="create_ebook" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add E-Book</button>
-                </div>
-            </form>
         </div>
     </div>
+
     </div>
     </main>
     </div>
