@@ -116,7 +116,7 @@ include 'includes/head.php';
                             </div>
                             <h4 class="fw-bold mb-3">No E-Books Yet</h4>
                             <p class="text-muted mb-4">You haven't purchased any e-books yet. Start exploring our collection!</p>
-                            <a href="ebooks.php" class="btn btn-green">
+                            <a href="ebooks.php" class="btn btn-green d-inline-flex align-items-center justify-content-center">
                                 <i class="bi bi-search me-2"></i> Browse E-Books
                             </a>
                         </div>

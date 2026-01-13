@@ -27,7 +27,7 @@ session_start();
           Access thousands of computer science, programming, and tech e-books. From web development to AI, find resources to advance your career.
         </div>
         <div class="mt-4 mb-4">
-          <a href="ebooks.php" class="btn btn-green me-2"><i class="bi bi-laptop me-2"></i>Browse Tech Books</a>
+          <a href="ebooks.php" class="btn btn-green me-2 d-inline-flex align-items-center justify-content-center"><i class="bi bi-laptop me-2"></i>Browse Tech Books</a>
         </div>
       </div>
       <div class="col-lg-5">
