@@ -2,7 +2,7 @@
 session_start();
 require_once 'config/db.php';
 require_once 'config/api-connection.php';
-require_once 'includes/utils.php';
+// require_once 'includes/utils.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -22,7 +22,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'sync') {
 }
 
 // Auto-sync EscaPinas vouchers on page load (silent)
-syncAllEscaPinasVouchers($conn, $user_id, $user_email);
+// syncAllEscaPinasVouchers($conn, $user_id, $user_email);
 
 // Fetch user's vouchers (including synced ones)
 $query = "SELECT * FROM vouchers 
