@@ -298,13 +298,17 @@ include '../includes/head.php';
 
     <div class="card message-card">
         <div class="card-header bg-white">
-            <div class="d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold mb-0">All Conversations</h6>
-                <div class="btn-group btn-group-sm">
-                    <a href="manage-messages.php" class="btn btn-outline-secondary <?php echo $filter_status === null ? 'active' : ''; ?>">All</a>
-                    <a href="manage-messages.php?status=pending" class="btn btn-outline-secondary <?php echo $filter_status === 'pending' ? 'active' : ''; ?>">Pending</a>
-                    <a href="manage-messages.php?status=read" class="btn btn-outline-secondary <?php echo $filter_status === 'read' ? 'active' : ''; ?>">Read</a>
-                    <a href="manage-messages.php?status=resolved" class="btn btn-outline-secondary <?php echo $filter_status === 'resolved' ? 'active' : ''; ?>">Resolved</a>
+            <div class="row align-items-center mb-3">
+                <div class="col-md-6">
+                    <h6 class="fw-bold mb-0">All Conversations</h6>
+                </div>
+                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                    <div class="btn-group btn-group-sm">
+                        <a href="manage-messages.php" class="btn btn-outline-secondary <?= $filter_status === null ? 'active' : ''; ?>">All</a>
+                        <a href="manage-messages.php?status=pending" class="btn btn-outline-secondary <?= $filter_status === 'pending' ? 'active' : ''; ?>">Pending</a>
+                        <a href="manage-messages.php?status=read" class="btn btn-outline-secondary <?= $filter_status === 'read' ? 'active' : ''; ?>">Read</a>
+                        <a href="manage-messages.php?status=resolved" class="btn btn-outline-secondary <?= $filter_status === 'resolved' ? 'active' : ''; ?>">Resolved</a>
+                    </div>
                 </div>
             </div>
         </div>
