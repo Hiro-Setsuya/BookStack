@@ -285,9 +285,9 @@ include 'includes/head.php';
 
     <!-- Main Content -->
     <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
-        <div class="container">
+        <div class="container mt-5">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8">
+                <div class="col-12 col-md-10">
                     <div class="verification-card">
                         <div class="text-center mb-5">
                             <div class="mb-3">
@@ -317,7 +317,7 @@ include 'includes/head.php';
                                         </div>
                                         <h5 class="fw-bold mb-2">Email Verification</h5>
                                         <p class="text-muted mb-2">We'll send verification instructions to:</p>
-                                        <p class="fw-semibold text-green mb-0"><?= htmlspecialchars($user['email']) ?></p>
+                                        <p class="fw-semibold text-green mb-0 text-truncate" title="<?= htmlspecialchars($user['email']) ?>"><?= htmlspecialchars($user['email']) ?></p>
                                     </div>
                                 </div>
 

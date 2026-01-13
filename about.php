@@ -148,6 +148,27 @@ include 'includes/head.php';
                     </div>
                 </div>
 
+                <!-- Collab Section -->
+                <div class="card profile-card p-4 mb-4 mt-4" style="background-color: #ffffff;">
+                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-people-fill text-success"></i> Collaboration Partners
+                    </h4>
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-3 mb-md-0">
+                            <img src="assets/img/logo/emblem v1.png" alt="EscaPinas Logo" class="img-fluid" style="max-height: 120px; width: auto;">
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="fw-bold mb-2">EscaPinas</h5>
+                            <p class="text-muted mb-0" style="line-height: 1.6;">
+                                In collaboration with <strong>EscaPinas</strong>, we are expanding our digital reach to provide high-quality localized content and enhanced distribution services across the region.
+                            </p>
+                            <div class="mt-3">
+                                <span class="badge rounded-pill bg-success px-3">Official Partner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Contact Information -->
                 <div class="card profile-card p-4 mb-4">
                     <h4 class="fw-bold mb-3">Get in Touch</h4>
