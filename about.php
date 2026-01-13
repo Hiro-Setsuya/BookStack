@@ -160,7 +160,7 @@ include 'includes/head.php';
                         <div class="col-md-9">
                             <h5 class="fw-bold mb-2">EscaPinas</h5>
                             <p class="text-muted mb-0" style="line-height: 1.6;">
-                                In collaboration with <strong>Escapinas</strong>, we are expanding our digital reach to provide high-quality localized content and enhanced distribution services across the region.
+                                In collaboration with <strong>EscaPinas</strong>, we are expanding our digital reach to provide high-quality localized content and enhanced distribution services across the region.
                             </p>
                             <div class="mt-3">
                                 <span class="badge rounded-pill bg-success px-3">Official Partner</span>
