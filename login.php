@@ -2,7 +2,6 @@
 session_start();
 require_once 'config/db.php';
 require_once 'config/api-connection.php';
-require_once 'includes/voucher-utils.php';
 require_once 'includes/form-input.php';
 
 $error = "";
@@ -108,7 +107,6 @@ function syncEscaPinasUser($conn, $escapinas_user, $password)
 
     if ($insert_result) {
         $user_id = mysqli_insert_id($conn);
-        issueWelcomeVoucher($conn, $user_id);
 
         return [
             'user_id' => $user_id,
@@ -180,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Verify password
             if (password_verify($password, $user['password_hash'])) {
                 // Issue welcome voucher on first login
-                issueWelcomeVoucher($conn, $user['user_id']);
 
                 // Login user
                 loginUser($user);
