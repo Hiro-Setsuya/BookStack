@@ -1,10 +1,153 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'config/api-connection.php';
 require_once 'includes/voucher-utils.php';
 require_once 'includes/form-input.php';
 
 $error = "";
+
+/**
+ * Fetch users from EscaPinas API
+ * @return array|null Array of users or null on failure
+ */
+function fetchEscaPinasUsers()
+{
+    $response = @file_get_contents(ESCAPINAS_API_USERS);
+    if (!$response) {
+        return null;
+    }
+    return json_decode($response, true);
+}
+
+/**
+ * Find user in EscaPinas data by identifier (email or phone)
+ * @param array $escapinas_users Array of users from API
+ * @param string $identifier Email or phone to search for
+ * @return array|null User data or null if not found
+ */
+function findEscaPinasUser($escapinas_users, $identifier)
+{
+    if (!$escapinas_users || !is_array($escapinas_users)) {
+        return null;
+    }
+
+    $identifier_lower = strtolower($identifier);
+
+    foreach ($escapinas_users as $user) {
+        $email = isset($user['email']) ? strtolower(trim($user['email'])) : '';
+        $phone = isset($user['contact_num']) ? trim($user['contact_num']) : '';
+
+        if ($email === $identifier_lower || $phone === $identifier) {
+            return $user;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Create or update user from EscaPinas data
+ * @param mysqli $conn Database connection
+ * @param array $escapinas_user User data from EscaPinas
+ * @param string $password Password to verify
+ * @return array|null User session data or null on failure
+ */
+function syncEscaPinasUser($conn, $escapinas_user, $password)
+{
+    // Extract user data
+    $email = isset($escapinas_user['email']) ? strtolower(trim($escapinas_user['email'])) : '';
+    $phone = isset($escapinas_user['contact_num']) ? trim($escapinas_user['contact_num']) : '';
+    $password_hash = isset($escapinas_user['password']) ? $escapinas_user['password'] : '';
+    $username = isset($escapinas_user['username']) && !empty($escapinas_user['username'])
+        ? $escapinas_user['username']
+        : 'User_' . time();
+
+    // Verify password
+    if (empty($password_hash) || !password_verify($password, $password_hash)) {
+        return null;
+    }
+
+    // Escape data
+    $email_escaped = mysqli_real_escape_string($conn, $email);
+    $phone_escaped = !empty($phone) ? mysqli_real_escape_string($conn, $phone) : null;
+    $username_escaped = mysqli_real_escape_string($conn, $username);
+    $hash_escaped = mysqli_real_escape_string($conn, $password_hash);
+
+    // Check if user exists
+    $check_query = "SELECT user_id, user_name, email, role FROM users WHERE email = '$email_escaped'";
+    if ($phone_escaped) {
+        $check_query .= " OR phone_number = '$phone_escaped'";
+    }
+    $check_result = executeQuery($check_query);
+
+    if ($check_result && mysqli_num_rows($check_result) > 0) {
+        // Update existing user
+        $existing_user = mysqli_fetch_assoc($check_result);
+        $update_query = "UPDATE users SET password_hash = '$hash_escaped' WHERE user_id = " . $existing_user['user_id'];
+        executeQuery($update_query);
+
+        return [
+            'user_id' => $existing_user['user_id'],
+            'user_name' => $existing_user['user_name'],
+            'email' => $existing_user['email'],
+            'role' => $existing_user['role']
+        ];
+    }
+
+    // Create new user
+    if ($phone_escaped) {
+        $insert_query = "INSERT INTO users (user_name, email, phone_number, password_hash) 
+                        VALUES ('$username_escaped', '$email_escaped', '$phone_escaped', '$hash_escaped')";
+    } else {
+        $insert_query = "INSERT INTO users (user_name, email, password_hash) 
+                        VALUES ('$username_escaped', '$email_escaped', '$hash_escaped')";
+    }
+
+    $insert_result = executeQuery($insert_query);
+
+    if ($insert_result) {
+        $user_id = mysqli_insert_id($conn);
+        issueWelcomeVoucher($conn, $user_id);
+
+        return [
+            'user_id' => $user_id,
+            'user_name' => $username,
+            'email' => $email,
+            'role' => 'user'
+        ];
+    }
+
+    // Retry check if insert failed
+    $retry_result = executeQuery("SELECT user_id, user_name, email, role FROM users WHERE email = '$email_escaped'");
+    if ($retry_result && mysqli_num_rows($retry_result) > 0) {
+        $existing_user = mysqli_fetch_assoc($retry_result);
+        executeQuery("UPDATE users SET password_hash = '$hash_escaped' WHERE user_id = " . $existing_user['user_id']);
+
+        return [
+            'user_id' => $existing_user['user_id'],
+            'user_name' => $existing_user['user_name'],
+            'email' => $existing_user['email'],
+            'role' => $existing_user['role']
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * Set user session and redirect
+ * @param array $user User data
+ */
+function loginUser($user)
+{
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['user_name'] = $user['user_name'];
+    $_SESSION['email'] = $user['email'];
+    $_SESSION['role'] = $user['role'];
+    header('Location: index.php');
+    exit;
+}
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
@@ -36,118 +179,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Verify password
             if (password_verify($password, $user['password_hash'])) {
-                // Set session variables
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['user_name'] = $user['user_name'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
-
-                // Issue welcome voucher on first login (if not already issued)
+                // Issue welcome voucher on first login
                 issueWelcomeVoucher($conn, $user['user_id']);
 
-                // Redirect to index.php
-                header('Location: index.php');
-                exit;
+                // Login user
+                loginUser($user);
             } else {
                 $error = "Invalid credentials. Please try again.";
             }
         } else {
             // User not found locally, check EscaPinas system
-            $escapinas_api_url = "http://192.168.1.10/EscaPinas/frontend/integs/api/users1.php";
-            $escapinas_response = @file_get_contents($escapinas_api_url);
+            $escapinas_users = fetchEscaPinasUsers();
+            $escapinas_user = findEscaPinasUser($escapinas_users, $identifier);
 
-            if ($escapinas_response) {
-                $escapinas_users = json_decode($escapinas_response, true);
-                if ($escapinas_users && is_array($escapinas_users)) {
-                    foreach ($escapinas_users as $escapinas_user) {
-                        $escapinas_email = isset($escapinas_user['email']) ? strtolower(trim($escapinas_user['email'])) : '';
-                        $escapinas_phone = isset($escapinas_user['contact_num']) ? trim($escapinas_user['contact_num']) : '';
+            if ($escapinas_user) {
+                $synced_user = syncEscaPinasUser($conn, $escapinas_user, $password);
 
-                        // Check if identifier matches email or phone from EscaPinas
-                        if ($escapinas_email === strtolower($identifier) || $escapinas_phone === $identifier) {
-                            // Verify password against EscaPinas hash
-                            $escapinas_hash = isset($escapinas_user['password']) ? $escapinas_user['password'] : '';
-
-                            if (!empty($escapinas_hash) && password_verify($password, $escapinas_hash)) {
-                                // Valid EscaPinas user, check if already exists in BookStack
-                                $escapinas_username = isset($escapinas_user['username']) && !empty($escapinas_user['username']) ? mysqli_real_escape_string($conn, $escapinas_user['username']) : 'User_' . time();
-                                $escapinas_email_escaped = mysqli_real_escape_string($conn, $escapinas_email);
-                                $escapinas_hash_escaped = mysqli_real_escape_string($conn, $escapinas_hash);
-                                $escapinas_phone_escaped = !empty($escapinas_phone) ? mysqli_real_escape_string($conn, $escapinas_phone) : NULL;
-
-                                // Check if user already exists by email or phone
-                                $check_query = "SELECT user_id, user_name, email, role FROM users WHERE email = '$escapinas_email_escaped'";
-                                if ($escapinas_phone_escaped) {
-                                    $check_query .= " OR phone_number = '$escapinas_phone_escaped'";
-                                }
-                                $check_result = executeQuery($check_query);
-
-                                if ($check_result && mysqli_num_rows($check_result) > 0) {
-                                    // User already exists, update password hash and log them in
-                                    $existing_user = mysqli_fetch_assoc($check_result);
-
-                                    // Update password hash to match EscaPinas
-                                    $update_query = "UPDATE users SET password_hash = '$escapinas_hash_escaped' WHERE user_id = " . $existing_user['user_id'];
-                                    executeQuery($update_query);
-
-                                    $_SESSION['user_id'] = $existing_user['user_id'];
-                                    $_SESSION['user_name'] = $existing_user['user_name'];
-                                    $_SESSION['email'] = $existing_user['email'];
-                                    $_SESSION['role'] = $existing_user['role'];
-
-                                    header('Location: index.php');
-                                    exit;
-                                } else {
-                                    // Create new user in BookStack
-                                    if ($escapinas_phone_escaped) {
-                                        $insert_query = "INSERT INTO users (user_name, email, phone_number, password_hash) VALUES ('$escapinas_username', '$escapinas_email_escaped', '$escapinas_phone_escaped', '$escapinas_hash_escaped')";
-                                    } else {
-                                        $insert_query = "INSERT INTO users (user_name, email, password_hash) VALUES ('$escapinas_username', '$escapinas_email_escaped', '$escapinas_hash_escaped')";
-                                    }
-
-                                    $insert_result = executeQuery($insert_query);
-
-                                    if ($insert_result) {
-                                        $user_id = mysqli_insert_id($conn);
-
-                                        // Set session variables
-                                        $_SESSION['user_id'] = $user_id;
-                                        $_SESSION['user_name'] = $escapinas_username;
-                                        $_SESSION['email'] = $escapinas_email;
-                                        $_SESSION['role'] = 'user';
-
-                                        // Issue welcome voucher
-                                        issueWelcomeVoucher($conn, $user_id);
-
-                                        // Redirect to index.php
-                                        header('Location: index.php');
-                                        exit;
-                                    } else {
-                                        // Insert failed, possibly duplicate - try to find existing user
-                                        $retry_check = "SELECT user_id, user_name, email, role FROM users WHERE email = '$escapinas_email_escaped'";
-                                        $retry_result = executeQuery($retry_check);
-
-                                        if ($retry_result && mysqli_num_rows($retry_result) > 0) {
-                                            $existing_user = mysqli_fetch_assoc($retry_result);
-
-                                            // Update password and log in
-                                            $update_query = "UPDATE users SET password_hash = '$escapinas_hash_escaped' WHERE user_id = " . $existing_user['user_id'];
-                                            executeQuery($update_query);
-
-                                            $_SESSION['user_id'] = $existing_user['user_id'];
-                                            $_SESSION['user_name'] = $existing_user['user_name'];
-                                            $_SESSION['email'] = $existing_user['email'];
-                                            $_SESSION['role'] = $existing_user['role'];
-
-                                            header('Location: index.php');
-                                            exit;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
+                if ($synced_user) {
+                    loginUser($synced_user);
                 }
             }
 
