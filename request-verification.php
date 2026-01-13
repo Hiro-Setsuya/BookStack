@@ -317,7 +317,7 @@ include 'includes/head.php';
                                         </div>
                                         <h5 class="fw-bold mb-2">Email Verification</h5>
                                         <p class="text-muted mb-2">We'll send verification instructions to:</p>
-                                        <p class="fw-semibold text-green mb-0"><?= htmlspecialchars($user['email']) ?></p>
+                                        <p class="fw-semibold text-green mb-0 text-truncate"><?= htmlspecialchars($user['email']) ?></p>
                                     </div>
                                 </div>
 
