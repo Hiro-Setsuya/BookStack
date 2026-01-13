@@ -192,18 +192,15 @@ include '../includes/head.php';
                                 <input type="text" name="search" class="form-control border-start-0" placeholder="Title or author" value="<?php echo htmlspecialchars($searchTerm); ?>">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label small fw-bold">Category</label>
-                            <select name="category" class="form-select form-select-sm">
-                                <option value="0" <?php echo $filterCategory == 0 ? 'selected' : ''; ?>>All Categories</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo $cat['category_id']; ?>" <?php echo $filterCategory == $cat['category_id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['name']); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small fw-bold">&nbsp;</label>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2 align-items-center">
+                                <select name="category" class="form-select form-select-sm">
+                                    <option value="0" <?php echo $filterCategory == 0 ? 'selected' : ''; ?>>All Categories</option>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?php echo $cat['category_id']; ?>" <?php echo $filterCategory == $cat['category_id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['name']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                                 <button type="submit" class="btn btn-sm btn-primary" title="Filter"><i class="bi bi-funnel-fill"></i></button>
                                 <?php if (!empty($searchTerm) || $filterCategory > 0): ?>
                                     <a href="manage-ebooks.php" class="btn btn-sm btn-outline-secondary" title="Clear filters"><i class="bi bi-x-lg"></i></a>
