@@ -254,18 +254,20 @@ include '../includes/head.php';
 
     <?php include '../includes/notification.php'; ?>
 
-    <header class="d-flex justify-content-between align-items-start mb-4">
-        <div>
-            <h5 class="fw-bold mb-0">Messages</h5>
-            <p class="text-muted small">Manage user communications and support requests.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="?refresh=1<?php echo $filter_status ? '&status=' . $filter_status : ''; ?>" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-envelope-check me-2"></i>Check Email
-            </a>
-            <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
-                <i class="bi bi-arrow-clockwise me-2"></i>Refresh
-            </button>
+    <header class="mb-4">
+        <div class="row align-items-start">
+            <div class="col-md-6">
+                <h5 class="fw-bold mb-0">Messages</h5>
+                <p class="text-muted small">Manage user communications and support requests.</p>
+            </div>
+            <div class="col-md-6 d-flex justify-content-md-end justify-content-center gap-2">
+                <a href="?refresh=1<?php echo $filter_status ? '&status=' . $filter_status : ''; ?>" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-envelope-check me-2"></i>Check Email
+                </a>
+                <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+                </button>
+            </div>
         </div>
     </header>
 
