@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'config/api-connection.php';
+require_once 'includes/utils.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -9,8 +11,20 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+$user_email = $_SESSION['email'];
 
-// Fetch user's vouchers
+// Handle voucher sync request
+if (isset($_GET['action']) && $_GET['action'] === 'sync') {
+    $sync_result = syncAllEscaPinasVouchers($conn, $user_id, $user_email);
+    $_SESSION['sync_message'] = "Synced {$sync_result['synced']} voucher(s) from EscaPinas.";
+    header('Location: my-vouchers.php');
+    exit;
+}
+
+// Auto-sync EscaPinas vouchers on page load (silent)
+syncAllEscaPinasVouchers($conn, $user_id, $user_email);
+
+// Fetch user's vouchers (including synced ones)
 $query = "SELECT * FROM vouchers 
           WHERE user_id = $user_id 
           ORDER BY 
@@ -82,10 +96,23 @@ include 'includes/head.php';
             <?php include 'includes/client-sidebar.php'; ?>
 
             <div class="col-lg-9">
-                <div class="profile-header mb-4 text-center text-lg-start">
-                    <h2 class="fw-bold">My Vouchers</h2>
-                    <p class="text-muted">View and manage your discount vouchers.</p>
+                <div class="profile-header mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="text-center text-lg-start">
+                        <h2 class="fw-bold mb-1">My Vouchers</h2>
+                        <p class="text-muted mb-0">View and manage your discount vouchers.</p>
+                    </div>
+                    <a href="?action=sync" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-repeat me-2"></i>Sync from EscaPinas
+                    </a>
                 </div>
+
+                <?php if (isset($_SESSION['sync_message'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle me-2"></i><?php echo $_SESSION['sync_message'];
+                                                                unset($_SESSION['sync_message']); ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
 
                 <?php if (mysqli_num_rows($result) > 0): ?>
                     <div class="row g-4">
@@ -124,9 +151,9 @@ include 'includes/head.php';
                                             <!-- Voucher Details -->
                                             <div class="col">
                                                 <div class="mb-2">
-                                                    <span class="badge <?php echo $voucher['external_system'] === 'travel_agency' ? 'bg-info' : 'bg-primary'; ?>">
-                                                        <i class="bi bi-<?php echo $voucher['external_system'] === 'travel_agency' ? 'airplane' : 'book'; ?> me-1"></i>
-                                                        <?php echo $voucher['external_system'] === 'travel_agency' ? 'Travel Agency' : 'BookStack'; ?>
+                                                    <span class="badge <?php echo $voucher['external_system'] === 'escapinas' ? 'bg-info' : ($voucher['external_system'] === 'travel_agency' ? 'bg-warning' : 'bg-primary'); ?>">
+                                                        <i class="bi bi-<?php echo $voucher['external_system'] === 'escapinas' ? 'globe' : ($voucher['external_system'] === 'travel_agency' ? 'airplane' : 'book'); ?> me-1"></i>
+                                                        <?php echo $voucher['external_system'] === 'escapinas' ? 'EscaPinas' : ($voucher['external_system'] === 'travel_agency' ? 'Travel Agency' : 'BookStack'); ?>
                                                     </span>
                                                 </div>
 
