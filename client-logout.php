@@ -73,16 +73,20 @@ include 'includes/head.php';
                     </p>
                 </div>
                 <div class="card-footer bg-white border-top p-4">
-                    <div class="d-grid gap-2 d-sm-flex">
-                        <a href="profile.php" class="btn btn-outline-secondary flex-fill py-2">
-                            <i class="bi bi-x-circle me-2"></i>Cancel
-                        </a>
-                        <form method="POST" class="d-flex flex-fill">
-                            <input type="hidden" name="confirm_logout" value="yes">
-                            <button type="submit" class="btn w-100 py-2" style="background-color: #2ecc71; color: white;" onclick="clearStackAIChat()">
-                                <i class="bi bi-box-arrow-right me-2"></i>Logout
-                            </button>
-                        </form>
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            <a href="profile.php" class="btn btn-outline-secondary w-100 py-2 d-flex align-items-center justify-content-center">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <form method="POST">
+                                <input type="hidden" name="confirm_logout" value="yes">
+                                <button type="submit" class="btn w-100 py-2 d-flex align-items-center justify-content-center" style="background-color: #2ecc71; color: white;" onclick="clearStackAIChat()">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
