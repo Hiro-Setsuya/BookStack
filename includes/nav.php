@@ -74,24 +74,9 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                     </a>
                 </li>
             </ul>
-
-            <!-- Mobile Search Form -->
-            <form method="GET" action="ebooks.php" class="d-lg-none px-3 py-2">
-                <div class="input-group">
-                    <input class="form-control" type="text" name="q" placeholder="Search BookStack" />
-                    <button class="btn btn-green" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
+            </div>
 
         <div class="ms-auto d-none d-lg-flex align-items-center">
-            <form method="GET" action="ebooks.php" class="me-2">
-                <input class="form-control" type="text" name="q" placeholder="Search BookStack" style="width: 200px;" />
-            </form>
-
-            <!-- Cart with badge -->
             <a href="cart.php" class="btn btn-green me-2 position-relative">
                 <i class="bi bi-cart3"></i>
                 <?php if ($cart_count > 0): ?>
@@ -101,7 +86,6 @@ function isActive(string $page, string $activeClass = 'text-green fw-bold'): str
                 <?php endif; ?>
             </a>
 
-            <!-- Profile or Sign In button -->
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="profile.php" class="btn btn-green text-nowrap">
                     <i class="bi bi-person-circle me-2"></i><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Profile'); ?>
