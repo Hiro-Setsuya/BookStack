@@ -226,7 +226,7 @@ include 'includes/head.php';
                         <div class="mb-4 d-flex align-items-center" style="padding: 16px; background: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6;">
                             <input class="form-check-input" type="checkbox" name="terms" id="terms" style="width: 20px; height: 20px; flex-shrink: 0; cursor: pointer; margin-top: 2px;" required />
                             <label class="form-check-label small text-muted ms-3" for="terms" style="cursor: pointer; line-height: 1.5;">
-                                By creating an account, you agree to our <a href="#" class="fw-bold text-reg text-decoration-none">Terms of Service</a> and <a href="#" class="fw-bold text-reg text-decoration-none">Privacy Policy</a>.
+                                By creating an account, you agree to our <a href="terms-condition.php" class="fw-bold text-reg text-decoration-none">Terms of Service</a> and <a href="terms-condition.php" class="fw-bold text-reg text-decoration-none">Privacy Policy</a>.
                             </label>
                         </div>
                         <!-- Submit Button -->
@@ -417,7 +417,7 @@ include 'includes/head.php';
 
         confirmInput.addEventListener('input', checkPasswordMatch);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 
 </html>
