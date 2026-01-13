@@ -58,18 +58,18 @@ include 'includes/head.php';
                                     <div class="card-body p-4">
                                         <div class="row g-3">
                                             <!-- Ebook Cover -->
-                                            <div class="col-auto">
-                                                <div class="position-relative rounded overflow-hidden" style="width: 100px; height: 140px; background-color: #f8f9fa; border: 1px solid #e0e0e0;">
+                                            <div class="col-12 col-md-3 d-flex justify-content-center">
+                                                <div class="position-relative rounded overflow-hidden">
                                                     <img src="<?php echo htmlspecialchars($ebook['cover_image']); ?>"
                                                         alt="<?php echo htmlspecialchars($ebook['title']); ?>"
-                                                        class="w-100 h-100"
+                                                        height="170"
                                                         style="object-fit: cover;"
                                                         onerror="this.style.objectFit='contain'; this.style.padding='10px';">
                                                 </div>
                                             </div>
 
                                             <!-- Ebook Details -->
-                                            <div class="col">
+                                            <div class="col-12 col-md-9">
                                                 <div class="d-flex justify-content-between align-items-start">
                                                     <div class="flex-grow-1">
                                                         <h5 class="fw-bold mb-1">
