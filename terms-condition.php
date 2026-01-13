@@ -9,14 +9,17 @@ include 'includes/head.php';
 ?>
 
 <style>
+    /* Change this section in your <style> tag */
     .legal-container {
-        max-width: 900px;
+        max-width: 1200px;
+        /* Increased from 900px */
         margin: 4rem auto;
         background: #ffffff;
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         border: 1px solid #dee2e6;
     }
+
     .legal-header {
         background: linear-gradient(135deg, #1fd26a 0%, #17a654 100%);
         color: white;
@@ -24,26 +27,31 @@ include 'includes/head.php';
         border-radius: 15px 15px 0 0;
         text-align: center;
     }
+
     .legal-content {
         padding: 3rem;
         line-height: 1.8;
         color: #495057;
     }
+
     .legal-content h3 {
         color: #212529;
         font-weight: 700;
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
+
     .nav-pills .nav-link {
         color: #6c757d;
         font-weight: 600;
         padding: 12px 25px;
     }
+
     .nav-pills .nav-link.active {
         background-color: #1fd26a;
         color: white;
     }
+
     .back-link {
         text-decoration: none;
         color: #1fd26a;
@@ -53,21 +61,33 @@ include 'includes/head.php';
         margin-bottom: 20px;
         font-weight: 600;
     }
+
+    /* Ensure the page stretches to keep footer at bottom */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .main-content {
+        flex: 1 0 auto;
+    }
 </style>
 
 <body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-                
-                <div class="mt-5">
-                    <a href="register.php" class="back-link">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                        Back to Registration
-                    </a>
-                </div>
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="mt-5">
+                        <a href="register.php" class="back-link">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            Back to Registration
+                        </a>
+                    </div>
 
-                <div class="legal-container">
+                </div>
+                <div class="legal-container mb-5">
                     <div class="legal-header">
                         <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
                             <img src="assets/img/logo/logo.svg" height="40" width="40" alt="Logo">
@@ -91,7 +111,7 @@ include 'includes/head.php';
                         <div class="tab-pane fade show active" id="terms" role="tabpanel">
                             <h2>Terms of Service</h2>
                             <p class="lead">Please read these terms carefully before using BookStack.</p>
-                            
+
                             <h3>1. Acceptance of Terms</h3>
                             <p>By creating an account or accessing our services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
 
@@ -108,7 +128,7 @@ include 'includes/head.php';
                         <div class="tab-pane fade" id="privacy" role="tabpanel">
                             <h2>Privacy Policy</h2>
                             <p class="lead">Your privacy is important to us. This policy explains how we handle your data.</p>
-                            
+
                             <h3>1. Information We Collect</h3>
                             <ul>
                                 <li><strong>Account Data:</strong> Username, email address, and hashed password.</li>
@@ -127,14 +147,14 @@ include 'includes/head.php';
                         </div>
                     </div>
                 </div>
-
-                <div class="text-center mb-5 mt-4 text-muted">
-                    <p>&copy; <?php echo date('Y'); ?> BookStack Inc. All rights reserved.</p>
-                </div>
             </div>
         </div>
     </div>
+    </div>
+
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
+
 </html>
