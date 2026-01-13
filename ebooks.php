@@ -81,7 +81,7 @@ if ($category_id > 0) {
     }
 }
 
-// Fetch ebooks from database with optional search and category filter
+// Fetch ebooks from database with strict title and author search
 if (!empty($search_query)) {
     $search_term = '%' . mysqli_real_escape_string($conn, $search_query) . '%';
     $query = "
@@ -99,16 +99,13 @@ if (!empty($search_query)) {
         LEFT JOIN categories c ON e.category_id = c.category_id
         WHERE 
             (e.title LIKE '$search_term' OR
-            e.author LIKE '$search_term' OR
-            e.description LIKE '$search_term' OR
-            c.name LIKE '$search_term')
+            e.author LIKE '$search_term')
             " . ($category_id > 0 ? "AND e.category_id = $category_id" : "") . "
         ORDER BY 
             CASE 
                 WHEN e.title LIKE '$search_term' THEN 1
                 WHEN e.author LIKE '$search_term' THEN 2
-                WHEN c.name LIKE '$search_term' THEN 3
-                ELSE 4
+                ELSE 3
             END,
             e.title ASC
     ";
