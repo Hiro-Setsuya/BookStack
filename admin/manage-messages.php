@@ -300,9 +300,9 @@ include '../includes/head.php';
         <div class="card-header bg-white">
             <div class="row align-items-center mb-3">
                 <div class="col-md-6">
-                    <h6 class="fw-bold mb-0">All Conversations</h6>
+                    <h6 class="fw-bold mb-0 text-md-start text-center">All Conversations</h6>
                 </div>
-                <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <div class="col-md-6 text-md-end text-center mt-2 mt-md-0">
                     <div class="btn-group btn-group-sm">
                         <a href="manage-messages.php" class="btn btn-outline-secondary <?= $filter_status === null ? 'active' : ''; ?>">All</a>
                         <a href="manage-messages.php?status=pending" class="btn btn-outline-secondary <?= $filter_status === 'pending' ? 'active' : ''; ?>">Pending</a>
