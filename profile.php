@@ -220,7 +220,7 @@ include 'includes/head.php';
                                             <strong class="text-warning d-block">Account Not Verified</strong>
                                             <p class="mb-0 small text-muted">Please verify your account to purchase ebooks.</p>
                                         </div>
-                                        <a href="request-verification.php" class="btn btn-primary btn-sm mt-2 mt-sm-0 d-flex align-items-center justify-content-center">Verify Now</a>
+                                        <a href="request-verification.php" class="btn btn-primary btn-sm mt-2 mt-sm-0 p-3 d-flex align-items-center justify-content-center">Verify Now</a>
                                     <?php endif; ?>
                                 </div>
                             </div>
