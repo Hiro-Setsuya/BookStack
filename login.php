@@ -52,6 +52,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "Invalid credentials. Please try again.";
             }
         } else {
+            // User not found locally, check EscaPinas system
+            $escapinas_api_url = "http://192.168.1.10/EscaPinas/frontend/integs/api/users1.php";
+            $escapinas_response = @file_get_contents($escapinas_api_url);
+
+            if ($escapinas_response) {
+                $escapinas_users = json_decode($escapinas_response, true);
+                if ($escapinas_users && is_array($escapinas_users)) {
+                    foreach ($escapinas_users as $escapinas_user) {
+                        $escapinas_email = isset($escapinas_user['email']) ? strtolower(trim($escapinas_user['email'])) : '';
+                        $escapinas_phone = isset($escapinas_user['contact_num']) ? trim($escapinas_user['contact_num']) : '';
+
+                        // Check if identifier matches email or phone from EscaPinas
+                        if ($escapinas_email === strtolower($identifier) || $escapinas_phone === $identifier) {
+                            // Verify password against EscaPinas hash
+                            $escapinas_hash = isset($escapinas_user['password']) ? $escapinas_user['password'] : '';
+
+                            if (!empty($escapinas_hash) && password_verify($password, $escapinas_hash)) {
+                                // Valid EscaPinas user, check if already exists in BookStack
+                                $escapinas_username = isset($escapinas_user['username']) && !empty($escapinas_user['username']) ? mysqli_real_escape_string($conn, $escapinas_user['username']) : 'User_' . time();
+                                $escapinas_email_escaped = mysqli_real_escape_string($conn, $escapinas_email);
+                                $escapinas_hash_escaped = mysqli_real_escape_string($conn, $escapinas_hash);
+                                $escapinas_phone_escaped = !empty($escapinas_phone) ? mysqli_real_escape_string($conn, $escapinas_phone) : NULL;
+
+                                // Check if user already exists by email or phone
+                                $check_query = "SELECT user_id, user_name, email, role FROM users WHERE email = '$escapinas_email_escaped'";
+                                if ($escapinas_phone_escaped) {
+                                    $check_query .= " OR phone_number = '$escapinas_phone_escaped'";
+                                }
+                                $check_result = executeQuery($check_query);
+
+                                if ($check_result && mysqli_num_rows($check_result) > 0) {
+                                    // User already exists, update password hash and log them in
+                                    $existing_user = mysqli_fetch_assoc($check_result);
+
+                                    // Update password hash to match EscaPinas
+                                    $update_query = "UPDATE users SET password_hash = '$escapinas_hash_escaped' WHERE user_id = " . $existing_user['user_id'];
+                                    executeQuery($update_query);
+
+                                    $_SESSION['user_id'] = $existing_user['user_id'];
+                                    $_SESSION['user_name'] = $existing_user['user_name'];
+                                    $_SESSION['email'] = $existing_user['email'];
+                                    $_SESSION['role'] = $existing_user['role'];
+
+                                    header('Location: index.php');
+                                    exit;
+                                } else {
+                                    // Create new user in BookStack
+                                    if ($escapinas_phone_escaped) {
+                                        $insert_query = "INSERT INTO users (user_name, email, phone_number, password_hash) VALUES ('$escapinas_username', '$escapinas_email_escaped', '$escapinas_phone_escaped', '$escapinas_hash_escaped')";
+                                    } else {
+                                        $insert_query = "INSERT INTO users (user_name, email, password_hash) VALUES ('$escapinas_username', '$escapinas_email_escaped', '$escapinas_hash_escaped')";
+                                    }
+
+                                    $insert_result = executeQuery($insert_query);
+
+                                    if ($insert_result) {
+                                        $user_id = mysqli_insert_id($conn);
+
+                                        // Set session variables
+                                        $_SESSION['user_id'] = $user_id;
+                                        $_SESSION['user_name'] = $escapinas_username;
+                                        $_SESSION['email'] = $escapinas_email;
+                                        $_SESSION['role'] = 'user';
+
+                                        // Issue welcome voucher
+                                        issueWelcomeVoucher($conn, $user_id);
+
+                                        // Redirect to index.php
+                                        header('Location: index.php');
+                                        exit;
+                                    } else {
+                                        // Insert failed, possibly duplicate - try to find existing user
+                                        $retry_check = "SELECT user_id, user_name, email, role FROM users WHERE email = '$escapinas_email_escaped'";
+                                        $retry_result = executeQuery($retry_check);
+
+                                        if ($retry_result && mysqli_num_rows($retry_result) > 0) {
+                                            $existing_user = mysqli_fetch_assoc($retry_result);
+
+                                            // Update password and log in
+                                            $update_query = "UPDATE users SET password_hash = '$escapinas_hash_escaped' WHERE user_id = " . $existing_user['user_id'];
+                                            executeQuery($update_query);
+
+                                            $_SESSION['user_id'] = $existing_user['user_id'];
+                                            $_SESSION['user_name'] = $existing_user['user_name'];
+                                            $_SESSION['email'] = $existing_user['email'];
+                                            $_SESSION['role'] = $existing_user['role'];
+
+                                            header('Location: index.php');
+                                            exit;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
             $error = "Invalid credentials. Please try again.";
         }
     }
