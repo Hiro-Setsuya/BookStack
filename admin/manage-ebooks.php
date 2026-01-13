@@ -346,11 +346,6 @@ include '../includes/head.php';
         </div>
     </div>
 
-    </div>
-    </main>
-    </div>
-    </div>
-
     <!-- E-Book Modal for Create/Edit -->
     <div class="modal fade" id="ebookModal" tabindex="-1" aria-labelledby="ebookModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
