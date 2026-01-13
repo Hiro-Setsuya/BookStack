@@ -8,7 +8,7 @@ session_start();
   <!-- navbar -->
   <?php include 'includes/nav.php'; ?>
 
-  <div class="container mt-lg-5 py-4 px-4">
+  <div class="container mt-5 pt-5 py-4 px-4">
     <div class="row">
       <div class="col-lg-7">
         <div class="display-3 fw-bold">Learn Tech Skills with</div>
