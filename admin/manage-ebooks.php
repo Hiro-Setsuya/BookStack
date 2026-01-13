@@ -187,7 +187,7 @@ include '../includes/head.php';
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Search books</label>
-                            <div class="input-group input-group-sm">
+                            <div class="input-group input-group-md">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
                                 <input type="text" name="search" class="form-control border-start-0" placeholder="Title or author" value="<?php echo htmlspecialchars($searchTerm); ?>">
                             </div>
