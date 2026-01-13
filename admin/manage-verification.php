@@ -251,13 +251,13 @@ include '../includes/head.php';
     ?>
 
     <div class="mb-4">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
+        <div class="row align-items-start mb-4">
+            <div class="col-md-6 mb-3">
                 <h5 class="fw-bold mb-0">Manage Verifications</h5>
                 <p class="text-muted small mb-0">Review and approve user verification requests.</p>
             </div>
-            <div>
-                <a href="?refresh=1" class="btn btn-outline-primary btn-sm">
+            <div class="col-md-6 d-flex justify-content-md-end justify-content-center">
+                <a href="?refresh=1" class="btn btn-outline-primary btn">
                     <i class="bi bi-envelope-check me-2"></i>Check Email
                 </a>
             </div>
