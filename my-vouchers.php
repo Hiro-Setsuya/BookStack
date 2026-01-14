@@ -101,9 +101,7 @@ include 'includes/head.php';
                         <h2 class="fw-bold mb-1">My Vouchers</h2>
                         <p class="text-muted mb-0">View and manage your discount vouchers.</p>
                     </div>
-                    <a href="?action=sync" class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-repeat me-2"></i>Sync from EscaPinas
-                    </a>
+
                 </div>
 
                 <?php if (isset($_SESSION['sync_message'])): ?>
