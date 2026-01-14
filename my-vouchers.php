@@ -155,20 +155,10 @@ include 'includes/head.php';
                                                     </span>
                                                 </div>
 
-                                                <div class="row align-items-center mb-3 g-2">
-                                                    <div class="col-10">
-                                                        <div class="voucher-code text-truncate">
-                                                            <?php echo htmlspecialchars($voucher['code']); ?>
-                                                        </div>
+                                                <div class="mb-3">
+                                                    <div class="voucher-code text-truncate">
+                                                        <?php echo htmlspecialchars($voucher['code']); ?>
                                                     </div>
-                                                    <?php if ($is_active): ?>
-                                                        <div class="col-2 d-flex justify-content-end">
-                                                            <button class="btn btn-sm btn-outline-secondary copy-code-btn" onclick="copyCode('<?php echo htmlspecialchars($voucher['code']); ?>', this)"
-                                                                title="Copy code">
-                                                                <i class="bi bi-clipboard"></i>
-                                                            </button>
-                                                        </div>
-                                                    <?php endif; ?>
                                                 </div>
 
                                                 <div class="row g-2 mb-3">
@@ -212,14 +202,10 @@ include 'includes/head.php';
                                                 </div>
 
                                                 <?php if ($is_active): ?>
-                                                    <div class="d-flex gap-2 flex-wrap">
+                                                    <div>
                                                         <a href="ebooks.php?voucher=<?php echo urlencode($voucher['code']); ?>" class="btn btn-sm btn-green">
                                                             <i class="bi bi-cart-plus me-1"></i> Use Now
                                                         </a>
-                                                        <button class="btn btn-sm btn-outline-secondary"
-                                                            onclick="shareVoucher('<?php echo htmlspecialchars($voucher['code']); ?>')">
-                                                            <i class="bi bi-share me-1"></i> Share
-                                                        </button>
                                                     </div>
                                                 <?php elseif ($is_expired): ?>
                                                     <div class="alert alert-danger mb-0 py-2 small">
@@ -259,39 +245,7 @@ include 'includes/head.php';
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        function copyCode(code, btn) {
-            navigator.clipboard.writeText(code).then(() => {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="bi bi-check2"></i>';
-                btn.classList.remove('btn-outline-secondary');
-                btn.classList.add('btn-success');
 
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.classList.remove('btn-success');
-                    btn.classList.add('btn-outline-secondary');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
-        }
-
-        function shareVoucher(code) {
-            const text = `Check out this voucher code: ${code}`;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'BookStack Voucher',
-                    text: text
-                }).catch(err => console.log('Error sharing:', err));
-            } else {
-                // Fallback: copy to clipboard
-                navigator.clipboard.writeText(code).then(() => {
-                    alert('Voucher code copied to clipboard!');
-                });
-            }
-        }
-    </script>
 </body>
 
 </html>
