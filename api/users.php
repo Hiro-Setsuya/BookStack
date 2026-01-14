@@ -285,6 +285,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
+// Handle DELETE requests (Delete user)
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (!isset($data['user_id'])) {
+        jsonResponse([
+            "success" => false,
+            "message" => "User ID is required"
+        ], 400);
+    }
+
+    $user_id = intval($data['user_id']);
+
+    $stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+    $stmt->bind_param("i", $user_id);
+
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows > 0) {
+            $stmt->close();
+            jsonResponse([
+                "success" => true,
+                "message" => "User deleted successfully"
+            ], 200);
+        } else {
+            $stmt->close();
+            jsonResponse([
+                "success" => false,
+                "message" => "User not found"
+            ], 404);
+        }
+    } else {
+        $error = $stmt->error;
+        $stmt->close();
+        jsonResponse([
+            "success" => false,
+            "message" => "Delete failed: " . $error
+        ], 500);
+    }
+}
+
 // Method not allowed
 jsonResponse([
     "success" => false,
