@@ -221,3 +221,51 @@
 [2026-01-09 05:41:25] Starting email check...
 [2026-01-09 05:41:27] Connected to Gmail successfully
 [2026-01-09 05:41:27] No unread emails found
+[2026-01-14 03:27:29] Starting email check...
+[2026-01-14 03:27:31] Connected to Gmail successfully
+[2026-01-14 03:27:32] Found 5 unread email(s)
+[2026-01-14 03:27:33] Processing email from: hartlacuarin22@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-14 03:27:33] Body preview: CONFIRM-D794EF
+[2026-01-14 03:27:33] Found verification code: CONFIRM-D794EF
+[2026-01-14 03:27:38] Immediate thank you email sent to: hartlacuarin22@gmail.com
+[2026-01-14 03:27:38] Searching for pending verification from: hartlacuarin22@gmail.com
+[2026-01-14 03:27:38] No matching pending verification found for: hartlacuarin22@gmail.com
+[2026-01-14 03:27:39] Processing email from: hartlacuarin22@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-14 03:27:39] Body preview: CONFIRM-76A8AE
+[2026-01-14 03:27:39] Found verification code: CONFIRM-76A8AE
+[2026-01-14 03:27:44] Immediate thank you email sent to: hartlacuarin22@gmail.com
+[2026-01-14 03:27:44] Searching for pending verification from: hartlacuarin22@gmail.com
+[2026-01-14 03:27:44] No matching pending verification found for: hartlacuarin22@gmail.com
+[2026-01-14 03:27:45] Processing email from: hartlacuarin22@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-14 03:27:45] Body preview: CONFIRM-FB2DD7
+[2026-01-14 03:27:45] Found verification code: CONFIRM-FB2DD7
+[2026-01-14 03:27:50] Immediate thank you email sent to: hartlacuarin22@gmail.com
+[2026-01-14 03:27:50] Searching for pending verification from: hartlacuarin22@gmail.com
+[2026-01-14 03:27:50] No matching pending verification found for: hartlacuarin22@gmail.com
+[2026-01-14 03:27:51] Processing email from: hartlacuarin22@gmail.com, Subject: Re: Account Verification Request - BookStack
+[2026-01-14 03:27:51] Body preview: CONFIRM-68A636
+[2026-01-14 03:27:51] Found verification code: CONFIRM-68A636
+[2026-01-14 03:27:56] Immediate thank you email sent to: hartlacuarin22@gmail.com
+[2026-01-14 03:27:56] Searching for pending verification from: hartlacuarin22@gmail.com
+[2026-01-14 03:27:56] No matching pending verification found for: hartlacuarin22@gmail.com
+[2026-01-14 03:27:57] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-14 03:27:57] Body preview: 
+[2026-01-14 03:27:57] No verification code found - treating as regular user message
+[2026-01-14 03:27:57] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-14 03:27:59] Starting email check...
+[2026-01-14 03:28:01] Connected to Gmail successfully
+[2026-01-14 03:28:01] Found 1 unread email(s)
+[2026-01-14 03:28:02] Processing email from: mailer-daemon@googlemail.com, Subject: Delivery Status Notification (Failure)
+[2026-01-14 03:28:02] Body preview: 
+[2026-01-14 03:28:02] No verification code found - treating as regular user message
+[2026-01-14 03:28:02] New user message saved from: mailer-daemon@googlemail.com (Unknown User)
+[2026-01-14 03:28:02] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-14 03:28:03] Email processing complete. Processed: 5, Updated: 0, New Messages: 1
+[2026-01-14 03:28:07] Auto-reply sent to: mailer-daemon@googlemail.com
+[2026-01-14 03:28:07] Email processing complete. Processed: 1, Updated: 0, New Messages: 1
+[2026-01-14 03:28:23] Starting email check...
+[2026-01-14 03:28:24] Connected to Gmail successfully
+[2026-01-14 03:28:24] No unread emails found
+[2026-01-14 03:28:33] Starting email check...
+[2026-01-14 03:28:34] Connected to Gmail successfully
+[2026-01-14 03:28:35] No unread emails found

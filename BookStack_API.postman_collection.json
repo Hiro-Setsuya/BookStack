@@ -1,0 +1,446 @@
+{
+  "info": {
+    "_postman_id": "bookstack-api-v1",
+    "name": "BookStack API Collection",
+    "description": "Complete API documentation for BookStack E-Book Store platform. Includes endpoints for user management and voucher operations.\n\n## Base URL\n```\nhttp://localhost/BookStack/api\n```\n\n## Authentication\n- **User Endpoints**: Require Basic Auth with admin credentials\n- **Voucher Endpoints**: Public access for GET, Basic Auth for modifications\n- **Auth Endpoint**: No authentication required\n\n## Response Format\nAll responses are in JSON format with appropriate HTTP status codes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@bookstack.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/BookStack/api/auth.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "auth.php"]
+            },
+            "description": "Authenticate a user and receive a token.\n\n### Request Body\n```json\n{\n    \"email\": \"user@example.com\",\n    \"password\": \"password\"\n}\n```\n\n### Response (200 OK)\n```json\n{\n    \"user_id\": 1,\n    \"username\": \"admin\",\n    \"email\": \"admin@bookstack.com\",\n    \"role\": \"admin\",\n    \"token\": \"abc123...\",\n    \"message\": \"Login successful\"\n}\n```\n\n### Error Responses\n- **400 Bad Request**: Missing email or password\n- **401 Unauthorized**: Invalid credentials"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for user login"
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/users.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "users.php"]
+            },
+            "description": "Retrieve all users from the system.\n\n**Authentication Required**: Admin Basic Auth\n\n### Response (200 OK)\n```json\n[\n    {\n        \"user_id\": 1,\n        \"user_name\": \"john_doe\",\n        \"email\": \"john@example.com\",\n        \"phone_number\": \"+1234567890\",\n        \"role\": \"customer\",\n        \"is_account_verified\": 1,\n        \"created_at\": \"2024-01-01 10:00:00\",\n        \"updated_at\": \"2024-01-01 10:00:00\"\n    }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/users.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "users.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieve a specific user by their ID.\n\n**Authentication Required**: Admin Basic Auth\n\n### Query Parameters\n- `id` (required): User ID\n\n### Response (200 OK)\n```json\n{\n    \"user_id\": 1,\n    \"user_name\": \"john_doe\",\n    \"email\": \"john@example.com\",\n    \"phone_number\": \"+1234567890\",\n    \"role\": \"customer\",\n    \"is_account_verified\": 1,\n    \"created_at\": \"2024-01-01 10:00:00\",\n    \"updated_at\": \"2024-01-01 10:00:00\"\n}\n```\n\n### Error Responses\n- **404 Not Found**: User not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/users.php?search=john&role=customer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "users.php"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john",
+                  "description": "Search by username or email"
+                },
+                {
+                  "key": "role",
+                  "value": "customer",
+                  "description": "Filter by role (admin/customer)"
+                }
+              ]
+            },
+            "description": "Search and filter users.\n\n**Authentication Required**: Admin Basic Auth\n\n### Query Parameters\n- `search` (optional): Search by username or email\n- `role` (optional): Filter by role (admin, customer)\n\n### Response (200 OK)\nReturns array of users matching criteria"
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"jane_smith\",\n    \"email\": \"jane@example.com\",\n    \"password\": \"securepass123\",\n    \"phone_number\": \"+1987654321\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/BookStack/api/users.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "users.php"]
+            },
+            "description": "Create a new user account.\n\n**Authentication Required**: Admin Basic Auth\n\n### Request Body\n```json\n{\n    \"username\": \"jane_smith\",      // Required, unique\n    \"email\": \"jane@example.com\",   // Required, unique, valid email\n    \"password\": \"securepass123\",   // Required, min 6 characters\n    \"phone_number\": \"+1987654321\" // Optional\n}\n```\n\n### Response (201 Created)\n```json\n{\n    \"user_id\": 2,\n    \"username\": \"jane_smith\",\n    \"email\": \"jane@example.com\",\n    \"message\": \"User registered successfully\"\n}\n```\n\n### Error Responses\n- **400 Bad Request**: Missing required fields or validation errors\n- **409 Conflict**: Username or email already exists"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 2,\n    \"username\": \"jane_updated\",\n    \"email\": \"jane.new@example.com\",\n    \"phone_number\": \"+1234567890\",\n    \"role\": \"customer\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/BookStack/api/users.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "users.php"]
+            },
+            "description": "Update an existing user's information.\n\n**Authentication Required**: Admin Basic Auth\n\n### Request Body\n```json\n{\n    \"user_id\": 2,                   // Required\n    \"username\": \"jane_updated\",    // Optional\n    \"email\": \"jane@example.com\",   // Optional, valid email\n    \"password\": \"newpassword\",     // Optional, min 6 characters\n    \"phone_number\": \"+1234567890\", // Optional\n    \"role\": \"customer\"             // Optional (admin/customer)\n}\n```\n\n### Response (200 OK)\n```json\n{\n    \"success\": true,\n    \"message\": \"User updated successfully\"\n}\n```\n\n### Error Responses\n- **400 Bad Request**: Invalid input or no fields to update\n- **404 Not Found**: User not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints - requires admin authentication",
+      "auth": {
+        "type": "basic",
+        "basic": [
+          {
+            "key": "username",
+            "value": "admin",
+            "type": "string"
+          },
+          {
+            "key": "password",
+            "value": "password123",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vouchers",
+      "item": [
+        {
+          "name": "Get All Vouchers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"]
+            },
+            "description": "Retrieve all vouchers from the system.\n\n**Authentication**: Not required for GET requests\n\n### Response (200 OK)\n```json\n[\n    {\n        \"voucher_id\": 1,\n        \"user_id\": 1,\n        \"user_name\": \"john_doe\",\n        \"email\": \"john@example.com\",\n        \"external_system\": \"ebook_store\",\n        \"code\": \"SAVE20\",\n        \"discount_type\": \"percentage\",\n        \"discount_amount\": 20.00,\n        \"min_order_amount\": 10.00,\n        \"max_uses\": 100,\n        \"times_used\": 5,\n        \"remaining_uses\": 95,\n        \"is_redeemed\": 0,\n        \"is_expired\": false,\n        \"is_available\": true,\n        \"issued_at\": \"2024-01-01 10:00:00\",\n        \"expires_at\": \"2024-12-31 23:59:59\",\n        \"redeemed_at\": null\n    }\n]\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Voucher by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieve a specific voucher by ID.\n\n### Query Parameters\n- `id` (required): Voucher ID\n\n### Response (200 OK)\n```json\n{\n    \"voucher_id\": 1,\n    \"user_id\": 1,\n    \"user_name\": \"john_doe\",\n    \"email\": \"john@example.com\",\n    \"code\": \"SAVE20\",\n    \"discount_type\": \"percentage\",\n    \"discount_amount\": 20.00,\n    \"remaining_uses\": 95,\n    \"is_expired\": false,\n    \"is_available\": true\n}\n```\n\n### Error Responses\n- **404 Not Found**: Voucher not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Voucher by Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php?code=SAVE20",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "SAVE20"
+                }
+              ]
+            },
+            "description": "Retrieve a voucher by its code.\n\n### Query Parameters\n- `code` (required): Voucher code (case-insensitive)\n\n### Response (200 OK)\nSame as Get Voucher by ID\n\n### Error Responses\n- **404 Not Found**: Voucher code not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Filter Vouchers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php?user_id=1&available=1&is_redeemed=0",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "1",
+                  "description": "Filter by user ID"
+                },
+                {
+                  "key": "available",
+                  "value": "1",
+                  "description": "Get only available vouchers (not redeemed, not expired)"
+                },
+                {
+                  "key": "is_redeemed",
+                  "value": "0",
+                  "description": "Filter by redemption status (0=not redeemed, 1=redeemed)"
+                },
+                {
+                  "key": "external_system",
+                  "value": "ebook_store",
+                  "description": "Filter by external system",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "SAVE",
+                  "description": "Search by voucher code",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Search and filter vouchers with multiple criteria.\n\n### Query Parameters\n- `user_id` (optional): Filter by user ID\n- `external_system` (optional): Filter by external system\n- `is_redeemed` (optional): Filter by redemption status (0 or 1)\n- `available` (optional): Filter for available vouchers (1)\n- `search` (optional): Search by voucher code\n\n### Response (200 OK)\nReturns array of vouchers matching criteria"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Voucher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 1,\n    \"code\": \"NEWUSER10\",\n    \"discount_type\": \"percentage\",\n    \"discount_amount\": 10.00,\n    \"min_order_amount\": 5.00,\n    \"max_uses\": 100,\n    \"expires_at\": \"2024-12-31 23:59:59\",\n    \"external_system\": \"ebook_store\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"]
+            },
+            "description": "Create a new voucher.\n\n### Request Body\n```json\n{\n    \"user_id\": 1,                      // Required, must exist\n    \"code\": \"NEWUSER10\",              // Required, unique, uppercase\n    \"discount_type\": \"percentage\",    // Optional, default: \"fixed\" (fixed/percentage)\n    \"discount_amount\": 10.00,         // Required, > 0\n    \"min_order_amount\": 5.00,         // Optional, default: 0.00\n    \"max_uses\": 100,                  // Optional, default: 1\n    \"expires_at\": \"2024-12-31 23:59:59\", // Optional, datetime\n    \"external_system\": \"ebook_store\"  // Optional, default: \"ebook_store\"\n}\n```\n\n### Response (201 Created)\n```json\n{\n    \"success\": true,\n    \"message\": \"Voucher created successfully\",\n    \"voucher\": {\n        \"voucher_id\": 5,\n        \"code\": \"NEWUSER10\",\n        \"discount_amount\": 10.00,\n        ...\n    }\n}\n```\n\n### Error Responses\n- **400 Bad Request**: Missing required fields, invalid data, or code already exists\n- **404 Not Found**: User not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Voucher",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"discount_amount\": 15.00,\n    \"min_order_amount\": 20.00,\n    \"max_uses\": 200,\n    \"expires_at\": \"2025-01-31 23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Update an existing voucher.\n\n### Query Parameters\n- `id` (required): Voucher ID\n\n### Request Body (all fields optional)\n```json\n{\n    \"discount_amount\": 15.00,\n    \"min_order_amount\": 20.00,\n    \"max_uses\": 200,\n    \"expires_at\": \"2025-01-31 23:59:59\",\n    \"is_redeemed\": 1\n}\n```\n\n### Response (200 OK)\n```json\n{\n    \"success\": true,\n    \"message\": \"Voucher updated successfully\",\n    \"voucher\": {...}\n}\n```\n\n### Error Responses\n- **400 Bad Request**: No fields to update\n- **404 Not Found**: Voucher not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Voucher",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost/BookStack/api/voucher.php?id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "path": ["BookStack", "api", "voucher.php"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Delete a voucher permanently.\n\n### Query Parameters\n- `id` (required): Voucher ID\n\n### Response (200 OK)\n```json\n{\n    \"success\": true,\n    \"message\": \"Voucher deleted successfully\"\n}\n```\n\n### Error Responses\n- **400 Bad Request**: Missing voucher ID\n- **404 Not Found**: Voucher not found"
+          },
+          "response": []
+        }
+      ],
+      "description": "Voucher management endpoints"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/BookStack/api",
+      "type": "string"
+    },
+    {
+      "key": "admin_username",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "admin_password",
+      "value": "password123",
+      "type": "string"
+    }
+  ]
+}

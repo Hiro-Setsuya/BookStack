@@ -33,7 +33,7 @@ BookStack is a comprehensive e-book e-commerce platform built with PHP and MySQL
 
 ### 🔧 Technical Features
 
-- **REST API** - Full-featured API with authentication (See [API Documentation](api/README.md))
+- **REST API** - Full-featured API with authentication (See [API Documentation](api/API_DOCUMENTATION.md) | [Postman Collection](BookStack_API.postman_collection.json))
 - **Email/SMS Integration** - Automated notifications and verification
 - **Reply Processing** - Capture and process email/SMS replies for verification
 - **Partner Integration** - API for third-party integrations
@@ -61,12 +61,12 @@ BookStack/
 │   ├── auth.php                   # API authentication
 │   ├── auth-middleware.php        # API middleware
 │   ├── users.php                  # User endpoints
-│   ├── vouchers.php               # Voucher endpoints
+│   ├── voucher.php                # Voucher endpoints
 │   ├── response.php               # JSON response handler
 │   ├── process-sms-reply.php      # SMS reply processor
 │   ├── process-email-reply.php    # Email reply processor
 │   ├── check-email-replies.php    # Email reply checker
-│   └── README.md                  # API documentation
+│   └── API_DOCUMENTATION.md       # Complete API documentation
 │
 │
 ├── assets/
@@ -256,36 +256,76 @@ BookStack/
 
 ## 🔌 API Documentation
 
-The BookStack API provides programmatic access to the platform. See [API Documentation](api/README.md) for detailed endpoint information.
+The BookStack API provides programmatic access to user management and voucher operations.
 
-### Quick API Example
+### 📖 Complete Documentation
 
-**Authentication:**
+- **[Full API Documentation](api/API_DOCUMENTATION.md)** - Comprehensive guide with all endpoints
+- **[Postman Collection](BookStack_API.postman_collection.json)** - Import into Postman for testing
+
+### 🚀 Quick Start
+
+**Base URL:** `http://localhost/BookStack/api`
+
+#### Authentication
 
 ```bash
-POST /api/auth.php
+POST /auth.php
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
+  "email": "admin@bookstack.com",
   "password": "password123"
 }
 ```
 
-**Response:**
+#### Get All Vouchers
 
-```json
+```bash
+GET /voucher.php?available=1
+```
+
+#### Create User (requires Basic Auth)
+
+```bash
+POST /users.php
+Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=
+Content-Type: application/json
+
 {
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "user_id": 1,
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-  }
+  "username": "newuser",
+  "email": "user@example.com",
+  "password": "securepass123"
 }
 ```
 
-See [BookStack_API.postman_collection.json](api/BookStack_API.postman_collection.json) for Postman collection.
+#### Get Voucher by Code
+
+```bash
+GET /voucher.php?code=SAVE20
+```
+
+### 📋 Available Endpoints
+
+#### Users API (Admin Auth Required)
+
+- `GET /users.php` - Get all users
+- `GET /users.php?id={id}` - Get user by ID
+- `POST /users.php` - Create new user
+- `PUT /users.php` - Update user
+
+#### Vouchers API
+
+- `GET /voucher.php` - Get all vouchers
+- `GET /voucher.php?id={id}` - Get voucher by ID
+- `GET /voucher.php?code={code}` - Get voucher by code
+- `POST /voucher.php` - Create voucher
+- `PUT /voucher.php?id={id}` - Update voucher
+- `DELETE /voucher.php?id={id}` - Delete voucher
+
+### 🧪 Testing
+
+Import **[BookStack_API.postman_collection.json](BookStack_API.postman_collection.json)** into Postman for ready-to-use API requests with examples.
 
 ## 🔐 Security Features
 
