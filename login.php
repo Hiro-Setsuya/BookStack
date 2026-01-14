@@ -211,7 +211,7 @@ include 'includes/head.php';
 ?>
 
 <body>
-    <div class="container-fluid px-4 py-3 shadow-sm mb-4">
+    <div class="container-fluid px-4 py-3 pt-5 shadow-sm mb-4">
         <div class="position-absolute top-0 start-0 w-100 p-4 d-flex justify-content-between align-items-center px-lg-5 shadow-sm">
             <a href="index.php" class="navbar-brand">
                 <img src="assets/img/logo/logo.svg" height="30" alt="Logo">
