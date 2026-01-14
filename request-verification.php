@@ -35,7 +35,15 @@ if ($user['is_account_verified']) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'])) {
     $method = mysqli_real_escape_string($conn, $_POST['verification_method']);
 
+    // Validate that user has the required contact information
     if ($method === 'email') {
+        if (empty($user['email'])) {
+            $_SESSION['status_message'] = "Email address is not set. Please update your profile with an email address first.";
+            $_SESSION['status_type'] = 'danger';
+            header('Location: request-verification.php');
+            exit;
+        }
+
         $contact_info = $user['email'];
         $verification_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
 
@@ -94,6 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_verification'
 
         $emailSent = sendEmail($contact_info, $subject, $message);
     } elseif ($method === 'phone') {
+        if (empty($user['phone_number'])) {
+            $_SESSION['status_message'] = "Phone number is not set. Please update your profile with a phone number first.";
+            $_SESSION['status_type'] = 'danger';
+            header('Location: request-verification.php');
+            exit;
+        }
+
         $contact_info = $user['phone_number'];
         $verification_code = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
 
