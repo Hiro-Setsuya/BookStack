@@ -159,18 +159,7 @@ include 'includes/head.php';
   <!-- navbar -->
   <?php include 'includes/nav.php'; ?>
 
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col text-center mx-2">
-        <div class="mx-auto d-lg-none d-flex mt-4">
-          <input id="mobile-search" name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-green" type="button" aria-label="Search button"><i class="bi bi-search"></i></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container mt-3 mt-lg-5 px-4">
+  <div class="container mt-3 mt-lg-5 pt-5 px-4">
     <div class="row px-md-5">
       <div class="col px-md-5">
         <div class="h2 fw-bold">Checkout</div>

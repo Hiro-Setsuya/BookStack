@@ -140,20 +140,7 @@ include 'includes/head.php';
 <body>
   <?php include 'includes/nav.php'; ?>
 
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col text-center mx-2">
-        <div class="mx-auto d-lg-none d-flex mt-3 px-3">
-          <div class="position-relative flex-grow-1">
-            <i class="bi bi-search position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%); color: #2ecc71; font-size: 0.9rem;"></i>
-            <input class="form-control form-control-sm ps-4 py-2 border-0" type="text" placeholder="Search books..." style="background-color: rgba(46, 204, 113, 0.08); border-radius: 20px;">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container mt-3 mt-lg-5 px-3">
+  <div class="container mt-5 pt-5 mt-lg-5 px-3">
     <div class="row">
 
       <div class="col-lg-8 mb-4">
