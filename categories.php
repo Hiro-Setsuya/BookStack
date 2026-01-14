@@ -40,7 +40,7 @@ include 'includes/head.php';
                 $category_id = $category['category_id'];
         ?>
                 <!-- Category Card -->
-                <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card ebook-card shadow-sm border-0 h-100">
                         <div class="card-body d-flex flex-column ebook-card-body">
                             <div class="category-header mb-3">
