@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
         <i class="bi bi-send"></i>
       </button>
     </div>
-    <p class="text-muted text-center mb-0" style="font-size: 11px;">Powered by Stack AI</p>
+    <p class="text-muted text-center mb-3" style="font-size: 11px;">Powered by Stack AI</p>
   </div>
 </div>
 
