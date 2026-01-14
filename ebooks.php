@@ -337,7 +337,7 @@ include 'includes/head.php';
     $message_type = !empty($message_type) ? $message_type : '';
     $messageType = $message_type;
     if (!empty($message)) {
-        echo '<div class="container mt-5 pt-5">';
+        echo '<div class="container position-absolute start-50 translate-middle-x" style="top: 80px; z-index: 1050;">';
         include 'includes/notification.php';
         echo '</div>';
     }
