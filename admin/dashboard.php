@@ -183,7 +183,7 @@ include '../includes/head.php';
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Student</th>
+                                <th>Users</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
