@@ -207,6 +207,14 @@ $extraStyles = '<link href="https://fonts.googleapis.com/css2?family=Material+Sy
 ob_start();
 renderFloatingInputStyles();
 $extraStyles .= ob_get_clean();
+$extraStyles .= '<style>
+.form-control.is-invalid {
+    background-image: none !important;
+}
+.form-control.is-invalid:focus {
+    background-image: none !important;
+}
+</style>' . "\n";
 include 'includes/head.php';
 ?>
 
