@@ -352,6 +352,26 @@ $extraStyles = '<style>
             padding: 1.25rem;
         }
     }
+
+    .pagination .page-link {
+        color: #28a745;
+        border-color: #28a745;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+    }
 </style>';
 include 'includes/head.php';
 ?>
