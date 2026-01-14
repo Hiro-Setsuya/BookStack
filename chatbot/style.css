@@ -58,12 +58,13 @@
 .stack-ai-modal {
   position: fixed;
   right: 0;
-  /* Use top offset so modal sits below the navbar/header */
   top: var(--stack-ai-top);
   width: 100%;
   max-width: 420px;
-  /* Make modal height account for the top offset */
-  height: calc(100vh - var(--stack-ai-top));
+
+  height: calc(100dvh - var(--stack-ai-top));
+  max-height: calc(100dvh - var(--stack-ai-top));
+
   background-color: white;
   z-index: 2100;
   transform: translateX(100%);
@@ -79,17 +80,10 @@
 
 .stack-ai-overlay {
   position: fixed;
-  /* Start overlay below the navbar/header too */
   top: var(--stack-ai-top);
   left: 0;
   width: 100%;
-  /* Overlay should cover the remaining viewport */
-  height: calc(100vh - var(--stack-ai-top));
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2090;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  height: calc(100dvh - var(--stack-ai-top));
 }
 
 .stack-ai-overlay.active {
@@ -270,6 +264,7 @@
 
 .stack-ai-footer {
   padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
   background-color: white;
   border-top: 2px solid #a7f3d0;
   flex-shrink: 0;
