@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   }
 
   // Load FULL knowledge base from data.txt
-  $dataFile = __DIR__ . '/chatbot/data.txt';
+  $dataFile = __DIR__ . '/data.txt';
   if (file_exists($dataFile)) {
     $data = file_get_contents($dataFile);
   } else {
