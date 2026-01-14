@@ -164,7 +164,6 @@ include '../includes/head.php';
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h6 class="fw-bold mb-1">Sales Overview</h6>
-                <p class="text-muted small mb-0">Last 3 months revenue</p>
             </div>
         </div>
         <div class="chart-container">
