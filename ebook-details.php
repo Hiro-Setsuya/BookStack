@@ -2,6 +2,53 @@
 session_start();
 require_once 'config/db.php';
 
+// Handle Add to Cart
+$message = '';
+$message_type = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
+  if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php?redirect=ebook-details.php?id=' . intval($_POST['ebook_id']));
+    exit;
+  }
+
+  $user_id = $_SESSION['user_id'];
+  $ebook_id_cart = intval($_POST['ebook_id']);
+
+  // Check if item already exists in cart
+  $check_stmt = $conn->prepare("SELECT cart_id FROM cart_items WHERE user_id = ? AND ebook_id = ?");
+  $check_stmt->bind_param("ii", $user_id, $ebook_id_cart);
+  $check_stmt->execute();
+  $check_result = $check_stmt->get_result();
+
+  if ($check_result->num_rows > 0) {
+    $message = 'This item is already in your cart!';
+    $message_type = 'warning';
+  } else {
+    // Add to cart
+    $insert_stmt = $conn->prepare("INSERT INTO cart_items (user_id, ebook_id) VALUES (?, ?)");
+    $insert_stmt->bind_param("ii", $user_id, $ebook_id_cart);
+
+    if ($insert_stmt->execute()) {
+      $message = 'Item added to cart successfully!';
+      $message_type = 'success';
+      // Redirect to prevent form resubmission
+      header("Location: ebook-details.php?id=$ebook_id_cart&added=1");
+      exit;
+    } else {
+      $message = 'Failed to add item to cart.';
+      $message_type = 'danger';
+    }
+    $insert_stmt->close();
+  }
+  $check_stmt->close();
+}
+
+// Check for success message from redirect
+if (isset($_GET['added']) && $_GET['added'] == 1) {
+  $message = 'Item added to cart successfully!';
+  $message_type = 'success';
+}
+
 // Get ebook ID from URL
 $ebook_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -75,7 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_rating']) && $i
 }
 
 $title = htmlspecialchars($ebook['title']);
-$extraStyles = '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet" />
+$extraStyles = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet" />
 <style>
   /* Star Rating Input */
   .rating-input {
@@ -112,6 +160,24 @@ include 'includes/head.php';
     <!-- Main Content -->
     <main class="flex-grow-1 py-5" style="margin-top: 80px;">
       <div class="container" style="max-width: 1400px;">
+
+        <!-- Success/Error Messages -->
+        <?php if (!empty($message)): ?>
+          <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
+            <?php if ($message_type === 'success'): ?>
+              <i class="bi bi-check-circle-fill me-2"></i>
+            <?php elseif ($message_type === 'warning'): ?>
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <?php else: ?>
+              <i class="bi bi-x-circle-fill me-2"></i>
+            <?php endif; ?>
+            <?php echo htmlspecialchars($message); ?>
+            <?php if ($message_type === 'success'): ?>
+              <a href="cart.php" class="alert-link ms-2">View Cart</a>
+            <?php endif; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <?php endif; ?>
 
         <!-- Product Hero -->
         <div class="row g-4 mb-5 justify-content-center">
@@ -161,10 +227,19 @@ include 'includes/head.php';
 
                 <!-- Action Buttons -->
                 <div class="d-grid gap-2 d-sm-flex">
-                  <button class="btn btn-lg d-flex align-items-center justify-content-center gap-2 flex-grow-1" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
-                    <span class="material-symbols-outlined">shopping_cart</span> Add to Cart
-                  </button>
-                  <a href="checkout.php?id=<?php echo $ebook_id; ?>&buy_now=1" class="btn btn-lg flex-grow-1" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600; text-decoration: none;">Buy Now</a>
+                  <?php if ($has_purchased): ?>
+                    <a href="download.php?id=<?php echo $ebook_id; ?>" class="btn btn-lg d-flex align-items-center justify-content-center gap-2 flex-grow-1" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
+                      <span class="material-symbols-outlined">download</span> Download Now
+                    </a>
+                  <?php else: ?>
+                    <form method="POST" action="" class="flex-grow-1 d-grid">
+                      <input type="hidden" name="ebook_id" value="<?php echo $ebook_id; ?>">
+                      <button type="submit" name="add_to_cart" class="btn btn-lg d-flex align-items-center justify-content-center gap-2" style="background-color: #2ecc71; border-color: #2ecc71; color: white; font-weight: 600;">
+                        <span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+                      </button>
+                    </form>
+                    <a href="checkout.php?id=<?php echo $ebook_id; ?>&buy_now=1" class="btn btn-lg flex-grow-1" style="border: 2px solid #2ecc71; color: #2ecc71; font-weight: 600; text-decoration: none;">Buy Now</a>
+                  <?php endif; ?>
                 </div>
 
                 <div class="text-center mt-3 small text-muted">
@@ -332,6 +407,20 @@ include 'includes/head.php';
 
   <!-- Optional: Bootstrap JS (for dropdowns, modals, etc.) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Auto-dismiss success alert -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Auto-dismiss success alert after 5 seconds
+      const successAlert = document.querySelector('.alert-success');
+      if (successAlert) {
+        setTimeout(function() {
+          const bsAlert = new bootstrap.Alert(successAlert);
+          bsAlert.close();
+        }, 5000);
+      }
+    });
+  </script>
 </body>
 
 </html>
