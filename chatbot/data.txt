@@ -1,453 +1,335 @@
-## **BOOKSTACK - EBOOK WEBSITE FAQs**
+BOOKSTACK - EBOOK WEBSITE FAQs
+ABOUT BOOKSTACK
 
----
+BookStack is an ebook e-commerce platform offering technology and programming books with instant downloads and lifetime access.
 
-## **ABOUT BOOKSTACK**
+Our goal is to make tech knowledge accessible to developers, students, and tech enthusiasts.
 
-BookStack is a premier ebook e-commerce platform dedicated to providing readers with access to a vast collection of digital books focused on technology and programming. 
-
-We offer seamless purchasing, instant downloads, and lifetime access to your ebook library. Our mission is to make technology knowledge accessible to developers, students, and tech enthusiasts worldwide.
-
-**What We Offer:**
-• Comprehensive technology and programming ebooks
-• Instant digital downloads after purchase
-• Secure PayPal payment processing
+What We Offer:
+• Technology and programming ebooks
+• Instant PDF downloads after purchase
+• Secure PayPal payments
 • Lifetime access to purchased books
 • Account verification for security
-• Exclusive discount vouchers
-• Multi-device compatibility (PDF format)
-• Customer support via email and SMS
+• Discount vouchers
+• Multi-device PDF compatibility
+• Email and SMS customer support
 
----
+BOOK CATEGORIES
 
-## **BOOK CATEGORIES**
-
-BookStack specializes in technology ebooks across these categories:
+BookStack focuses on technology-related ebooks:
 
 • Programming Languages (Python, Java, C++, JavaScript, etc.)
-• Web Development (HTML, CSS, React, Node.js, etc.)
+• Web Development (HTML, CSS, React, Node.js)
 • Mobile App Development (Android, iOS, React Native)
 • Database Systems (MySQL, PostgreSQL, MongoDB)
-• Backend Development (APIs, Server Architecture)
+• Backend Development (APIs, Servers)
 • Frontend Development (UI/UX, Frameworks)
 • Technology Fundamentals
 
-**All books are in PDF format** and can be read on any device supporting PDF files.
+All books are in PDF format and readable on any PDF-supported device.
 
----
+HOW TO PURCHASE EBOOKS
 
-## **HOW TO PURCHASE EBOOKS**
+Step-by-step purchasing process:
 
-**Step-by-step purchasing process:**
+Browse available ebooks or search
 
-1. **Browse**: Explore our catalog or use the search function
-2. **Select**: Click on the book cover to view details and description
-3. **Add to Cart**: Click the "Add to Cart" button
-4. **Review Cart**: Check your selected items and total
-5. **Checkout**: Proceed to secure checkout
-6. **Payment**: Complete payment via PayPal
-7. **Download**: Instant access to download your ebook in PDF format
-8. **Library**: Access all purchased ebooks anytime from "My E-Books"
+Select a book to view details
 
-**Supported Payment Methods:**
-• **PayPal** (Credit Cards, Debit Cards, PayPal Balance)
+Add to Cart
 
-**Transaction Security:**
-All transactions are protected by PayPal's industry-standard security. Your payment information is processed securely through PayPal's encrypted gateway. We never store your credit card details.
+Review Cart
 
----
+Checkout
 
-## **PRICING & DISCOUNTS**
+Pay via PayPal
 
-**Pricing:**
-• Ebooks are priced in Philippine Peso (₱)
-• Prices typically range from ₱99 to ₱999
-• Premium technical books: ₱299 - ₱999
-• Individual book pricing visible on product pages
+Download instantly
 
-**Discount Vouchers:**
-• Exclusive voucher codes available for registered users
-• Vouchers can provide percentage or fixed amount discounts
-• Check "My Vouchers" page after logging in
-• Apply voucher code at checkout for instant savings
-• Some vouchers may have minimum purchase requirements
-• Vouchers have expiration dates - use them before they expire!
+Access anytime via "My E-Books"
 
-**How to Use Vouchers:**
-1. Go to "My Vouchers" page to view available codes
-2. Copy your voucher code
-3. Add items to cart and proceed to checkout
-4. Enter voucher code in the discount field
-5. Click "Apply" to see your savings
-6. Complete payment with discounted price
+Supported Payment Method:
+• PayPal (cards or PayPal balance)
 
----
+Transaction Security:
+Payments are securely processed via PayPal. BookStack does not store card details.
 
-## **ACCOUNT & PROFILE**
+PRICING & DISCOUNTS
 
-**Creating an Account:**
-1. Click "Register" or "Sign Up" on the homepage
-2. Enter your full name, email, and phone number
-3. Create a strong password
-4. Submit registration form
-5. **Verify your account** (required before purchasing)
+Pricing:
+• Prices in Philippine Peso (₱)
+• Typical range: ₱99 – ₱999
+• Premium books: ₱299 – ₱999
 
-**Account Verification:**
-• Required for all users before making purchases
-• Can be verified via **Email** or **SMS**
-• Choose your preferred verification method in your profile
-• Follow instructions sent to your email or phone
-• Admin will review and approve your verification
+Discount Vouchers:
+• Available to registered users
+• Percentage or fixed discounts
+• Found on "My Vouchers" page
+• Applied during checkout
+• May have expiration or minimum spend
 
-**Verification via Email:**
-1. Go to "Request Verification" page
-2. Select "Email" as verification method
-3. Check your email for verification code
-4. Reply to the email with the code
-5. Admin will approve within 24-48 hours
+How to Use Vouchers:
 
-**Verification via SMS:**
-1. Go to "Request Verification" page
-2. Select "Phone" as verification method
-3. Receive verification code via SMS
-4. Reply to the SMS with the code
-5. Account will be automatically verified upon correct code
+Copy voucher from "My Vouchers"
 
-**Account Features:**
-• Personal library with all purchased ebooks
-• Download history and access logs
-• Profile management (name, email, phone)
-• Password change functionality
-• Order history and receipts
-• Voucher management page
-• Secure logout option
+Add items to cart
 
-**Profile Management:**
-• Update your name, email, and phone number
-• Change password regularly for security
-• Ensure contact information is current for support
-• Phone format: Philippine numbers (09XX or +639XX)
+Enter voucher code at checkout
 
-**Security:**
-• Password protected with secure encryption
-• Phone number verification available
-• Secure password reset via "Forgot Password"
-• Privacy policy protecting your data
+Apply and complete payment
 
----
+ACCOUNT & PROFILE
 
-## **DOWNLOADING & ACCESSING EBOOKS**
+Creating an Account:
 
-**How to Download Your Ebooks:**
+Click Register
 
-1. **After Purchase**:
-   - Go to "My E-Books" page
-   - All purchased ebooks appear in your library
-   - Click "Download" button next to each ebook
+Enter name, email, phone
 
-2. **Multiple Downloads**:
-   - Download your ebooks as many times as needed
-   - No download limits or restrictions
-   - Lifetime access to all purchased content
+Create password
 
-3. **File Format**:
-   - All ebooks are in **PDF format**
-   - Universal compatibility with all devices
-   - No special reader app required
+Submit form
 
-**Compatible Devices:**
-• **Computers**: Windows, Mac, Linux
-• **Mobile**: Android phones/tablets, iPhones/iPads
-• **E-readers**: Any device that supports PDF files
-• **Tablets**: All tablet devices
+Complete verification
 
-**Reading Your Ebooks:**
-• Use any PDF reader application
-• Adobe Acrobat Reader (recommended)
-• Built-in browser PDF viewers
-• Mobile PDF apps (e.g., Google PDF Viewer, Adobe Reader)
-• Offline reading supported - download and read anytime
+Account Verification:
+• Required before purchasing
+• Via Email or SMS
+• Admin approval required
 
-**Troubleshooting Downloads:**
-• Ensure stable internet connection
-• Try a different browser if download fails
-• Check your browser's download folder
-• Disable popup blockers temporarily
-• Clear browser cache and try again
-• Contact support if issues persist
+Verification via Email:
 
----
+Request verification
 
-## **CUSTOMER SUPPORT**
+Select Email
 
-**Need Help? We're Here!**
+Receive code
 
-**Email Support:**
-📧 **Email**: nullbyte235@gmail.com
-• Available 24/7 for inquiries
-• Response time: Within 24-48 hours
-• Include your order number for faster assistance
+Reply with code
 
-**SMS Support:**
-📱 **Phone**: +63 994 055 1720 (09940551720)
-• SMS verification and support available
-• Fast response during business hours
-• Include your registered phone number
+Approval within 24–48 hours
 
-**Support via Website:**
-• Use the contact form on homepage
-• Fill in your details and message
-• Select "Email" or "Phone" as contact method
-• Admin will respond to your inquiry
+Verification via SMS:
 
-**Common Issues I Help With:**
-• Download or access problems
-• Payment issues or transaction errors
-• Account verification assistance
-• Voucher code questions
-• Password reset and account recovery
-• Order history inquiries
-• Book recommendations
-• Technical support for purchases
+Request verification
 
-**Before Contacting Support:**
-• Check your order confirmation email
-• Verify your account is active and verified
-• Review FAQs below for quick answers
-• Have your order number ready (if applicable)
-• Include screenshots of any errors
+Select Phone
 
-**Response Times:**
-• Email inquiries: 24-48 hours
-• SMS support: Same day (business hours)
-• Urgent issues prioritized
-• Weekend responses may be delayed
+Receive SMS code
 
----
+Reply with code
 
-## **ORDERS & PAYMENT**
+Auto-verified if correct
 
-**Viewing Your Orders:**
-1. Log in to your account
-2. Go to "Orders" page
-3. View complete order history
-4. See order details, dates, and amounts
-5. Download receipts for your records
+Account Features:
+• Ebook library
+• Download history
+• Profile and password management
+• Order history
+• Voucher access
 
-**Order Information Includes:**
-• Order number and date
+Security:
+• Encrypted passwords
+• Secure password reset
+• Optional phone verification
+
+DOWNLOADING & ACCESSING EBOOKS
+
+How to Download:
+
+Go to "My E-Books"
+
+Click Download
+
+Access Details:
+• Unlimited downloads
+• Lifetime access
+• PDF format only
+
+Compatible Devices:
+• Windows, Mac, Linux
+• Android & iOS
+• Tablets and e-readers (PDF supported)
+
+Reading Options:
+• Any PDF reader
+• Offline reading supported
+
+Download Troubleshooting:
+• Check internet
+• Try another browser
+• Clear cache
+• Disable pop-up blockers
+• Contact support if needed
+
+CUSTOMER SUPPORT
+
+Email Support:
+📧 Email: nullbyte235@gmail.com
+
+• 24/7 availability
+• 24–48 hour response
+
+SMS Support:
+📱 Phone: +63 994 055 1720
+• Verification and support
+• Business hours response
+
+Support via Website:
+• Contact form available
+• Choose Email or Phone
+
+Common Support Topics:
+• Downloads and access
+• Payments
+• Verification
+• Vouchers
+• Password recovery
+
+ORDERS & PAYMENT
+
+Viewing Orders:
+
+Log in
+
+Go to "Orders"
+
+View history and receipts
+
+Order Includes:
+• Order number
 • Items purchased
-• Total amount paid
-• Payment method used
-• Download links for ebooks
-• Transaction status
+• Amount paid
+• Payment status
+• Download links
 
-**Payment Process:**
-1. Items in cart are totaled
-2. Apply voucher code if available
-3. Click "Proceed to Checkout"
-4. Redirected to PayPal secure gateway
-5. Complete payment with PayPal account or card
-6. Return to BookStack after successful payment
-7. Access ebooks immediately
+Payment Flow:
 
-**Payment Troubleshooting:**
-• Ensure PayPal account has sufficient funds
-• Verify card details are correct
-• Check for any PayPal restrictions
-• Contact PayPal support for payment gateway issues
-• Contact BookStack support for order-related issues
+Cart total calculated
 
----
+Voucher applied (optional)
 
-## **PRIVACY & SECURITY**
+PayPal checkout
 
-**Data Protection:**
-• All personal information encrypted with SSL
-• No selling of user data to third parties
-• Secure account verification process
-• Payment processing through PayPal's secure gateway
-• Regular security updates
+Payment confirmation
 
-**What We Collect:**
-• Name, email address, and phone number for account creation
-• Purchase history to provide access to your library
-• Payment information processed securely by PayPal (not stored on our servers)
-• Order details for customer support
+Instant ebook access
 
-**Your Rights:**
-• View your profile information anytime
-• Update your contact details
-• Change your password
-• Request account information
-• Contact support for data-related inquiries
+PRIVACY & SECURITY
 
-**Account Security Tips:**
-• Use a strong, unique password
-• Don't share your login credentials
-• Verify your account for added security
-• Log out after using shared devices
-• Enable phone verification
+Data Protection:
+• SSL encryption
+• No data selling
+• PayPal-secured payments
 
----
+Collected Information:
+• Name, email, phone
+• Order history
+• Payment handled by PayPal only
 
-## **TECHNICAL ISSUES & TROUBLESHOOTING**
+User Rights:
+• Update profile
+• Change password
+• Request account info
 
-**Common Problems:**
+Security Tips:
+• Use strong passwords
+• Do not share credentials
+• Log out on shared devices
 
-1. **Can't download ebook?**
-   - Ensure you're logged into your account
-   - Check your internet connection is stable
-   - Try a different browser (Chrome, Firefox, Edge)
-   - Clear your browser cache and cookies
-   - Disable popup blockers temporarily
-   - Check if file downloaded to your Downloads folder
-   - Contact support via email if problem persists
+TECHNICAL ISSUES & TROUBLESHOOTING
 
-2. **Can't login to my account?**
-   - Verify your internet connection
-   - Check that Caps Lock is OFF
-   - Ensure you're using the correct email address
-   - Use "Forgot Password" to reset your password
-   - Clear browser cookies and try again
-   - Try a different browser or device
-   - Contact support if still unable to login
+Common Problems:
 
-3. **Account not verified yet?**
-   - Go to "Request Verification" page
-   - Choose Email or SMS verification
-   - Follow the verification instructions
-   - Admin reviews within 24-48 hours
-   - Contact support if verification is delayed
+Download issues
 
-4. **Payment not going through?**
-   - Ensure PayPal account has sufficient funds
-   - Verify card details are correct in PayPal
-   - Check for any PayPal restrictions or limits
-   - Try a different payment method in PayPal
-   - Contact PayPal support for payment gateway issues
-   - Contact BookStack support with order details
+Check login and internet
 
-5. **Voucher code not working?**
-   - Check if voucher has expired
-   - Verify minimum purchase amount is met
-   - Ensure code is entered correctly (case-sensitive)
-   - Check if voucher has usage limits
-   - View "My Vouchers" for available codes
-   - Contact support with voucher code details
+Try another browser
 
-6. **Can't find purchased ebook?**
-   - Go to "My E-Books" page
-   - Ensure you're logged into correct account
-   - Check "Orders" page for purchase confirmation
-   - Verify payment was completed successfully
-   - Wait a few minutes and refresh page
-   - Contact support with order number
+Clear cache
 
----
+Login issues
 
-## **FREQUENTLY ASKED QUESTIONS**
+Verify email/password
 
-**Q: Is BookStack available worldwide?**
-A: Yes! BookStack is accessible globally. Our website serves readers worldwide with secure PayPal payment processing available in most countries.
+Reset password if needed
 
-**Q: Can I share purchased ebooks with friends?**
-A: No. Ebooks are licensed for personal use only. Sharing or distributing purchased content violates our terms of service and infringes on author copyrights. Each user must purchase their own copy.
+Unverified account
 
-**Q: Do you offer physical books?**
-A: No, BookStack specializes exclusively in digital ebooks in PDF format. This allows instant delivery, lifetime access, and compatibility with all devices.
+Request verification
 
-**Q: Can I return or refund an ebook?**
-A: Due to the instant digital nature of our products, all sales are final once the ebook is downloaded. Please review book descriptions carefully before purchasing. Contact support for exceptional circumstances.
+Wait 24–48 hours
 
-**Q: How do I update my payment method?**
-A: Payment is processed through PayPal. You can manage your payment methods directly in your PayPal account. BookStack does not store payment information.
+Payment failed
 
-**Q: Are ebooks DRM-protected?**
-A: Our ebooks are in standard PDF format without DRM protection. This allows you to read on any device. However, redistribution is prohibited by our terms of service.
+Check PayPal balance
 
-**Q: Can I read ebooks offline?**
-A: Yes! Download the PDF files to your device and read them offline anytime using any PDF reader application. No internet connection required after download.
+Verify card details
 
-**Q: How many devices can I use?**
-A: You can download and read your purchased ebooks on unlimited devices. Simply log into your account from any device and download your books.
+Contact PayPal or support
 
-**Q: Do I need a special app to read the ebooks?**
-A: No special app needed! Our ebooks are in PDF format which can be opened with any PDF reader like Adobe Acrobat Reader, browser PDF viewers, or mobile PDF apps.
+Voucher not working
 
-**Q: Will I lose access to my ebooks?**
-A: No! Once purchased, you have lifetime access. You can download your ebooks anytime from your account, even years after purchase.
+Check expiry and requirements
 
-**Q: Can I re-download purchased ebooks?**
-A: Absolutely! Go to "My E-Books" page and download your books as many times as you need. There are no download limits.
+Verify correct code
 
-**Q: What if I forgot my password?**
-A: Click "Forgot Password" on the login page, enter your email address, and follow the password reset instructions sent to your email.
+Missing ebook
 
-**Q: How do I verify my account?**
-A: Go to "Request Verification" page, choose Email or SMS verification method, and follow the instructions. Admin will review and approve your verification request.
+Check "My E-Books"
 
-**Q: When will my account be verified?**
-A: Email verifications are typically reviewed within 24-48 hours. SMS verifications with correct codes are approved automatically or within a few hours.
+Confirm payment success
 
-**Q: How do I get discount vouchers?**
-A: Vouchers are provided to registered and verified users. Check "My Vouchers" page regularly for available discount codes. Special vouchers may be sent via email or SMS.
+FREQUENTLY ASKED QUESTIONS
 
-**Q: Can I use multiple vouchers on one order?**
-A: Currently, only one voucher code can be applied per order. Choose the voucher that gives you the best discount.
+Q: Is BookStack available worldwide?
+A: Yes, BookStack is accessible globally via PayPal.
 
-**Q: Why can't I purchase ebooks?**
-A: Your account must be verified before making purchases. Complete the account verification process first by going to "Request Verification" page.
+Q: Can I share ebooks?
+A: No. Ebooks are for personal use only.
 
-**Q: How do I contact customer support?**
-A: Use the contact form on our website. Fill in your details, describe your issue, and choose Email or Phone as your preferred contact method. Admin will respond within 24-48 hours.
+Q: Are physical books available?
+A: No. BookStack sells digital PDFs only.
 
-**Q: What information should I include when contacting support?**
-A: Include your registered email, order number (if applicable), detailed description of the issue, and any error messages or screenshots. This helps us assist you faster.
+Q: Are refunds allowed?
+A: No refunds after download due to digital nature.
 
-**Q: Can I change my registered email or phone number?**
-A: Yes! Go to your "Profile" page and update your contact information. Make sure to use a valid email and phone number for support communications.
+Q: Can I read offline?
+A: Yes. Downloaded PDFs work offline.
 
----
+Q: How many devices can I use?
+A: Unlimited devices.
 
-## **BOOKSTACK MISSION & VALUES**
+Q: Can I re-download ebooks?
+A: Yes, unlimited re-downloads.
 
-**Our Mission:**
-Making technology knowledge accessible to developers, students, and tech enthusiasts worldwide through affordable, high-quality ebooks.
+Q: How do I reset my password?
+A: Use "Forgot Password" on login page.
 
-**What We Stand For:**
-• **Accessibility**: Instant digital delivery to readers anywhere
-• **Quality**: Curated collection of technology and programming ebooks
-• **Security**: Safe transactions through PayPal and secure account verification
-• **Value**: Competitive pricing with exclusive voucher discounts
-• **Support**: Responsive customer service via email and SMS
-• **Lifetime Access**: Your purchased books are yours forever
+Q: Why can’t I purchase?
+A: Account verification is required.
 
-**Our Commitment:**
-• Continuously expanding our technology book catalog
-• Maintaining highest standards of security and privacy
-• Providing excellent customer support
-• Offering competitive prices and regular discounts
-• Ensuring smooth purchasing and download experience
-• Building a community of tech learners and professionals
+BOOKSTACK MISSION & VALUES
 
-**Why Choose BookStack?**
-✓ Specialized in technology and programming content
-✓ Instant PDF downloads - no waiting
-✓ Lifetime access to all purchases
-✓ Secure PayPal payment processing
-✓ Account verification for user protection
-✓ Exclusive voucher discounts
-✓ Responsive customer support
-✓ No subscriptions - buy what you need
-✓ Compatible with all devices
+Our Mission:
+Provide affordable, high-quality technology ebooks with lifetime access.
 
-Join thousands of developers and tech enthusiasts learning and growing with BookStack today!
+What We Stand For:
+• Accessibility
+• Quality
+• Security
+• Value
+• Support
+• Lifetime ownership
 
-**Contact Us:**
-📧 Website Contact Form: Available 24/7
-🌐 Website: http://localhost:8080/BookStack
+Why Choose BookStack?
+✓ Tech-focused ebooks
+✓ Instant PDF downloads
+✓ Lifetime access
+✓ Secure PayPal payments
+✓ Voucher discounts
+✓ No subscriptions
 
----
-
-**Note**: BookStack is committed to protecting intellectual property rights. All ebooks are for personal use only. Redistribution, sharing, or resale is strictly prohibited and may result in account termination and legal action. 
+Note: All ebooks are for personal use only. Redistribution or resale is prohibited and may result in account termination.
