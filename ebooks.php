@@ -441,8 +441,8 @@ include 'includes/head.php';
                                         </span>
                                     </div>
                                     <div class="d-grid">
-                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm ebook-btn">
-                                            <i class="bi bi-download me-1"></i><span class="d-none d-sm-inline">Download</span><span class="d-inline d-sm-none">Get</span>
+                                        <a href="download.php?id=<?php echo $ebook['ebook_id']; ?>" class="btn btn-green btn-sm ebook-btn d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-download me-1"></i>Download
                                         </a>
                                     </div>
                                 <?php else: ?>
