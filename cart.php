@@ -166,22 +166,22 @@ include 'includes/head.php';
           <?php foreach ($cart_items as $item): ?>
             <div class="cart-item-card p-4 mb-3">
               <div class="row align-items-center">
-                <div class="col-1">
+                <div class="col-auto">
                   <input type="checkbox" class="custom-checkbox item-checkbox" data-price="<?php echo $item['price']; ?>" data-ebook-id="<?php echo $item['ebook_id']; ?>">
                 </div>
-                <div class="col-3">
-                  <img src="<?php echo htmlspecialchars($item['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" height="120">
+                <div class="col-lg-2 col-3 mb-3 mb-lg-0">
+                  <img src="<?php echo htmlspecialchars($item['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" class="img-fluid book-cover" style="max-height: 140px; object-fit: cover; width: 100%;">
                 </div>
-                <div class="col-5">
-                  <h5 class="fw-bold mb-2 text-truncate" style="color: #2c3e50;"><?php echo htmlspecialchars($item['title']); ?></h5>
-                  <p class="text-muted mb-2 small"><i class="bi bi-person me-1"></i><?php echo htmlspecialchars($item['author'] ?? 'Unknown Author'); ?></p>
+                <div class="col-lg-5 col-12 mb-3 mb-lg-0">
+                  <h5 class="fw-bold mb-2" style="color: #2c3e50;"><?php echo htmlspecialchars($item['title']); ?></h5>
+                  <p class="text-muted mb-3 small"><i class="bi bi-person me-1"></i><?php echo htmlspecialchars($item['author'] ?? 'Unknown Author'); ?></p>
                   <div class="d-flex gap-2 flex-wrap">
                     <button type="button" class="btn btn-sm px-3 py-2 remove-btn" data-bs-toggle="modal" data-bs-target="#removeModal" data-ebook-id="<?php echo $item['ebook_id']; ?>" data-ebook-title="<?php echo htmlspecialchars($item['title']); ?>" style="background: rgba(220, 53, 69, 0.1); color: #dc3545; border: none; border-radius: 10px; font-weight: 500; transition: all 0.3s;" onmouseover="this.style.background='rgba(220, 53, 69, 0.2)'" onmouseout="this.style.background='rgba(220, 53, 69, 0.1)'">
                       <i class="bi bi-trash me-1"></i><span class="d-none d-sm-inline">Remove</span>
                     </button>
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col-lg-3 col-12 text-lg-end">
                   <div class="fs-4 fw-bold text-green">₱<?php echo number_format($item['price'], 2); ?></div>
                   <?php if ($item['quantity'] > 1): ?>
                     <div class="small text-muted mt-1">Qty: <?php echo $item['quantity']; ?></div>
