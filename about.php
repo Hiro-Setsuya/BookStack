@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'config/api-connection.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -155,11 +156,43 @@ include 'includes/head.php';
                         <i class="bi bi-people-fill text-success"></i> Meet the Members
                     </h4>
                     <div class="row g-4">
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-4 col-lg-4">
                             <div class="d-flex align-items-center gap-3">
                                 <img src="assets/img/members/hiro.jpg" alt="Adrian" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
                                 <div>
                                     <h6 class="fw-bold mb-1">Adrian Vincent H. Javillo</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="assets/img/members/hart.jpg" alt="Hart" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Hart Kristiane C. Lacuarin</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="assets/img/members/rayv.jpg" alt="Rver" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Jhon Rayver E. Martinez</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="assets/img/members/chino.jpg" alt="Chino" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Chino Keonie P. Santos</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="assets/img/members/rowel.jpg" alt="Rowel" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Rowel Gabriel V. Mangabat</h6>
                                 </div>
                             </div>
                         </div>
@@ -182,6 +215,7 @@ include 'includes/head.php';
                             </p>
                             <div class="mt-3">
                                 <span class="badge rounded-pill bg-success px-3">Official Partner</span>
+                                <a href="<?php echo ESCAPINAS_BASE_URL ?>/EscaPinas/index.php" target="_blank" class="btn btn-sm btn-outline-success ms-2">Visit Website</a>
                             </div>
                         </div>
                     </div>
