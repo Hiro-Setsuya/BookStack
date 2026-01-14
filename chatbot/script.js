@@ -67,12 +67,6 @@ function addStackAIMessage(text) {
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     // Fix numbered lists that have line breaks between number and text
     .replace(/(\d+)\.\s*\n/g, "$1. ")
-    // Ensure proper line breaks exist after sentences
-    .replace(/\. ([A-Z•\d])/g, ".\n$1")
-    // Convert bullet points with single line break (minimal spacing)
-    .replace(/\n• /g, "\n• ")
-    // Convert numbered lists without extra spacing (answer goes directly below number)
-    .replace(/\n(\d+)\. /g, "\n$1. ")
     // Convert all line breaks to <br>
     .replace(/\n/g, "<br>")
     // Clean up multiple consecutive <br> tags (max 2)
@@ -218,9 +212,6 @@ function startFetch(msg) {
             .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
             // Fix numbered lists that have line breaks between number and text
             .replace(/(\d+)\.\s*\n/g, "$1. ")
-            .replace(/\. ([A-Z•\d])/g, ".\n$1")
-            .replace(/\n• /g, "\n• ")
-            .replace(/\n(\d+)\. /g, "\n$1. ")
             .replace(/\n/g, "<br>")
             .replace(/(<br>\s*){3,}/g, "<br><br>")
             .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
@@ -255,6 +246,7 @@ function handleKeyPress(event) {
     sendStackAIMessage();
   }
 }
+
 
 // Optional: Close modal with Escape key
 document.addEventListener("keydown", function (event) {
@@ -346,9 +338,6 @@ function loadChatHistory() {
         .replace(/[ \t]+/g, " ")
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
         .replace(/(\d+)\.\s*\n/g, "$1. ")
-        .replace(/\. ([A-Z•\d])/g, ".\n$1")
-        .replace(/\n• /g, "\n• ")
-        .replace(/\n(\d+)\. /g, "\n$1. ")
         .replace(/\n/g, "<br>")
         .replace(/(<br>\s*){3,}/g, "<br><br>")
         .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
