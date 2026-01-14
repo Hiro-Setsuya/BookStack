@@ -71,6 +71,11 @@ $category_id = isset($_GET['category_id']) ? intval($_GET['category_id']) : 0;
 $total_results = 0;
 $category_name = '';
 
+// Pagination settings
+$per_page = 12;
+$page = isset($_GET['page']) && intval($_GET['page']) > 0 ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $per_page;
+
 // Get category name if filtering by category
 if ($category_id > 0) {
     $cat_query = "SELECT name FROM categories WHERE category_id = $category_id";
@@ -84,6 +89,14 @@ if ($category_id > 0) {
 // Fetch ebooks from database with strict title and author search
 if (!empty($search_query)) {
     $search_term = '%' . mysqli_real_escape_string($conn, $search_query) . '%';
+    // Count total matching results
+    $count_query = "SELECT COUNT(DISTINCT e.ebook_id) as cnt FROM ebooks e LEFT JOIN categories c ON e.category_id = c.category_id WHERE (e.title LIKE '$search_term' OR e.author LIKE '$search_term')" . ($category_id > 0 ? " AND e.category_id = $category_id" : "");
+    $count_result = executeQuery($count_query);
+    if ($count_result) {
+        $row_cnt = mysqli_fetch_assoc($count_result);
+        $total_results = intval($row_cnt['cnt']);
+    }
+
     $query = "
         SELECT DISTINCT
             e.ebook_id,
@@ -108,13 +121,19 @@ if (!empty($search_query)) {
                 ELSE 3
             END,
             e.title ASC
+        LIMIT $offset, $per_page
     ";
     $result = executeQuery($query);
-    if ($result) {
-        $total_results = mysqli_num_rows($result);
-    }
 } elseif ($category_id > 0) {
     // Filter by category only
+    // Count total in category
+    $count_query = "SELECT COUNT(*) as cnt FROM ebooks WHERE category_id = $category_id";
+    $count_result = executeQuery($count_query);
+    if ($count_result) {
+        $row_cnt = mysqli_fetch_assoc($count_result);
+        $total_results = intval($row_cnt['cnt']);
+    }
+
     $query = "
         SELECT 
             e.ebook_id, 
@@ -130,15 +149,24 @@ if (!empty($search_query)) {
         LEFT JOIN categories c ON e.category_id = c.category_id
         WHERE e.category_id = $category_id 
         ORDER BY e.created_at DESC
+        LIMIT $offset, $per_page
     ";
     $result = executeQuery($query);
-    if ($result) {
-        $total_results = mysqli_num_rows($result);
-    }
 } else {
-    $query = "SELECT e.ebook_id, e.title, e.author, e.price, e.cover_image, e.file_path, c.name as category_name, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = e.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = e.ebook_id) as total_ratings FROM ebooks e LEFT JOIN categories c ON e.category_id = c.category_id ORDER BY e.created_at DESC";
+    // Count total ebooks
+    $count_query = "SELECT COUNT(*) as cnt FROM ebooks";
+    $count_result = executeQuery($count_query);
+    if ($count_result) {
+        $row_cnt = mysqli_fetch_assoc($count_result);
+        $total_results = intval($row_cnt['cnt']);
+    }
+
+    $query = "SELECT e.ebook_id, e.title, e.author, e.price, e.cover_image, e.file_path, c.name as category_name, (SELECT AVG(rating) FROM ratings r WHERE r.ebook_id = e.ebook_id) as avg_rating, (SELECT COUNT(*) FROM ratings r WHERE r.ebook_id = e.ebook_id) as total_ratings FROM ebooks e LEFT JOIN categories c ON e.category_id = c.category_id ORDER BY e.created_at DESC LIMIT $offset, $per_page";
     $result = executeQuery($query);
 }
+
+// Compute total pages
+$total_pages = $per_page > 0 ? max(1, ceil($total_results / $per_page)) : 1;
 
 // Set page title and description based on search or category
 if (!empty($search_query)) {
@@ -346,6 +374,17 @@ include 'includes/head.php';
     <!-- Main Content -->
     <?php include 'includes/client-main.php'; ?>
 
+    <?php
+    // Build base URL for pagination links while preserving search/category params
+    $base_url = 'ebooks.php?';
+    if (!empty($search_query)) {
+        $base_url .= 'q=' . urlencode($search_query) . '&';
+    }
+    if ($category_id > 0) {
+        $base_url .= 'category_id=' . $category_id . '&';
+    }
+    ?>
+
     <div class="row g-3 px-2 px-sm-4 mb-4">
         <?php
         if ($result && mysqli_num_rows($result) > 0) {
@@ -446,6 +485,25 @@ include 'includes/head.php';
         }
         ?>
     </div>
+
+    <div class="container mt-3">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?php if ($page <= 1) echo 'disabled'; ?>">
+                    <a class="page-link" href="<?php echo $base_url . 'page=' . max(1, $page - 1); ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <?php for ($p = 1; $p <= $total_pages; $p++): ?>
+                    <li class="page-item <?php if ($p == $page) echo 'active'; ?>"><a class="page-link" href="<?php echo $base_url . 'page=' . $p; ?>"><?php echo $p; ?></a></li>
+                <?php endfor; ?>
+                <li class="page-item <?php if ($page >= $total_pages) echo 'disabled'; ?>">
+                    <a class="page-link" href="<?php echo $base_url . 'page=' . min($total_pages, $page + 1); ?>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
