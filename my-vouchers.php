@@ -155,14 +155,19 @@ include 'includes/head.php';
                                                     </span>
                                                 </div>
 
-                                                <div class="d-flex align-items-center gap-3 mb-3">
-                                                    <div class="voucher-code"><?php echo htmlspecialchars($voucher['code']); ?></div>
+                                                <div class="row align-items-center mb-3 g-2">
+                                                    <div class="col-10">
+                                                        <div class="voucher-code text-truncate">
+                                                            <?php echo htmlspecialchars($voucher['code']); ?>
+                                                        </div>
+                                                    </div>
                                                     <?php if ($is_active): ?>
-                                                        <button class="btn btn-sm btn-outline-secondary copy-code-btn"
-                                                            onclick="copyCode('<?php echo htmlspecialchars($voucher['code']); ?>', this)"
-                                                            title="Copy code">
-                                                            <i class="bi bi-clipboard"></i>
-                                                        </button>
+                                                        <div class="col-2 justify-content-end">
+                                                            <button class="btn btn-sm btn-outline-secondary copy-code-btn" onclick="copyCode('<?php echo htmlspecialchars($voucher['code']); ?>', this)"
+                                                                title="Copy code">
+                                                                <i class="bi bi-clipboard"></i>
+                                                            </button>
+                                                        </div>
                                                     <?php endif; ?>
                                                 </div>
 
