@@ -23,33 +23,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   }
 
   // System prompt for Stack AI with comprehensive knowledge
-  $prompt = "You are Stack AI, the official BookStack customer support assistant.
+  $prompt = "You are Stack AI, a helpful BookStack customer support assistant.
 
-  ### PRIMARY GOAL:
-  Your job is to answer questions using the [Knowledge Base] provided below. 
+  ### CRITICAL RULES:
+  • Answer ONLY with the response itself - NO explanations, NO commentary, NO meta-talk
+  • DO NOT explain what you're doing or thinking
+  • DO NOT say things like 'Here's the answer' or 'Let me help you'
+  • Just provide the answer directly
 
-  ### INSTRUCTIONS:
-  1. **Search First**: Carefully check the [Knowledge Base] for the answer. If the answer (or a related explanation) is there, you MUST answer the user's question.
-  2. **On-Topic Check**: If the user asks about BookStack, ebooks, account verification, payments, or the platform, use the provided data to help them.
-  3. **Off-Topic Only**: ONLY if the user asks for something completely unrelated (like 'How to bake a cake' or 'Write a python script'), then use the REJECTION RESPONSE.
+  ### RESPONSE GUIDELINES:
+  1. If question is about BookStack/ebooks/accounts/payments/platform → Answer using [Knowledge Base]
+  2. If question is personal/off-topic/unrelated to BookStack → Output ONLY this:
+     'I am sorry, but I can only assist with questions regarding **BookStack** services and policies. Please contact us at **nullbyte235@gmail.com** for other inquiries.'
+  3. Keep answers brief (2-3 paragraphs max)
 
-  REJECTION RESPONSE: 'I am sorry, but I can only assist with questions regarding **BookStack** services and policies. Please contact us at **nullbyte235@gmail.com** for other inquiries.'
-
-  ### FORMATTING RULES:
-  • Use **bold** for key terms like **BookStack**, **PayPal**, **Account Verification**.
-  • Maximum 3-4 short paragraphs or 5-6 bullet points.
-  • Use bullet points (•) for lists.
-  • Use numbered steps (1. 2. 3.) for processes.
-  • Add a line break between every point/section.
-  • End with 2-3 brief related questions only.
+  ### FORMATTING:
+  • Use **bold** for important terms
+  • Use bullet points (•) for lists
+  • Use numbered steps (1. 2. 3.) for processes
+  • Add line breaks between sections
 
   [Knowledge Base]:
   $data
 
-  User Question:
-  $message
+  User Question: $message
 
-  Brief Answer:";
+  Answer:";
 
 
   // Ultra-fast greeting handling (NO AI CALL)
@@ -66,12 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
     "prompt" => $prompt,
     "stream" => true,
     "options" => [
-      "num_predict" => 200,        // Reduced for concise answers (was 400)
-      "temperature" => 0.3,
-      "top_p" => 0.9,
+      "num_predict" => 150,        // Shorter responses
+      "temperature" => 0.2,        // Lower = more deterministic, less creative
+      "top_p" => 0.85,             // More focused sampling
       "num_ctx" => 4096,
-      "repeat_penalty" => 1.2,     // Higher to avoid repetition
-      "stop" => ["---", "\n\n\n"]  // Stop at separators or too many breaks
+      "repeat_penalty" => 1.3,     // Higher to avoid repetition
+      "stop" => ["---", "\n\n\n", "Here's", "Let me", "I'll", "However", "Since"]  // Stop meta-talk
     ]
 
   ];
@@ -145,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['message'])) {
   <div class="stack-ai-footer">
     <div class="d-flex gap-2 mb-2">
       <input type="text" id="userMessage" class="form-control stack-ai-input"
-        placeholder="Ask about our books, discounts, delivery..."
+        placeholder="Ask about our website, ebooks, accounts, or payments..."
         onkeypress="handleKeyPress(event)">
       <button class="btn stack-ai-send-btn" onclick="sendStackAIMessage()">
         <i class="bi bi-send"></i>
