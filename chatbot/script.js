@@ -17,7 +17,7 @@ function openStackAIModal() {
     if (history.length === 0 && !sessionStorage.getItem("stackAIWelcome")) {
       setTimeout(() => {
         addStackAIMessage(
-          "Welcome to **Stack AI**! 👋\n\nI can help with:\n• Account setup & verification\n• Purchasing & downloads\n• Vouchers & payments\n• Technical support\n\nWhat do you need help with?"
+          "Welcome to *Stack AI*! 👋\n\nI can help with:\n• Account setup & verification\n• Purchasing & downloads\n• Vouchers & payments\n• Technical support\n\nWhat do you need help with?"
         );
         sessionStorage.setItem("stackAIWelcome", "true");
       }, 300);
@@ -63,18 +63,12 @@ function addStackAIMessage(text) {
   let formattedText = text
     // First, normalize excessive spaces
     .replace(/[ \t]+/g, " ")
-    // Convert **bold** to <strong>
+    // Convert *bold* to <strong>
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    // Fix numbered lists that have line breaks between number and text
-    .replace(/(\d+)\.\s*\n/g, "$1. ")
     // Convert all line breaks to <br>
     .replace(/\n/g, "<br>")
     // Clean up multiple consecutive <br> tags (max 2)
-    .replace(/(<br>\s*){3,}/g, "<br><br>")
-    // Add spacing before sections that start with emojis
-    .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
-    // Clean leading/trailing breaks
-    .replace(/^(<br>)+|(<br>)+$/g, "");
+    .replace(/(<br>\s*){3,}/g, "<br><br>");
 
   bubble.innerHTML = formattedText;
 
@@ -210,12 +204,8 @@ function startFetch(msg) {
           let formattedText = receivedText
             .replace(/[ \t]+/g, " ")
             .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-            // Fix numbered lists that have line breaks between number and text
-            .replace(/(\d+)\.\s*\n/g, "$1. ")
             .replace(/\n/g, "<br>")
-            .replace(/(<br>\s*){3,}/g, "<br><br>")
-            .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
-            .replace(/^(<br>)+|(<br>)+$/g, "");
+            .replace(/(<br>\s*){3,}/g, "<br><br>");
 
           bubble.innerHTML = formattedText;
           box.scrollTop = box.scrollHeight;
@@ -246,7 +236,6 @@ function handleKeyPress(event) {
     sendStackAIMessage();
   }
 }
-
 
 // Optional: Close modal with Escape key
 document.addEventListener("keydown", function (event) {
@@ -337,11 +326,8 @@ function loadChatHistory() {
       let formattedText = msg.text
         .replace(/[ \t]+/g, " ")
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/(\d+)\.\s*\n/g, "$1. ")
         .replace(/\n/g, "<br>")
-        .replace(/(<br>\s*){3,}/g, "<br><br>")
-        .replace(/(📚|❓|✓|✗|📧|📱|₱|🎯)/g, "<br>$1")
-        .replace(/^(<br>)+|(<br>)+$/g, "");
+        .replace(/(<br>\s*){3,}/g, "<br><br>");
 
       bubble.innerHTML = formattedText;
       messageDiv.appendChild(bubble);
