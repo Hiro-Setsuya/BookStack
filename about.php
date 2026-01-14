@@ -139,17 +139,35 @@ include 'includes/head.php';
                         BookStack is built with modern web technologies to ensure a fast, secure, and reliable experience:
                     </p>
                     <div class="d-flex flex-wrap gap-2 mb-3">
-                        <span class="badge bg-light text-dark border px-3 py-2">PHP</span>
-                        <span class="badge bg-light text-dark border px-3 py-2">MySQL</span>
-                        <span class="badge bg-light text-dark border px-3 py-2">Bootstrap 5</span>
-                        <span class="badge bg-light text-dark border px-3 py-2">JavaScript</span>
-                        <span class="badge bg-light text-dark border px-3 py-2">PayPal API</span>
-                        <span class="badge bg-light text-dark border px-3 py-2">PHPMailer</span>
+                        <span class="badge bg-success text-white border px-3 py-2">PHP</span>
+                        <span class="badge bg-success text-white border px-3 py-2">MySQL</span>
+                        <span class="badge bg-success text-white border px-3 py-2">Bootstrap 5</span>
+                        <span class="badge bg-success text-white border px-3 py-2">JavaScript</span>
+                        <span class="badge bg-success text-white border px-3 py-2">PayPal API</span>
+                        <span class="badge bg-success text-white border px-3 py-2">PHPMailer</span>
+                        <span class="badge bg-success text-white border px-3 py-2">Ollama</span>
+                    </div>
+                </div>
+
+                <!-- Members Section -->
+                <div class="card profile-card p-4 mb-4">
+                    <h4 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-people-fill text-success"></i> Meet the Members
+                    </h4>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="assets/img/members/hiro.jpg" alt="Adrian" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Adrian Vincent H. Javillo</h6>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Collab Section -->
-                <div class="card profile-card p-4 mb-4 mt-4" style="background-color: #ffffff;">
+                <div class=" card profile-card p-4 mb-4 mt-4">
                     <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
                         <i class="bi bi-people-fill text-success"></i> Collaboration Partners
                     </h4>
@@ -180,7 +198,7 @@ include 'includes/head.php';
                             <i class="bi bi-envelope-fill text-success fs-5"></i>
                             <div>
                                 <small class="text-muted d-block">Email</small>
-                                <span class="fw-semibold">support@bookstack.com</span>
+                                <span class="fw-semibold">nullbyte235@gmail.com</span>
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3">
