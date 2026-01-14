@@ -1,9 +1,7 @@
 <?php
 // Email notification functions for BookStack
 require_once __DIR__ . '/../config/mail.php';
-
-// Global IP address for email links
-$GLOBALS['ip'] = "192.168.1.32";
+require_once __DIR__ . '/../config/api-connection.php';
 
 /**
  * Send OTP verification email
@@ -109,7 +107,7 @@ function sendPasswordResetConfirmation($email, $userName = '')
                 <p>Your password has been successfully changed. You can now log in with your new password.</p>
                 
                 <div style='text-align: center;'>
-                    <a href='http://$ip/BookStack/login.php' class='button'>Login to BookStack</a>
+                    <a href='http://" . BOOKSTORE_BASE_URL . "/BookStack/login.php' class='button'>Login to BookStack</a>
                 </div>
                 
                 <div class='warning'>
@@ -178,7 +176,7 @@ function sendWelcomeEmail($email, $userName)
                 </ul>
                 
                 <div style='text-align: center;'>
-                    <a href='http://$ip/BookStack/ebooks.php' class='button'>Start Browsing</a>
+                    <a href='http://" . BOOKSTORE_BASE_URL . "/BookStack/ebooks.php' class='button'>Start Browsing</a>
                 </div>
                 
                 <p>If you have any questions, feel free to contact our support team.</p>
@@ -285,7 +283,7 @@ function sendPurchaseConfirmationEmail($email, $userName, $orderID, $items, $tot
                 </div>
                 
                 <div style='text-align: center;'>
-                    <a href='http://$ip/BookStack/my-ebooks.php' class='button'>View My Ebooks</a>
+                    <a href='http://" . BOOKSTORE_BASE_URL . "/BookStack/my-ebooks.php' class='button'>View My Ebooks</a>
                 </div>
                 
                 <p><strong>Need Help?</strong></p>
