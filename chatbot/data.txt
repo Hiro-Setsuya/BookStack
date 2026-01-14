@@ -19,13 +19,14 @@ BOOK CATEGORIES
 
 BookStack focuses on technology-related ebooks:
 
-• Programming Languages (Python, Java, C++, JavaScript, etc.)
-• Web Development (HTML, CSS, React, Node.js)
-• Mobile App Development (Android, iOS, React Native)
-• Database Systems (MySQL, PostgreSQL, MongoDB)
-• Backend Development (APIs, Servers)
-• Frontend Development (UI/UX, Frameworks)
-• Technology Fundamentals
+• Data Structures & Algorithms
+• Database
+• Discrete Structures
+• Ethical Hacking 
+• Imformation Computing
+• Networks
+• Operating Systems
+• Web Development
 
 All books are in PDF format and readable on any PDF-supported device.
 
@@ -60,7 +61,6 @@ PRICING & DISCOUNTS
 Pricing:
 • Prices in Philippine Peso (₱)
 • Typical range: ₱99 – ₱999
-• Premium books: ₱299 – ₱999
 
 Discount Vouchers:
 • Available to registered users
@@ -169,7 +169,6 @@ Email Support:
 📧 Email: nullbyte235@gmail.com
 
 • 24/7 availability
-• 24–48 hour response
 
 SMS Support:
 📱 Phone: +63 994 055 1720
