@@ -485,6 +485,7 @@ include 'includes/head.php';
         }
         ?>
     </div>
+    </div>
 
     <div class="container mt-3">
         <nav aria-label="Page navigation example">
