@@ -27,7 +27,7 @@ if (basename($_SERVER['SCRIPT_NAME']) === basename(__FILE__)) {
                     <li class="mb-2"><a href="index.php" class="footer-link text-white-50 text-decoration-none">Home</a></li>
                     <li class="mb-2"><a href="ebooks.php" class="footer-link text-white-50 text-decoration-none">E-Books</a></li>
                     <li class="mb-2"><a href="cart.php" class="footer-link text-white-50 text-decoration-none">Cart</a></li>
-                    <li class="mb-2"><a href="orders.php" class="footer-link text-white-50 text-decoration-none">My Orders</a></li>
+                    <li class="mb-2"><a href="my-ebooks.php" class="footer-link text-white-50 text-decoration-none">My E-Books</a></li>
                 </ul>
             </div>
 
