@@ -169,8 +169,8 @@ include 'includes/head.php';
                 <div class="col-auto">
                   <input type="checkbox" class="custom-checkbox item-checkbox" data-price="<?php echo $item['price']; ?>" data-ebook-id="<?php echo $item['ebook_id']; ?>">
                 </div>
-                <div class="col-lg-2 col-3 mb-3 mb-lg-0">
-                  <img src="<?php echo htmlspecialchars($item['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" class="img-fluid book-cover" style="max-height: 140px; object-fit: cover; width: 100%;">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start">
+                  <img src="<?php echo htmlspecialchars($item['cover_image'] ?? 'assets/img/ebook_cover/default.jpg'); ?>" class="img-fluid book-cover" style="max-height: 140px; object-fit: cover;">
                 </div>
                 <div class="col-lg-5 col-12 mb-3 mb-lg-0">
                   <h5 class="fw-bold mb-2" style="color: #2c3e50;"><?php echo htmlspecialchars($item['title']); ?></h5>
