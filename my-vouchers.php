@@ -162,7 +162,7 @@ include 'includes/head.php';
                                                         </div>
                                                     </div>
                                                     <?php if ($is_active): ?>
-                                                        <div class="col-2 justify-content-end">
+                                                        <div class="col-2 d-flex justify-content-end">
                                                             <button class="btn btn-sm btn-outline-secondary copy-code-btn" onclick="copyCode('<?php echo htmlspecialchars($voucher['code']); ?>', this)"
                                                                 title="Copy code">
                                                                 <i class="bi bi-clipboard"></i>
