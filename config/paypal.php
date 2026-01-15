@@ -1,6 +1,6 @@
 <?php
-define('PAYPAL_CLIENT_ID', 'AUbaETfmUXfZ0Hv2rTaqsbVFCe88WMLkZg_8GreLpb7ECUvTclpLAps55aiGc4Hc62JP1vBZLVTKRcg7');
-define('PAYPAL_SECRET', 'EFUZ5tFs9nev6Xr-i7cSL-xoXNvVJH8F95xXEqnqzznrF_TXRZvahz0DlDCRiYuJL1vz4VwGZTlw4m0C');
+define('PAYPAL_CLIENT_ID', ''); // Actual PayPal Client ID 
+define('PAYPAL_SECRET', ''); // Actual PayPal Secret 
 
 function generateAccessToken($clientId, $secret)
 {
